@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: mogu
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        default_batch_fetch_size: 1000
+  datasource:
+    url: jdbc:tc:mysql:8.0.36:///mogu?
+    username: myuser
+    password: secret
+
+  docker:
+    compose:
+      file: compose.yaml
+      enabled: true
+      lifecycle-management: none
+      start:
+        command: up
+      stop:
+        command: down
+        timeout: 1m
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
