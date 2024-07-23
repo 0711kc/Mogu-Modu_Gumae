@@ -12,4 +12,5 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class UpdatePostRequest {
+	private String title;
 }

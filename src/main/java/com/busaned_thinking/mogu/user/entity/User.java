@@ -10,6 +10,7 @@ import com.busaned_thinking.mogu.post.entity.HiddenPost;
 import com.busaned_thinking.mogu.search.entity.Search;
 import com.busaned_thinking.mogu.signal.entity.AlarmSignal;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -63,10 +64,10 @@ public class User {
 	private String email;
 
 	@Column()
-	private short role;
+	private Short role;
 
 	@Column()
-	private boolean isBlock;
+	private Boolean isBlock;
 
 	@Column()
 	private LocalDateTime blockDate;
@@ -76,7 +77,7 @@ public class User {
 	private String profileImage;
 
 	@Column()
-	private int level;
+	private Integer level;
 
 	@Size(max = 10)
 	@Column(length = 10)
@@ -85,7 +86,8 @@ public class User {
 	@Column()
 	private LocalDateTime registerDate;
 
-	@OneToOne
+	// @OneToOne(mappedBy = "activity_area")
+	@OneToOne(cascade = CascadeType.ALL)
 	private ActivityArea activityArea;
 
 	@OneToMany
@@ -102,6 +104,21 @@ public class User {
 
 	@OneToMany
 	private ArrayList<AlarmSignal> alarmSignals = new ArrayList<>();
+
+	public static User of(String userId, String password, String registration, String name, String nickname,
+		String phone, String email, Short role, ActivityArea activityArea) {
+		return User.builder()
+			.userId(userId)
+			.password(password)
+			.registration(registration)
+			.name(name)
+			.nickname(nickname)
+			.phone(phone)
+			.email(email)
+			.role(role)
+			.activityArea(activityArea)
+			.build();
+	}
 
 	public void update(String name) {
 		this.name = name;

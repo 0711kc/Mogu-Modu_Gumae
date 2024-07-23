@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MessageRead {
+	@Id
+	private Long a;
 
 	@Column()
 	private boolean state;

@@ -1,14 +1,13 @@
 package com.busaned_thinking.mogu.location.entity;
 
-import java.util.ArrayList;
+import org.locationtech.jts.geom.Point;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,20 +19,28 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "activity_area")
 public class ActivityArea {
-	//primary key?
-	//외래키 어떻게 표현함?
+	private static final short DEFAULT_DISTANCE = 500;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(columnDefinition = "point")
+	private Point referencePoint;
 
 	@Column()
-	private short distanceMeters;
+	private Short distanceMeters;
 
-	@Column()
-	private int emdAreaId;
+	public static ActivityArea from(Point referencePoint) {
+		return ActivityArea.builder()
+			.referencePoint(referencePoint)
+			.distanceMeters(DEFAULT_DISTANCE)
+			.build();
+	}
 
-	@OneToMany
-	private ArrayList<EmdArea> emdAreas = new ArrayList<>();
+	public void updateDistance() {
 
-
-
-
+	}
 }
