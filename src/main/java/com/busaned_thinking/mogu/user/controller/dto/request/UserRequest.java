@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class UserRequest {
+
 	@NotBlank(message = "아이디를 입력해주세요.")
 	@Size(max = 12)
 	private String userId;
@@ -24,15 +25,35 @@ public class UserRequest {
 	@Size(max = 80)
 	private String password;
 
+	@NotBlank(message = "주민등록번호를 입력해주세요.")
+	@Size(max = 12)
+	private String registration;
+
 	@NotBlank(message = "이름을 입력해주세요.")
 	@Size(max = 12)
 	private String name;
+
+	@NotBlank(message = "별명을 입력해주세요.")
+	@Size(max = 12)
+	private String nickname;
+
+	@NotBlank(message = "전화번호를 입력해주세요.")
+	@Size(max = 11)
+	private String phone;
+
+	@NotBlank(message = "이메일을 입력해주세요.")
+	@Size(max = 30)
+	private String email;
 
 	public User toEntity() {
 		return User.builder()
 			.userId(userId)
 			.password(password)
+			.registration(registration)
 			.name(name)
+			.nickname(nickname)
+			.phone(phone)
+			.email(email)
 			.build();
 	}
 }
