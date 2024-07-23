@@ -1,10 +1,12 @@
 package com.busaned_thinking.mogu.user.controller.dto.request;
 
+import org.locationtech.jts.geom.Point;
+
+import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.user.entity.User;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class UserRequest {
+
 	@NotBlank(message = "아이디를 입력해주세요.")
 	@Size(max = 12)
 	private String userId;
@@ -24,15 +27,39 @@ public class UserRequest {
 	@Size(max = 80)
 	private String password;
 
+	@NotBlank(message = "주민등록번호를 입력해주세요.")
+	@Size(max = 12)
+	private String registration;
+
 	@NotBlank(message = "이름을 입력해주세요.")
 	@Size(max = 12)
 	private String name;
 
-	public User toEntity() {
+	@NotBlank(message = "별명을 입력해주세요.")
+	@Size(max = 12)
+	private String nickname;
+
+	@NotBlank(message = "전화번호를 입력해주세요.")
+	@Size(max = 11)
+	private String phone;
+
+	@NotBlank(message = "이메일을 입력해주세요.")
+	@Size(max = 30)
+	private String email;
+
+	@Column()
+	private Point location;
+
+	public User toEntity(ActivityArea activityArea) {
 		return User.builder()
 			.userId(userId)
 			.password(password)
+			.registration(registration)
 			.name(name)
+			.nickname(nickname)
+			.phone(phone)
+			.email(email)
+			.activityArea(activityArea)
 			.build();
 	}
 }

@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.busaned_thinking.mogu.location.entity.ActivityArea;
+import com.busaned_thinking.mogu.location.repository.ActivityAreaRepository;
 import com.busaned_thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.busaned_thinking.mogu.user.controller.dto.request.UserRequest;
 import com.busaned_thinking.mogu.user.controller.dto.response.UserResponse;
@@ -26,10 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
+	private final ActivityAreaRepository activityAreaRepository;
 
 	@Override
-	public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
-		User user = userRequest.toEntity();
+	public ResponseEntity<UserResponse> createUser(UserRequest userRequest, ActivityArea activityArea) {
+		User user = userRequest.toEntity(activityArea);
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)

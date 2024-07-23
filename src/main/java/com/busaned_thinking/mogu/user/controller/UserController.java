@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.busaned_thinking.mogu.location.entity.ActivityArea;
+import com.busaned_thinking.mogu.location.service.ActivityAreaService;
 import com.busaned_thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.busaned_thinking.mogu.user.controller.dto.request.UserRequest;
 import com.busaned_thinking.mogu.user.controller.dto.response.UserResponse;
@@ -23,10 +25,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
+	private final ActivityAreaService activityAreaService;
 
 	@PostMapping("/new")
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
-		return userService.createUser(userRequest);
+		ActivityArea activityArea = activityAreaService.create(userRequest.getLocation());
+		return userService.createUser(userRequest, activityArea);
 	}
 
 	@GetMapping("/{userId}")
