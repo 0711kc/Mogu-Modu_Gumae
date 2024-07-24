@@ -2,6 +2,7 @@ package com.busaned_thinking.mogu.user.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
@@ -63,47 +64,55 @@ public class User {
 	@Column(length = 30, unique = true)
 	private String email;
 
-	@Column()
+	@Column
 	private Short role;
 
-	@Column()
-	private Boolean isBlock;
+	@Column
+	@Builder.Default
+	private Boolean isBlock = false;
 
-	@Column()
-	private LocalDateTime blockDate;
+	@Column
+	@Builder.Default
+	private LocalDateTime blockDate = null;
 
 	@Size(max = 80)
 	@Column(length = 80)
 	private String profileImage;
 
-	@Column()
-	private Integer level;
+	@Column
+	@Builder.Default
+	private Integer level = 0;
 
-	@Size(max = 10)
-	@Column(length = 10)
-	private String manner;
+	@Column
+	@Builder.Default
+	private Short manner = Manner.DEFAULT.getScore();
 
-	@Column()
-	private LocalDateTime registerDate;
+	@Column
+	@Builder.Default
+	private LocalDateTime registerDate = LocalDateTime.now();
 
-	// @OneToOne(mappedBy = "activity_area")
 	@OneToOne(cascade = CascadeType.ALL)
 	private ActivityArea activityArea;
 
 	@OneToMany
-	private ArrayList<Chat> chats = new ArrayList<>();
+	@Builder.Default
+	private List<Chat> chats = new ArrayList<>();
 
 	@OneToMany
-	private ArrayList<Complaint> complaints = new ArrayList<>();
+	@Builder.Default
+	private List<Complaint> complaints = new ArrayList<>();
 
 	@OneToMany
-	private ArrayList<HiddenPost> hiddenPosts = new ArrayList<>();
+	@Builder.Default
+	private List<HiddenPost> hiddenPosts = new ArrayList<>();
 
 	@OneToMany
-	private ArrayList<Search> searches = new ArrayList<>();
+	@Builder.Default
+	private List<Search> searches = new ArrayList<>();
 
 	@OneToMany
-	private ArrayList<AlarmSignal> alarmSignals = new ArrayList<>();
+	@Builder.Default
+	private List<AlarmSignal> alarmSignals = new ArrayList<>();
 
 	public static User of(String userId, String password, String registration, String name, String nickname,
 		String phone, String email, Short role, ActivityArea activityArea) {

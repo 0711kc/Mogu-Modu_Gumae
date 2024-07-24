@@ -29,7 +29,7 @@ public class UserController {
 
 	@PostMapping("/new")
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
-		ActivityArea activityArea = activityAreaService.create(userRequest.getLocation());
+		ActivityArea activityArea = activityAreaService.create(userRequest.getLongitude(), userRequest.getLatitude());
 		return userService.createUser(userRequest, activityArea);
 	}
 
