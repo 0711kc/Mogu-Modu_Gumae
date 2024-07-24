@@ -21,6 +21,7 @@ import com.busaned_thinking.mogu.user.entity.User;
 import com.busaned_thinking.mogu.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -59,6 +60,17 @@ public class UserServiceImpl implements UserService {
 			.body(UserResponse.from(updatedUser));
 	}
 
+	@Override
+	public ResponseEntity<UserResponse> updateProfileImage(String userId, @NonNull String profileImage) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		user.updateProfileImage(profileImage);
+		User updatedUser = userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(updatedUser));
+	}
+
 	private void update(User user, UpdateUserRequest updateUserRequest) {
 		String name = updateUserRequest.getName();
 		user.update(name);
@@ -67,7 +79,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<Void> deleteUser(String userId) {
 		User user = userRepository.findByUserId(userId)
-				.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		userRepository.deleteById(user.getUid());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
