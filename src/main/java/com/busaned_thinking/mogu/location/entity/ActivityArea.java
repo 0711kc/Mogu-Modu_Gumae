@@ -1,6 +1,6 @@
 package com.busaned_thinking.mogu.location.entity;
 
-import org.locationtech.jts.geom.Point;
+import java.awt.geom.Point2D;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,13 +27,14 @@ public class ActivityArea {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(columnDefinition = "point")
-	private Point referencePoint;
+	@Column
+	private Point2D.Double referencePoint;
 
-	@Column()
+	@Column
 	private Short distanceMeters;
 
-	public static ActivityArea from(Point referencePoint) {
+	public static ActivityArea from(Double longitude, Double latitude) {
+		Point2D.Double referencePoint = new Point2D.Double(longitude, latitude);
 		return ActivityArea.builder()
 			.referencePoint(referencePoint)
 			.distanceMeters(DEFAULT_DISTANCE)

@@ -2,6 +2,7 @@ package com.busaned_thinking.mogu.chat.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,10 +28,10 @@ public class Chat {
 	private Long id;
 
 	@OneToMany
-	private ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+	private List<ChatMessage> chatMessages = new ArrayList<>();
 
 	@OneToMany
-	private ArrayList<ChatUser> chatUsers = new ArrayList<>();
+	private List<ChatUser> chatUsers = new ArrayList<>();
 
 	@Size(max = 1000)
 	@Column(length = 1000)

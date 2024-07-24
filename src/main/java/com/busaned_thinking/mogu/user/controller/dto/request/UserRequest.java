@@ -1,12 +1,11 @@
 package com.busaned_thinking.mogu.user.controller.dto.request;
 
-import org.locationtech.jts.geom.Point;
-
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
+import com.busaned_thinking.mogu.user.entity.Role;
 import com.busaned_thinking.mogu.user.entity.User;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,8 +46,14 @@ public class UserRequest {
 	@Size(max = 30)
 	private String email;
 
-	@Column()
-	private Point location;
+	@NotNull(message = "권한을 입력해주세요.")
+	private Role role;
+
+	@NotNull(message = "위도를 입력해주세요.")
+	private Double latitude;
+
+	@NotNull(message = "경도를 입력해주세요.")
+	private Double longitude;
 
 	public User toEntity(ActivityArea activityArea) {
 		return User.builder()
@@ -59,6 +64,7 @@ public class UserRequest {
 			.nickname(nickname)
 			.phone(phone)
 			.email(email)
+			.role(role.getIndex())
 			.activityArea(activityArea)
 			.build();
 	}

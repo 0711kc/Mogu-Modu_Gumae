@@ -38,7 +38,7 @@ public class EmdArea {
 	private String name;
 
 	@ManyToOne
-	private SiggArea siggArea = new SiggArea();
+	private SiggArea siggArea;
 
 	@Column
 	private LocalDateTime version;
