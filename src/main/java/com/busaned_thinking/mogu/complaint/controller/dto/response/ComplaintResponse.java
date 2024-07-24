@@ -1,7 +1,6 @@
 package com.busaned_thinking.mogu.complaint.controller.dto.response;
 
-import com.busaned_thinking.mogu.post.controller.dto.response.PostResponse;
-import com.busaned_thinking.mogu.post.entity.Post;
+import com.busaned_thinking.mogu.complaint.entity.Complaint;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,10 +9,14 @@ import lombok.Getter;
 @Builder
 public class ComplaintResponse {
 	private final String title;
+	private final String content;
+	private final Short type;
 
-	public static ComplaintResponse from(Post post) {
+	public static ComplaintResponse from(Complaint complaint) {
 		return ComplaintResponse.builder()
-			.title(post.getTitle())
+			.title(complaint.getTitle())
+			.content(complaint.getContent())
+			.type(complaint.getType())
 			.build();
 	}
 }

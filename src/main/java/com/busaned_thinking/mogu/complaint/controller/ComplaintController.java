@@ -1,7 +1,6 @@
 package com.busaned_thinking.mogu.complaint.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,8 @@ public class ComplaintController {
 	private final ComplaintService complaintService;
 
 	@PostMapping("/new")
-	public ResponseEntity<ComplaintResponse> createComplaint(@RequestBody @Valid final ComplaintRequest complaintRequest) {
+	public ResponseEntity<ComplaintResponse> createComplaint(
+		@RequestBody @Valid final ComplaintRequest complaintRequest) {
 		return complaintService.createComplaint(complaintRequest);
 	}
 
@@ -40,8 +40,10 @@ public class ComplaintController {
 		return complaintService.updateComplaint(id, updateComplaintRequest);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteComplaint(@PathVariable final Long id) {
-		return complaintService.deleteComplaint(id);
-	}
+	// @PostMapping("/image/new")
+	// public ResponseEntity<ComplaintResponse> createComplaintImage(
+	// 	@RequestBody @Valid final ComplaintRequest complaintRequest) {
+	// 	return complaintService.createComplaint(complaintRequest);
+	// }
+
 }
