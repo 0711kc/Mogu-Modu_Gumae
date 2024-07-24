@@ -49,4 +49,11 @@ public enum Role {
 			.findFirst()
 			.orElseThrow(IllegalArgumentException::new);
 	}
+
+	public static Role findByJwt(String jwtRole) {
+		return Arrays.stream(Role.values())
+			.filter(memberRole -> memberRole.getJwt().equals(jwtRole))
+			.findFirst()
+			.orElseThrow(IllegalArgumentException::new);
+	}
 }
