@@ -1,6 +1,8 @@
 spring:
   application:
     name: mogu
+  profiles:
+    include: secret
   jpa:
     open-in-view: true
     hibernate:

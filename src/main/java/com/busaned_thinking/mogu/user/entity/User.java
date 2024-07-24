@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
+import com.busaned_thinking.mogu.config.S3Config;
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.post.entity.HiddenPost;
 import com.busaned_thinking.mogu.search.entity.Search;
@@ -77,7 +78,8 @@ public class User {
 
 	@Size(max = 80)
 	@Column(length = 80)
-	private String profileImage;
+	@Builder.Default
+	private String profileImage = S3Config.anonymousImage();
 
 	@Column
 	@Builder.Default
@@ -131,5 +133,9 @@ public class User {
 
 	public void update(String name) {
 		this.name = name;
+	}
+
+	public void updateProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 }
