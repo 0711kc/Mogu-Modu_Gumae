@@ -1,6 +1,7 @@
 package com.busaned_thinking.mogu.complaint.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ public class Complaint {
 	private String answer;
 
 	@OneToMany
-	private ArrayList<ComplaintImage> complaintImages = new ArrayList<>();
+	private List<ComplaintImage> complaintImages = new ArrayList<>();
 
 	@Size(max = 500)
 	@Column(length = 500)
@@ -45,8 +46,11 @@ public class Complaint {
 	@Column(length = 50)
 	private String title;
 
-	@Size(max = 10)
-	@Column(length = 10)
-	private String type;
+	@Column()
+	private Short type;
 
+	public void update(String answer, Short type) {
+		this.answer = answer;
+		this.type = type;
+	}
 }
