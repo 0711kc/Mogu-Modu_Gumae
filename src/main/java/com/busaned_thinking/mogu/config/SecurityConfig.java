@@ -25,6 +25,28 @@ public class SecurityConfig implements WebMvcConfigurer {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JWTUtil jwtUtil;
 
+	// private static final String[] ADMIN_POST = {
+	// 	"/notice/new",
+	// };
+	//
+	// private static final String[] ADMIN_PATCH = {
+	// 	"/notice/{id}",
+	// 	"/complaint/{id}"
+	// };
+	//
+	// private static final String[] ADMIN_DELETE = {
+	// 	"/notice/{id}",
+	// };
+	//
+	// private static final String[] AUTH_POST = {
+	// 	"/complaint/{id}"
+	// };
+	//
+	// private static final String[] AUTH_GET = {
+	// 	"/notice/{id}",
+	// 	"/complaint/{id}"
+	// };
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
@@ -48,6 +70,12 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 		http
 			.authorizeHttpRequests((auth) -> auth
+				// .requestMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN_ROLE")
+				// .requestMatchers(HttpMethod.PATCH, ADMIN_PATCH).hasAnyRole("ADMIN_ROLE")
+				// .requestMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasAnyRole("ADMIN_ROLE")
+				// .requestMatchers(HttpMethod.GET, AUTH_POST).authenticated()
+				// .requestMatchers(HttpMethod.GET, AUTH_GET).authenticated()
+
 				// .requestMatchers(HttpMethod.POST, WHITE_LIST_POST).permitAll()
 				// .requestMatchers(HttpMethod.GET, WHITE_LIST_GET).permitAll()
 				// .requestMatchers(HttpMethod.GET, TEMP_WHITE_LIST_GET).permitAll()
@@ -55,7 +83,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 				// .requestMatchers(HttpMethod.PATCH, TEMP_WHITE_LIST_PATCH).permitAll()
 				// .requestMatchers(WHITE_LIST_SWAGGER).permitAll()
 				// .anyRequest().authenticated());
-					.anyRequest().permitAll());
+				.anyRequest().permitAll());
 
 		http
 			.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);

@@ -11,9 +11,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-	user((short) 0, "사용자", "user", "ROLE_USER"),
-	admin((short) 1, "관리자", "admin", "ROLE_ADMIN")
-	;
+	user((short)0, "사용자", "user", "ROLE_USER"),
+	admin((short)1, "관리자", "admin", "ROLE_ADMIN");
 
 	private final short index;
 	private final String response;

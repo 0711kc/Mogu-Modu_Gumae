@@ -1,7 +1,9 @@
 package com.busaned_thinking.mogu.complaint.service;
 
 import java.beans.FeatureDescriptor;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,18 +19,35 @@ import com.busaned_thinking.mogu.complaint.controller.dto.request.ComplaintReque
 import com.busaned_thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
 import com.busaned_thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintState;
+import com.busaned_thinking.mogu.complaint.repository.ComplaintImageRepository;
 import com.busaned_thinking.mogu.complaint.repository.ComplaintRepository;
+import com.busaned_thinking.mogu.config.S3Config;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ComplaintServiceImpl implements ComplaintService {
 	private final ComplaintRepository complaintRepository;
+	private final ComplaintImageRepository complaintImageRepository;
 
 	@Override
-	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest) {
-		Complaint complaint = complaintRequest.toEntity();
+	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
+		List<String> complaintImageLinks) {
+		List<ComplaintImage> complaintImages = new ArrayList<>();
+		complaintImages.add(ComplaintImage.from(S3Config.basicPostImage()));
+		if (complaintImageLinks != null) {
+			complaintImages = complaintImageLinks.stream()
+				.map(ComplaintImage::from)
+				.toList();
+		}
+		Complaint complaint = complaintRequest.toEntity(complaintImages);
+		complaintImages.stream().forEach(complaintImageRepository::save);
 		Complaint savedComplaint = complaintRepository.save(complaint);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -38,7 +57,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 	@Override
 	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
 		Complaint complaint = complaintRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("[Error] 문의를 찾을 수 없습니다."));
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(complaint));
@@ -47,7 +66,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 	@Override
 	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest) {
 		Complaint complaint = complaintRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("[Error] 문의를 찾을 수 없습니다."));
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		UpdateComplaintRequest originComplaint = UpdateComplaintRequest.from(complaint);
 		copyNonNullProperties(updateComplaintRequest, originComplaint);
 		update(complaint, originComplaint);
@@ -59,8 +78,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	private void update(Complaint complaint, UpdateComplaintRequest updateComplaintRequest) {
 		String answer = updateComplaintRequest.getAnswer();
-		Short type = updateComplaintRequest.getType();
-		complaint.update(answer, type);
+		ComplaintState complaintState = ComplaintState.COMPLETED;
+		complaint.update(answer, complaintState.getIndex());
 	}
 
 	private static void copyNonNullProperties(Object src, Object target) {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.busaned_thinking.mogu.image.service.ImageServiceImpl;
+import com.busaned_thinking.mogu.image.service.ImageService;
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.location.service.ActivityAreaService;
 import com.busaned_thinking.mogu.user.controller.dto.request.UpdateUserRequest;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 	private final ActivityAreaService activityAreaService;
-	private final ImageServiceImpl imageServiceImpl;
+	private final ImageService imageService;
 
 	@PostMapping("/new")
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
@@ -51,7 +51,7 @@ public class UserController {
 	@PatchMapping("/{userId}/image")
 	public ResponseEntity<UserResponse> updateProfileImage(@PathVariable final String userId,
 		@RequestPart(name = "image") MultipartFile multipartFile) {
-		String imageLink = imageServiceImpl.upload(multipartFile);
+		String imageLink = imageService.upload(multipartFile);
 		return userService.updateProfileImage(userId, imageLink);
 	}
 
