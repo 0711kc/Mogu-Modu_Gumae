@@ -1,6 +1,11 @@
 package com.busaned_thinking.mogu.complaint.controller.dto.response;
 
+import java.util.List;
+
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintState;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +15,21 @@ import lombok.Getter;
 public class ComplaintResponse {
 	private final String title;
 	private final String content;
-	private final Short type;
+	private final String answer;
+	private final String type;
+	private final String state;
+	private final List<String> imageLinks;
 
 	public static ComplaintResponse from(Complaint complaint) {
 		return ComplaintResponse.builder()
 			.title(complaint.getTitle())
 			.content(complaint.getContent())
-			.type(complaint.getType())
+			.answer(complaint.getAnswer())
+			.type(ComplaintType.findByIndex(complaint.getType()).getResponse())
+			.state(ComplaintState.findByIndex(complaint.getState()).getResponse())
+			.imageLinks(complaint.getComplaintImages().stream()
+				.map(ComplaintImage::getImage)
+				.toList())
 			.build();
 	}
 }

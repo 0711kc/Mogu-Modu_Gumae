@@ -32,15 +32,16 @@ public class Complaint {
 	private String answer;
 
 	@OneToMany
+	@Builder.Default
 	private List<ComplaintImage> complaintImages = new ArrayList<>();
 
 	@Size(max = 500)
 	@Column(length = 500)
 	private String content;
 
-	@Size(max = 10)
-	@Column(length = 10)
-	private String state;
+	@Column
+	@Builder.Default
+	private Short state = ComplaintState.DEFAULT.getIndex();
 
 	@Size(max = 50)
 	@Column(length = 50)
@@ -49,8 +50,8 @@ public class Complaint {
 	@Column()
 	private Short type;
 
-	public void update(String answer, Short type) {
+	public void update(String answer, Short state) {
 		this.answer = answer;
-		this.type = type;
+		this.state = state;
 	}
 }
