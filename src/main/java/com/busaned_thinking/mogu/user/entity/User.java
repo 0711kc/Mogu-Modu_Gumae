@@ -79,7 +79,7 @@ public class User {
 	@Size(max = 80)
 	@Column(length = 80)
 	@Builder.Default
-	private String profileImage = S3Config.anonymousImage();
+	private String profileImage = S3Config.basicUserImage();
 
 	@Column
 	@Builder.Default
