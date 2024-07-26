@@ -25,4 +25,10 @@ public class ComplaintImage {
 	@Size(max = 80)
 	@Column(length = 80)
 	private String image;
+
+	public static ComplaintImage from(String imageLink) {
+		return ComplaintImage.builder()
+			.image(imageLink)
+			.build();
+	}
 }

@@ -30,8 +30,13 @@ public class S3Config {
 			.build();
 	}
 
-	public static String anonymousImage() {
+	public static String basicUserImage() {
 		return "https://moguimages.s3.ap-northeast-2.amazonaws.com/ano.png";
 	}
+
+	public static String basicPostImage() {
+		return "https://moguimages.s3.ap-northeast-2.amazonaws.com/basicPostImage.png";
+	}
+
 }
 

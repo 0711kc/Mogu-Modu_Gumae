@@ -1,6 +1,10 @@
 package com.busaned_thinking.mogu.complaint.controller.dto.request;
 
+import java.util.List;
+
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
+import com.busaned_thinking.mogu.complaint.entity.ComplaintType;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,13 +29,14 @@ public class ComplaintRequest {
 	private String content;
 
 	@NotNull(message = "타입을 선택해주세요.")
-	private Short type;
+	private ComplaintType type;
 
-	public Complaint toEntity() {
+	public Complaint toEntity(List<ComplaintImage> complaintImages) {
 		return Complaint.builder()
 			.title(title)
 			.content(content)
-			.type(type)
+			.type(type.getIndex())
+			.complaintImages(complaintImages)
 			.build();
 	}
 }
