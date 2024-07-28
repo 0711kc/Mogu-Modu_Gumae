@@ -1,9 +1,5 @@
 package com.busaned_thinking.mogu.post.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.busaned_thinking.mogu.image.service.ImageService;
-import com.busaned_thinking.mogu.location.entity.Location;
-import com.busaned_thinking.mogu.location.service.LocationService;
 import com.busaned_thinking.mogu.post.controller.dto.request.PostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.response.PostResponse;
@@ -32,17 +23,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 	private final PostService postService;
-	private final LocationService locationService;
-	private final ImageService imageService;
 
-	@PostMapping("/new/{userId}")
-	public ResponseEntity<PostResponse> createPost(
-		@PathVariable String userId,
-		@RequestPart(name = "request") @Valid final PostRequest postRequest,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		List<String> imageLinks = imageService.uploadAll(multipartFileList.orElseGet(ArrayList::new));
-		Location location = locationService.createLocation(postRequest.getLongitude(), postRequest.getLatitude());
-		return postService.createPost(userId, postRequest, location, imageLinks);
+	@PostMapping("/new")
+	public ResponseEntity<PostResponse> createPost(@RequestBody @Valid final PostRequest postRequest) {
+		return postService.createPost(postRequest);
 	}
 
 	@GetMapping("/{id}")

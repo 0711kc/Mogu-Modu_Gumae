@@ -17,8 +17,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 	@Override
-	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-		FilterChain filterChain)
+	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, FilterChain filterChain)
 		throws ServletException, IOException {
 		try {
 			filterChain.doFilter(request, response);

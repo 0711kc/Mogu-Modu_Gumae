@@ -1,22 +1,15 @@
 package com.busaned_thinking.mogu.post.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.busaned_thinking.mogu.ask.entity.Ask;
-import com.busaned_thinking.mogu.location.entity.Location;
-import com.busaned_thinking.mogu.user.entity.User;
+import com.busaned_thinking.mogu.location.entity.EmdArea;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Size;
@@ -36,55 +29,39 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Category category;
+	@OneToMany
+	private ArrayList<Ask> asks = new ArrayList<>();
 
-	@Column
-	@Builder.Default
-	private Boolean isHidden = false;
+	@OneToOne
+	// private EmdArea emdArea = new EmdArea();
+	private EmdArea emdArea;
 
-	@Column
-	@Builder.Default
-	private LocalDateTime postDate = LocalDateTime.now();
+	@Size(max = 10)
+	@Column(length = 10)
+	private String category;
 
-	@Column
-	private LocalDateTime purchaseDate;
+	@OneToMany
+	private ArrayList<Heart> hearts = new ArrayList<>();
 
-	@Column
-	private Integer userCount;
+	@Column()
+	private boolean isHidden;
 
-	@Column
-	@Builder.Default
-	private RecruitState recruitState = RecruitState.DEFAULT;
+	@OneToOne
+	private PostDetail postDetail = new PostDetail();
+
+	@Size(max = 10)
+	@Column(length = 10)
+	private String purchaseRoute;
+
+	@OneToMany
+	private ArrayList<Report> reports = new ArrayList<>();
+
+	@Size(max = 10)
+	@Column(length = 10)
+	private String state;
 
 	@Size(max = 50)
 	@Column(length = 50)
 	private String title;
 
-	@Column
-	private Integer discountCost;
-
-	@Column
-	private Integer originalCost;
-
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	@Builder.Default
-	private List<Ask> asks = new ArrayList<>();
-
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	@Builder.Default
-	private List<Report> reports = new ArrayList<>();
-
-	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	@Builder.Default
-	private List<Heart> hearts = new ArrayList<>();
-
-	@OneToOne(fetch = FetchType.LAZY)
-	private PostDetail postDetail;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	private Location location;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
 }

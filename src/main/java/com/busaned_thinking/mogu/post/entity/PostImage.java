@@ -22,13 +22,7 @@ public class PostImage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Size(max = 100)
-	@Column(length = 100)
+	@Size(max = 80)
+	@Column(length = 80)
 	private String image;
-
-	public static PostImage from(String imageLink) {
-		return PostImage.builder()
-			.image(imageLink)
-			.build();
-	}
 }
