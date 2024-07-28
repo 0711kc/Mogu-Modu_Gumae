@@ -8,12 +8,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Manner {
-	best((short) 5, "최고예요!!"),
-	good((short) 4, "좋아요!"),
-	common((short) 3, "보통이에요"),
-	bad((short) 2, "별로예요."),
-	worst((short) 1, "최악이에요..")
-	;
+	best((short)5, "최고예요!!"),
+	good((short)4, "좋아요!"),
+	common((short)3, "보통이에요"),
+	bad((short)2, "별로예요."),
+	worst((short)1, "최악이에요..");
 
 	public static final Manner DEFAULT = good;
 

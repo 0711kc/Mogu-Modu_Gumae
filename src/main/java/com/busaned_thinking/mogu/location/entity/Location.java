@@ -1,16 +1,12 @@
 package com.busaned_thinking.mogu.location.entity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.awt.geom.Point2D;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,25 +18,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SiggArea {
+public class Location {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Size(max = 50)
-	@Column(length = 50)
-	private String name;
+	@Column
+	private Point2D.Double referencePoint;
 
-	@Size(max = 5)
-	@Column(length = 5)
-	private String admCode;
+	public static Location of(Double longitude, Double latitude) {
+		Point2D.Double referencePoint = new Point2D.Double(longitude, latitude);
+		return Location.builder()
+			.referencePoint(referencePoint)
+			.build();
+	}
 
-	@ManyToOne
-	private SidoArea sidoArea;
+	public Double getLongitude() {
+		return referencePoint.getX();
+	}
 
-	@OneToMany
-	private ArrayList<EmdArea> emdAreas = new ArrayList<>();
-
-	@Column()
-	private LocalDateTime version;
+	public Double getLatitude() {
+		return referencePoint.getY();
+	}
 }
