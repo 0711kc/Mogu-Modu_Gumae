@@ -16,6 +16,5 @@ public class ActivityAreaServiceImpl implements ActivityAreaService {
 	public ActivityArea create(Double longitude, Double latitude) {
 		ActivityArea activityArea = ActivityArea.from(longitude, latitude);
 		return activityAreaRepository.save(activityArea);
-		// return null;
 	}
 }
