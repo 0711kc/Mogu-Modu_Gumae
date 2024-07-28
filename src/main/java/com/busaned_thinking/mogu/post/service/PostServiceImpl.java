@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class PostServiceImpl implements PostService {
-
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final PostDetailRepository postDetailRepository;
@@ -71,8 +70,14 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<Void> deletePost(Long id) {
-		return null;
+	public ResponseEntity<Void> deletePost(String userId, Long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("[Error] 게시글을 찾을 수 없습니다."));
+		if (!post.getUser().getUserId().equals(userId)) {
+			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
+		}
+		postRepository.delete(post);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	private static void copyNonNullProperties(Object src, Object target) {

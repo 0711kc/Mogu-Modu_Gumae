@@ -11,7 +11,7 @@ import com.busaned_thinking.mogu.post.controller.dto.response.PostResponse;
 
 public interface PostService {
 
-	ResponseEntity<Void> deletePost(Long id);
+	ResponseEntity<Void> deletePost(String userId, Long postId);
 
 	ResponseEntity<PostResponse> createPost(String memberId, PostRequest postRequest, Location location,
 		List<String> postImageLinks);
