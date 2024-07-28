@@ -1,7 +1,6 @@
 package com.busaned_thinking.mogu.complaint.service;
 
 import java.beans.FeatureDescriptor;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.busaned_thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.busaned_thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
@@ -26,7 +26,6 @@ import com.busaned_thinking.mogu.complaint.repository.ComplaintRepository;
 import com.busaned_thinking.mogu.config.S3Config;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,15 +38,9 @@ public class ComplaintServiceImpl implements ComplaintService {
 	@Override
 	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
 		List<String> complaintImageLinks) {
-		List<ComplaintImage> complaintImages = new ArrayList<>();
-		complaintImages.add(ComplaintImage.from(S3Config.basicPostImage()));
-		if (complaintImageLinks != null) {
-			complaintImages = complaintImageLinks.stream()
-				.map(ComplaintImage::from)
-				.toList();
-		}
+		List<ComplaintImage> complaintImages = createComplaintImages(complaintImageLinks);
+		complaintImageRepository.saveAll(complaintImages);
 		Complaint complaint = complaintRequest.toEntity(complaintImages);
-		complaintImages.stream().forEach(complaintImageRepository::save);
 		Complaint savedComplaint = complaintRepository.save(complaint);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -80,6 +73,15 @@ public class ComplaintServiceImpl implements ComplaintService {
 		String answer = updateComplaintRequest.getAnswer();
 		ComplaintState complaintState = ComplaintState.COMPLETED;
 		complaint.update(answer, complaintState.getIndex());
+	}
+
+	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks) {
+		if (complaintImageLinks.isEmpty()) {
+			return List.of(ComplaintImage.from(S3Config.basicPostImage()));
+		}
+		return complaintImageLinks.stream()
+			.map(ComplaintImage::from)
+			.toList();
 	}
 
 	private static void copyNonNullProperties(Object src, Object target) {

@@ -1,5 +1,6 @@
 package com.busaned_thinking.mogu.complaint.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +35,7 @@ public class ComplaintController {
 	public ResponseEntity<ComplaintResponse> createComplaint(
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		List<String> imageLinks = null;
-		if (multipartFileList.isPresent() && multipartFileList.get() != null) {
-			imageLinks = multipartFileList.get().stream()
-				.map(imageService::upload)
-				.toList();
-		}
+		List<String> imageLinks = imageService.uploadAll(multipartFileList.orElseGet(ArrayList::new));
 		return complaintService.createComplaint(complaintRequest, imageLinks);
 	}
 
