@@ -14,10 +14,6 @@ import com.busaned_thinking.mogu.chat.controller.dto.request.ChatRequest;
 import com.busaned_thinking.mogu.chat.controller.dto.request.UpdateChatRequest;
 import com.busaned_thinking.mogu.chat.controller.dto.response.ChatResponse;
 import com.busaned_thinking.mogu.chat.service.ChatService;
-import com.busaned_thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
-import com.busaned_thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
-import com.busaned_thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
-import com.busaned_thinking.mogu.complaint.service.ComplaintService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
