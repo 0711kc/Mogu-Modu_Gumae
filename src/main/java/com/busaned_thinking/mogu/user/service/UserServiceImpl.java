@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.user.controller.dto.request.UpdateUserRequest;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
