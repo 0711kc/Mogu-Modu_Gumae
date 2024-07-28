@@ -15,7 +15,6 @@ import com.busaned_thinking.mogu.signal.entity.AlarmSignal;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -94,26 +93,26 @@ public class User {
 	@Builder.Default
 	private LocalDateTime registerDate = LocalDateTime.now();
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private ActivityArea activityArea;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@Builder.Default
 	private List<Chat> chats = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@Builder.Default
 	private List<Complaint> complaints = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@Builder.Default
 	private List<HiddenPost> hiddenPosts = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@Builder.Default
 	private List<Search> searches = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany
 	@Builder.Default
 	private List<AlarmSignal> alarmSignals = new ArrayList<>();
 
