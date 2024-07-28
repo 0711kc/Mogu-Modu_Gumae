@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,7 +32,7 @@ public class Complaint {
 	@Column(length = 500)
 	private String answer;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@Builder.Default
 	private List<ComplaintImage> complaintImages = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class Complaint {
 	@Column(length = 50)
 	private String title;
 
-	@Column()
+	@Column
 	private Short type;
 
 	public void update(String answer, Short state) {
