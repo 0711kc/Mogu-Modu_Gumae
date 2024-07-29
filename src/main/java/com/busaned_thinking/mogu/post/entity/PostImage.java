@@ -1,6 +1,5 @@
 package com.busaned_thinking.mogu.post.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,7 +29,7 @@ public class PostImage {
 	@Column(length = 100)
 	private String image;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_detail_id")
 	private PostDetail postDetail;
 

@@ -26,6 +26,8 @@ public class ComplaintImage {
 	@Column(length = 100)
 	private String image;
 
+	// TODO Complaint, ComplaintImage 매핑 관계 단방향에서 양방향으로 수정 - 중간 테이블 발생 방지를 위해서
+
 	public static ComplaintImage from(String imageLink) {
 		return ComplaintImage.builder()
 			.image(imageLink)
