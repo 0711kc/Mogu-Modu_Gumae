@@ -14,6 +14,9 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Location createLocation(Double longitude, Double latitude) {
+		if (longitude == null || latitude == null) {
+			return null;
+		}
 		Location location = Location.of(longitude, latitude);
 		return locationRepository.save(location);
 	}

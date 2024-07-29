@@ -87,4 +87,23 @@ public class Post {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	public void update(Category category, LocalDateTime purchaseDate, int userCount, String title, int discountCost,
+		int originalCost, Location location) {
+		this.category = category;
+		this.purchaseDate = purchaseDate;
+		this.userCount = userCount;
+		this.title = title;
+		this.discountCost = discountCost;
+		this.originalCost = originalCost;
+		this.location = location;
+	}
+
+	public void updateRecruitState(RecruitState recruitState) {
+		this.recruitState = recruitState;
+	}
+
+	public void updateHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
 }

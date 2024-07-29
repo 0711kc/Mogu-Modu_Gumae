@@ -18,5 +18,6 @@ public interface PostService {
 
 	ResponseEntity<PostResponse> findPost(Long id);
 
-	ResponseEntity<PostResponse> updatePost(Long id, UpdatePostRequest updatePostRequest);
+	ResponseEntity<PostResponse> updatePost(String userId, Long postId, UpdatePostRequest updatePostRequest,
+		List<String> postImageLinks, Location location);
 }

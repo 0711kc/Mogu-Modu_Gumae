@@ -1,7 +1,6 @@
 package com.busaned_thinking.mogu.post.controller.dto.request;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,7 +8,6 @@ import com.busaned_thinking.mogu.location.entity.Location;
 import com.busaned_thinking.mogu.post.entity.Category;
 import com.busaned_thinking.mogu.post.entity.Post;
 import com.busaned_thinking.mogu.post.entity.PostDetail;
-import com.busaned_thinking.mogu.post.entity.PostImage;
 import com.busaned_thinking.mogu.post.entity.RecruitState;
 import com.busaned_thinking.mogu.user.entity.User;
 
@@ -50,8 +48,6 @@ public class PostRequest {
 	@NotNull(message = "구매 여부를 입력해주세요")
 	private Boolean purchaseState;
 
-	// private RecruitState recruitState;
-
 	@NotNull(message = "균등 배분 여부를 입력해주세요")
 	private Boolean shareCondition;
 
@@ -68,7 +64,6 @@ public class PostRequest {
 		return Post.builder()
 			.title(title)
 			.category(category)
-			// .recruitState(recruitState)
 			.discountCost(discountCost)
 			.originalCost(originalCost)
 			.purchaseDate(purchaseDate)
@@ -80,11 +75,11 @@ public class PostRequest {
 			.build();
 	}
 
-	public PostDetail toDetailEntity(List<PostImage> postImages) {
+	public PostDetail toDetailEntity() {
 		return PostDetail.builder()
 			.content(content)
 			.shareCondition(shareCondition)
-			.postImages(postImages)
+			.purchaseState(purchaseState)
 			.build();
 	}
 }
