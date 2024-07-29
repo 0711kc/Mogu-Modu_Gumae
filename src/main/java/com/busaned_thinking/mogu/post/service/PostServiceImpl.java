@@ -27,6 +27,7 @@ import com.busaned_thinking.mogu.post.entity.Post;
 import com.busaned_thinking.mogu.post.entity.PostDetail;
 import com.busaned_thinking.mogu.post.entity.PostImage;
 import com.busaned_thinking.mogu.post.repository.PostDetailRepository;
+import com.busaned_thinking.mogu.post.repository.PostImageRepository;
 import com.busaned_thinking.mogu.post.repository.PostRepository;
 import com.busaned_thinking.mogu.user.entity.User;
 import com.busaned_thinking.mogu.user.repository.UserRepository;
@@ -41,6 +42,7 @@ public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
 	private final PostDetailRepository postDetailRepository;
+	private final PostImageRepository postImageRepository;
 
 	@Override
 	public ResponseEntity<PostResponse> createPost(String userId, PostRequest postRequest, Location location,
@@ -49,10 +51,12 @@ public class PostServiceImpl implements PostService {
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		PostDetail postDetail = postRequest.toDetailEntity();
 		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
+		postImageRepository.saveAll(postImages);
 		postDetail.updatePostImages(postImages);
 		Post post = postRequest.toEntity(user, location, postDetail);
-		Post savedPost = postRepository.save(post);
+		postDetail.initialize(post);
 		postDetailRepository.save(postDetail);
+		Post savedPost = postRepository.save(post);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostResponse.from(savedPost));
@@ -128,7 +132,7 @@ public class PostServiceImpl implements PostService {
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
-		postRepository.delete(post);
+		postDetailRepository.deleteByPostId(post.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

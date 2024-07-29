@@ -78,7 +78,7 @@ public class Post {
 	@Builder.Default
 	private List<Heart> hearts = new ArrayList<>();
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	private PostDetail postDetail;
 
 	@OneToOne(fetch = FetchType.LAZY)
