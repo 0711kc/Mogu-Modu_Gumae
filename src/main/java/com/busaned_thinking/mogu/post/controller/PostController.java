@@ -21,6 +21,7 @@ import com.busaned_thinking.mogu.location.service.LocationService;
 import com.busaned_thinking.mogu.post.controller.dto.request.PostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.response.PostResponse;
+import com.busaned_thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.busaned_thinking.mogu.post.service.PostService;
 
 import jakarta.validation.Valid;
@@ -35,7 +36,7 @@ public class PostController {
 	private final ImageService imageService;
 
 	@PostMapping("/new/{userId}")
-	public ResponseEntity<PostResponse> createPost(
+	public ResponseEntity<PostWithDetailResponse> createPost(
 		@PathVariable String userId,
 		@RequestPart(name = "request") @Valid final PostRequest postRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
@@ -49,8 +50,13 @@ public class PostController {
 		return postService.findPost(id);
 	}
 
+	@GetMapping("/detail/{id}")
+	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(@PathVariable final Long id) {
+		return postService.findPostWithDetail(id);
+	}
+
 	@PatchMapping("/{postId}/{userId}")
-	public ResponseEntity<PostResponse> updatePost(
+	public ResponseEntity<PostWithDetailResponse> updatePost(
 		@PathVariable Long postId,
 		@PathVariable String userId,
 		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,

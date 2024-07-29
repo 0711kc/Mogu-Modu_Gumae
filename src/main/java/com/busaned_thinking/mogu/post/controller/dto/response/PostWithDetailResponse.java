@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostResponse {
+public class PostWithDetailResponse {
 	private final Long id;
 
 	private final String category;
@@ -37,10 +37,12 @@ public class PostResponse {
 
 	private final Integer userCount;
 
+	private final PostDetailResponse postDetailResponse;
+
 	private final LocationResponse location;
 
-	public static PostResponse from(final Post post) {
-		return PostResponse.builder()
+	public static PostWithDetailResponse from(final Post post) {
+		return PostWithDetailResponse.builder()
 			.id(post.getId())
 			.category(post.getCategory().getResponse())
 			.isHidden(post.getIsHidden())
@@ -54,6 +56,7 @@ public class PostResponse {
 			.purchaseDate(post.getPurchaseDate())
 			.userCount(post.getUserCount())
 			.location(LocationResponse.from(post.getLocation()))
+			.postDetailResponse(PostDetailResponse.from(post.getPostDetail()))
 			.build();
 	}
 }

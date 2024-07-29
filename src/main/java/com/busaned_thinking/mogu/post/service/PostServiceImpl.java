@@ -22,6 +22,7 @@ import com.busaned_thinking.mogu.location.entity.Location;
 import com.busaned_thinking.mogu.post.controller.dto.request.PostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.busaned_thinking.mogu.post.controller.dto.response.PostResponse;
+import com.busaned_thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.busaned_thinking.mogu.post.entity.Category;
 import com.busaned_thinking.mogu.post.entity.Post;
 import com.busaned_thinking.mogu.post.entity.PostDetail;
@@ -45,7 +46,7 @@ public class PostServiceImpl implements PostService {
 	private final PostImageRepository postImageRepository;
 
 	@Override
-	public ResponseEntity<PostResponse> createPost(String userId, PostRequest postRequest, Location location,
+	public ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest, Location location,
 		List<String> postImageLinks) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
@@ -59,7 +60,7 @@ public class PostServiceImpl implements PostService {
 		Post savedPost = postRepository.save(post);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(PostResponse.from(savedPost));
+			.body(PostWithDetailResponse.from(savedPost));
 	}
 
 	private List<PostImage> createPostImages(List<String> postImageLinks, PostDetail postDetail) {
@@ -81,7 +82,17 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<PostResponse> updatePost(String userId, Long postId, UpdatePostRequest updatePostRequest,
+	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(Long id) {
+		Post post = postRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(PostWithDetailResponse.from(post));
+	}
+
+	@Override
+	public ResponseEntity<PostWithDetailResponse> updatePost(String userId, Long postId,
+		UpdatePostRequest updatePostRequest,
 		List<String> postImageLinks, Location location) {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
@@ -104,7 +115,7 @@ public class PostServiceImpl implements PostService {
 		Post updatedPost = postRepository.save(post);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(PostResponse.from(updatedPost));
+			.body(PostWithDetailResponse.from(updatedPost));
 	}
 
 	private void update(Post post, UpdatePostRequest updatePostRequest, Location location, List<PostImage> postImages) {
