@@ -26,7 +26,7 @@ public class Location {
 	@Column
 	private Point2D.Double referencePoint;
 
-	public static Location of(Double longitude, Double latitude) {
+	public static Location of(double longitude, double latitude) {
 		Point2D.Double referencePoint = new Point2D.Double(longitude, latitude);
 		return Location.builder()
 			.referencePoint(referencePoint)

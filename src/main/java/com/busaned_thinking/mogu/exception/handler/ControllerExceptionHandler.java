@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.handler;
+package com.busaned_thinking.mogu.exception.handler;
 
 import java.util.List;
 

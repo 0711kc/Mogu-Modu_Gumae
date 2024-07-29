@@ -1,10 +1,14 @@
 package com.busaned_thinking.mogu.post.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,9 +30,14 @@ public class PostImage {
 	@Column(length = 100)
 	private String image;
 
-	public static PostImage from(String imageLink) {
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "post_detail_id")
+	private PostDetail postDetail;
+
+	public static PostImage from(String imageLink, PostDetail postDetail) {
 		return PostImage.builder()
 			.image(imageLink)
+			.postDetail(postDetail)
 			.build();
 	}
 }

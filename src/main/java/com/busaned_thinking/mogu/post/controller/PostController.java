@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,10 +49,16 @@ public class PostController {
 		return postService.findPost(id);
 	}
 
-	@PatchMapping("/{id}")
-	public ResponseEntity<PostResponse> updatePost(@PathVariable final Long id,
-		@RequestBody @Valid UpdatePostRequest updatePostRequest) {
-		return postService.updatePost(id, updatePostRequest);
+	@PatchMapping("/{postId}/{userId}")
+	public ResponseEntity<PostResponse> updatePost(
+		@PathVariable Long postId,
+		@PathVariable String userId,
+		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
+		List<String> imageLinks = imageService.uploadAll(multipartFileList.orElseGet(ArrayList::new));
+		Location location = locationService.createLocation(updatePostRequest.getLongitude(),
+			updatePostRequest.getLatitude());
+		return postService.updatePost(userId, postId, updatePostRequest, imageLinks, location);
 	}
 
 	@DeleteMapping("/{postId}/{userId}")
