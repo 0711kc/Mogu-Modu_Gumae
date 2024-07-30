@@ -31,7 +31,7 @@ public class ComplaintController {
 	private final ComplaintService complaintService;
 	private final ImageService imageService;
 
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<ComplaintResponse> createComplaint(
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {

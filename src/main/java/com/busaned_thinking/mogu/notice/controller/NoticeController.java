@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class NoticeController {
 	private final NoticeService noticeService;
 
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<NoticeResponse> createNotice(@RequestBody @Valid final NoticeRequest noticeRequest,
 		@AuthenticationPrincipal User user) {
 		return noticeService.createNotice(noticeRequest);

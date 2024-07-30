@@ -31,7 +31,7 @@ public class UserController {
 	private final ActivityAreaService activityAreaService;
 	private final ImageService imageService;
 
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
 		ActivityArea activityArea = activityAreaService.create(userRequest.getLongitude(), userRequest.getLatitude());
 		return userService.createUser(userRequest, activityArea);
