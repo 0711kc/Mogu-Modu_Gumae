@@ -35,7 +35,7 @@ public class PostController {
 	private final LocationService locationService;
 	private final ImageService imageService;
 
-	@PostMapping("/new/{userId}")
+	@PostMapping("/{userId}")
 	public ResponseEntity<PostWithDetailResponse> createPost(
 		@PathVariable String userId,
 		@RequestPart(name = "request") @Valid final PostRequest postRequest,

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping
+@RequestMapping("/ask")
 @RequiredArgsConstructor
 public class AskController {
 }
