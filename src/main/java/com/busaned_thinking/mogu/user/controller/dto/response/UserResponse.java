@@ -1,12 +1,12 @@
 package com.busaned_thinking.mogu.user.controller.dto.response;
 
+import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
-import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.post.entity.HiddenPost;
 import com.busaned_thinking.mogu.search.entity.Search;
 import com.busaned_thinking.mogu.user.entity.Manner;
@@ -35,7 +35,8 @@ public class UserResponse {
 	private String manner;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDateTime registerDate;
-	private ActivityArea activityAreas;
+	private Point2D.Double activityAreas;
+	private Short distanceMeters;
 	private List<Chat> chats;
 	private List<Complaint> complaints;
 	private List<HiddenPost> hiddenPosts;
@@ -56,7 +57,8 @@ public class UserResponse {
 			.level(user.getLevel())
 			.manner(Manner.findByScore(user.getManner()).getDescription())
 			.registerDate(user.getRegisterDate())
-			.activityAreas(user.getActivityArea())
+			.activityAreas(user.getActivityArea().getReferencePoint())
+			.distanceMeters(user.getActivityArea().getDistanceMeters())
 			.chats(user.getChats())
 			.complaints(user.getComplaints())
 			.hiddenPosts(user.getHiddenPosts())

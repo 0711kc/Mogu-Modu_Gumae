@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.user.service;
+package com.busaned_thinking.mogu.user.service.module;
 
 import java.beans.FeatureDescriptor;
 import java.util.Arrays;
