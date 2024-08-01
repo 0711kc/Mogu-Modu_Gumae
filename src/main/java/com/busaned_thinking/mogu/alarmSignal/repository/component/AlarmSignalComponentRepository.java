@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
+import com.busaned_thinking.mogu.ask.entity.Ask;
 import com.busaned_thinking.mogu.user.entity.User;
 
 public interface AlarmSignalComponentRepository {
@@ -14,4 +15,8 @@ public interface AlarmSignalComponentRepository {
 	Optional<User> findUserById(String userId);
 
 	List<AlarmSignal> findAlarmSignalByUserUid(Long uid);
+
+	Optional<Ask> findAskByUserUidAndPostId(Long uid, Long postId);
+
+	AlarmSignal saveAlarmSignal(AlarmSignal alarmSignal);
 }
