@@ -1,6 +1,7 @@
 package com.busaned_thinking.mogu.ask.entity;
 
 import com.busaned_thinking.mogu.post.entity.Post;
+import com.busaned_thinking.mogu.user.entity.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,11 +29,26 @@ public class Ask {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Size(max = 10)
-	@Column(length = 10)
-	private String state;
+	@Column
+	private Short state;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")
 	private Post post;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_uid")
+	private User user;
+
+	public static Ask from(Post post, User user) {
+		return Ask.builder()
+			.state(AskState.DEFAULT.getIndex())
+			.post(post)
+			.user(user)
+			.build();
+	}
+
+	public void update(AskState askState) {
+		this.state = askState.getIndex();
+	}
 }

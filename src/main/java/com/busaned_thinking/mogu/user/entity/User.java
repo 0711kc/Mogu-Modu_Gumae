@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.busaned_thinking.mogu.ask.entity.Ask;
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
 import com.busaned_thinking.mogu.config.S3Config;
@@ -96,6 +97,10 @@ public class User {
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private ActivityArea activityArea;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<Ask> asks = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@Builder.Default
