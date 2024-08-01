@@ -1,5 +1,9 @@
 package com.busaned_thinking.mogu.ask.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.post.entity.Post;
 import com.busaned_thinking.mogu.user.entity.User;
 
@@ -12,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +44,10 @@ public class Ask {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_uid")
 	private User user;
+
+	@OneToMany(mappedBy = "ask", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<AlarmSignal> alarmSignals = new ArrayList<>();
 
 	public static Ask from(Post post, User user) {
 		return Ask.builder()
