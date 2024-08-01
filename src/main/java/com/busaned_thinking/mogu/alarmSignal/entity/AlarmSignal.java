@@ -39,4 +39,12 @@ public class AlarmSignal {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+
+	public static AlarmSignal of(Ask ask, String content, User user) {
+		return AlarmSignal.builder()
+			.ask(ask)
+			.content(content)
+			.user(user)
+			.build();
+	}
 }

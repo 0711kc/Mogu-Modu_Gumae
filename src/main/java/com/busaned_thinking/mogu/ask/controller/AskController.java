@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.busaned_thinking.mogu.ask.controller.dto.response.AskResponse;
-import com.busaned_thinking.mogu.ask.service.AskService;
+import com.busaned_thinking.mogu.ask.service.component.AskComponentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,26 +20,26 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/ask")
 @RequiredArgsConstructor
 public class AskController {
-	private final AskService askService;
+	private final AskComponentService askComponentService;
 
 	@PostMapping("/user/{userId}/post/{postId}")
 	public ResponseEntity<AskResponse> createAsk(@PathVariable final String userId, @PathVariable final Long postId) {
-		return askService.createAsk(userId, postId);
+		return askComponentService.createAsk(userId, postId);
 	}
 
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<AskResponse>> findAskByUser(@PathVariable final String userId) {
-		return askService.findAskByUser(userId);
+		return askComponentService.findAskByUser(userId);
 	}
 
 	@GetMapping("/post/{postId}")
 	public ResponseEntity<List<AskResponse>> findAskByPost(@PathVariable final Long postId) {
-		return askService.findAskByPost(postId);
+		return askComponentService.findAskByPost(postId);
 	}
 
 	@PatchMapping("/user/{userId}/post/{postId}")
-	public ResponseEntity<AskResponse> setAskState(@PathVariable final String userId,
-		@PathVariable final Long postId, @RequestPart(name = "state") boolean state) {
-		return askService.setAskState(userId, postId, state);
+	public ResponseEntity<AskResponse> updateAskState(@PathVariable final String userId,
+		@PathVariable final Long postId, @RequestPart(name = "state") Boolean state) {
+		return askComponentService.updateAsk(userId, postId, state);
 	}
 }

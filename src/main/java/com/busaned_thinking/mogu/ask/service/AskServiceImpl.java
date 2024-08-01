@@ -32,7 +32,6 @@ public class AskServiceImpl implements AskService {
 			throw new IllegalArgumentException("[Error] 자기 자신의 글은 참여 신청할 수 없습니다.");
 		}
 		boolean isExistAsk = askComponentRepository.existsAskByUserUidAndPostId(user.getUid(), postId);
-
 		if (isExistAsk) {
 			throw new IllegalArgumentException("[Error] 이미 참여 신청이 완료된 게시글입니다.");
 		}
@@ -68,7 +67,7 @@ public class AskServiceImpl implements AskService {
 	}
 
 	@Override
-	public ResponseEntity<AskResponse> setAskState(String userId, Long postId, Boolean state) {
+	public ResponseEntity<AskResponse> updateAskState(String userId, Long postId, Boolean state) {
 		User user = askComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		Ask ask = askComponentRepository.findAskByUserUidAndPostId(user.getUid(), postId)
