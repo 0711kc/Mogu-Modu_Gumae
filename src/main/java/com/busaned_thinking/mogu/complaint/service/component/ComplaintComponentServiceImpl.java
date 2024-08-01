@@ -1,8 +1,6 @@
 package com.busaned_thinking.mogu.complaint.service.component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,8 +24,8 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 
 	@Override
 	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		Optional<List<MultipartFile>> multipartFileList) {
-		List<String> imageLinks = imageService.uploadAll(multipartFileList.orElseGet(ArrayList::new));
+		List<MultipartFile> multipartFileList) {
+		List<String> imageLinks = imageService.uploadAll(multipartFileList);
 		return complaintService.createComplaint(complaintRequest, imageLinks);
 	}
 
