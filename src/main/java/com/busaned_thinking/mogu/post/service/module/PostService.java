@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.post.service;
+package com.busaned_thinking.mogu.post.service.module;
 
 import java.util.List;
 
