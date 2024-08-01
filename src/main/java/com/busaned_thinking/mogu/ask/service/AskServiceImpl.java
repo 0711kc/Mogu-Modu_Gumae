@@ -12,7 +12,7 @@ import com.busaned_thinking.mogu.ask.entity.Ask;
 import com.busaned_thinking.mogu.ask.entity.AskState;
 import com.busaned_thinking.mogu.ask.repository.AskRepository;
 import com.busaned_thinking.mogu.post.entity.Post;
-import com.busaned_thinking.mogu.post.repository.PostRepository;
+import com.busaned_thinking.mogu.post.repository.module.PostRepository;
 import com.busaned_thinking.mogu.user.entity.User;
 import com.busaned_thinking.mogu.user.repository.UserRepository;
 
