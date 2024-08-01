@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.alarmSignal.repository;
+package com.busaned_thinking.mogu.alarmSignal.repository.module;
 
 import java.util.List;
 
