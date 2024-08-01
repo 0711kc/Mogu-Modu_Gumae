@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.alarmSignal.repository.module.AlarmSignalRepository;
+import com.busaned_thinking.mogu.ask.entity.Ask;
+import com.busaned_thinking.mogu.ask.repository.module.AskRepository;
 import com.busaned_thinking.mogu.user.entity.User;
 import com.busaned_thinking.mogu.user.repository.UserRepository;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class AlarmSignalComponentRepositoryImpl implements AlarmSignalComponentRepository {
 	private final AlarmSignalRepository alarmSignalRepository;
 	private final UserRepository userRepository;
+	private final AskRepository askRepository;
 
 	@Override
 	public Optional<AlarmSignal> findAlarmSignalById(Long id) {
@@ -36,5 +39,15 @@ public class AlarmSignalComponentRepositoryImpl implements AlarmSignalComponentR
 	@Override
 	public List<AlarmSignal> findAlarmSignalByUserUid(Long uid) {
 		return alarmSignalRepository.findByUserUid(uid);
+	}
+
+	@Override
+	public Optional<Ask> findAskByUserUidAndPostId(Long uid, Long postId) {
+		return askRepository.findByUserUidAndPostId(uid, postId);
+	}
+
+	@Override
+	public AlarmSignal saveAlarmSignal(AlarmSignal alarmSignal) {
+		return alarmSignalRepository.save(alarmSignal);
 	}
 }

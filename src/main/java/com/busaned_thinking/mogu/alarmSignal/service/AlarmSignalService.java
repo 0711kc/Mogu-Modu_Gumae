@@ -8,6 +8,8 @@ import com.busaned_thinking.mogu.alarmSignal.controller.dto.response.AlarmSignal
 
 public interface AlarmSignalService {
 
+	ResponseEntity<AlarmSignalResponse> createAlarmSignal(String userId, Long postId);
+
 	ResponseEntity<Void> deleteAlarmSignal(Long id);
 
 	ResponseEntity<List<AlarmSignalResponse>> findAlarmSignal(String userId);

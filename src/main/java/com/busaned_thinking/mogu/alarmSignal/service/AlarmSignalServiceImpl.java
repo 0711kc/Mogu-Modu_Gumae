@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.busaned_thinking.mogu.alarmSignal.controller.dto.response.AlarmSignalResponse;
 import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.alarmSignal.repository.component.AlarmSignalComponentRepository;
+import com.busaned_thinking.mogu.ask.entity.Ask;
+import com.busaned_thinking.mogu.ask.entity.AskState;
 import com.busaned_thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +23,24 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AlarmSignalServiceImpl implements AlarmSignalService {
 	private final AlarmSignalComponentRepository alarmSignalComponentRepository;
+
+	@Override
+	public ResponseEntity<AlarmSignalResponse> createAlarmSignal(String userId, Long postId) {
+		User user = alarmSignalComponentRepository.findUserById(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		Ask ask = alarmSignalComponentRepository.findAskByUserUidAndPostId(user.getUid(), postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 신청 정보를 찾을 수 없습니다."));
+		AskState askState = AskState.findByIndex(ask.getState());
+		User toUser = switch (askState) {
+			case WAITING -> ask.getPost().getUser();
+			case REJECTED, APPROVED -> ask.getUser();
+		};
+		AlarmSignal alarmSignal = AlarmSignal.of(ask, askState.getAlarmMessage(), toUser);
+		AlarmSignal savedAlarmSignal = alarmSignalComponentRepository.saveAlarmSignal(alarmSignal);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(AlarmSignalResponse.from(savedAlarmSignal));
+	}
 
 	@Override
 	public ResponseEntity<Void> deleteAlarmSignal(Long id) {
