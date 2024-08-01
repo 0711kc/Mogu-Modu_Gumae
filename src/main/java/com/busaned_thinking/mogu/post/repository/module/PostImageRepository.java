@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.post.repository;
+package com.busaned_thinking.mogu.post.repository.module;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
