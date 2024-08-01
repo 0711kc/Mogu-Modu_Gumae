@@ -10,7 +10,7 @@ import lombok.Getter;
 public class AlarmSignalResponse {
 	private final String content;
 
-	public static AlarmSignalResponse of(AlarmSignal alarmSignal) {
+	public static AlarmSignalResponse from(AlarmSignal alarmSignal) {
 		return AlarmSignalResponse.builder()
 			.content(alarmSignal.getContent())
 			.build();
