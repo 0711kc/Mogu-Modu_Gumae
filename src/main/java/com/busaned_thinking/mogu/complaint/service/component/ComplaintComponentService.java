@@ -1,7 +1,6 @@
 package com.busaned_thinking.mogu.complaint.service.component;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +12,7 @@ import com.busaned_thinking.mogu.complaint.controller.dto.response.ComplaintResp
 public interface ComplaintComponentService {
 
 	ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		Optional<List<MultipartFile>> multipartFileList);
+		List<MultipartFile> multipartFileList);
 
 	ResponseEntity<ComplaintResponse> findComplaint(Long id);
 

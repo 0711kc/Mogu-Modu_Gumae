@@ -12,4 +12,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AlarmSignalController {
 	private final AlarmSignalService alarmSignalService;
+
 }
