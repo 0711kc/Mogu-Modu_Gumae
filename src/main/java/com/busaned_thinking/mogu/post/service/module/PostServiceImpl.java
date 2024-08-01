@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.post.service;
+package com.busaned_thinking.mogu.post.service.module;
 
 import java.beans.FeatureDescriptor;
 import java.time.LocalDateTime;
@@ -27,11 +27,8 @@ import com.busaned_thinking.mogu.post.entity.Category;
 import com.busaned_thinking.mogu.post.entity.Post;
 import com.busaned_thinking.mogu.post.entity.PostDetail;
 import com.busaned_thinking.mogu.post.entity.PostImage;
-import com.busaned_thinking.mogu.post.repository.PostDetailRepository;
-import com.busaned_thinking.mogu.post.repository.PostImageRepository;
-import com.busaned_thinking.mogu.post.repository.PostRepository;
+import com.busaned_thinking.mogu.post.repository.component.PostComponentRepository;
 import com.busaned_thinking.mogu.user.entity.User;
-import com.busaned_thinking.mogu.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -40,24 +37,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class PostServiceImpl implements PostService {
-	private final PostRepository postRepository;
-	private final UserRepository userRepository;
-	private final PostDetailRepository postDetailRepository;
-	private final PostImageRepository postImageRepository;
+	private final PostComponentRepository postComponentRepository;
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest, Location location,
 		List<String> postImageLinks) {
-		User user = userRepository.findByUserId(userId)
+		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		PostDetail postDetail = postRequest.toDetailEntity();
 		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
-		postImageRepository.saveAll(postImages);
+		postComponentRepository.saveAllPostImages(postImages);
 		postDetail.updatePostImages(postImages);
 		Post post = postRequest.toEntity(user, location, postDetail);
 		postDetail.initialize(post);
-		postDetailRepository.save(postDetail);
-		Post savedPost = postRepository.save(post);
+		postComponentRepository.savePostDetail(postDetail);
+		Post savedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostWithDetailResponse.from(savedPost));
@@ -74,7 +68,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ResponseEntity<PostResponse> findPost(Long id) {
-		Post post = postRepository.findById(id)
+		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -83,7 +77,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(Long id) {
-		Post post = postRepository.findById(id)
+		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +88,7 @@ public class PostServiceImpl implements PostService {
 	public ResponseEntity<PostWithDetailResponse> updatePost(String userId, Long postId,
 		UpdatePostRequest updatePostRequest,
 		List<String> postImageLinks, Location location) {
-		Post post = postRepository.findById(postId)
+		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 수정할 수 있습니다.");
@@ -111,8 +105,8 @@ public class PostServiceImpl implements PostService {
 		}
 		copyNonNullProperties(updatePostRequest, originPost);
 		update(post, originPost, location, postImages);
-		postDetailRepository.save(post.getPostDetail());
-		Post updatedPost = postRepository.save(post);
+		postComponentRepository.savePostDetail(post.getPostDetail());
+		Post updatedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostWithDetailResponse.from(updatedPost));
@@ -138,12 +132,12 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ResponseEntity<Void> deletePost(String userId, Long postId) {
-		Post post = postRepository.findById(postId)
+		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
-		postDetailRepository.deleteByPostId(post.getId());
+		postComponentRepository.deletePostDetailByPostId(post.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
