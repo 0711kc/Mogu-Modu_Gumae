@@ -1,0 +1,18 @@
+package com.bunsaned3thinking.mogu.chat.controller.dto.request;
+
+import com.bunsaned3thinking.mogu.chat.entity.Chat;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public class ChatRequest {
+	@NotBlank(message = "내용을 입력해주세요.")
+	@Size(max = 1000)
+	private String lastMsg;
+
+	public Chat toEntity() {
+		return Chat.builder()
+			.lastMsg(lastMsg)
+			.build();
+	}
+}
