@@ -21,9 +21,10 @@ import com.busaned_thinking.mogu.complaint.controller.dto.response.ComplaintResp
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
 import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
 import com.busaned_thinking.mogu.complaint.entity.ComplaintState;
-import com.busaned_thinking.mogu.complaint.repository.ComplaintComponentRepository;
+import com.busaned_thinking.mogu.complaint.repository.component.ComplaintComponentRepository;
 import com.busaned_thinking.mogu.config.S3Config;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -46,7 +47,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
-		Complaint complaint = complaintComponentRepository.findByIdComplaint(id);
+		Complaint complaint = complaintComponentRepository.findByIdComplaint(id)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(complaint));
@@ -54,7 +56,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest) {
-		Complaint complaint = complaintComponentRepository.findByIdComplaint(id);
+		Complaint complaint = complaintComponentRepository.findByIdComplaint(id)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		UpdateComplaintRequest originComplaint = UpdateComplaintRequest.from(complaint);
 		copyNonNullProperties(updateComplaintRequest, originComplaint);
 		update(complaint, originComplaint);

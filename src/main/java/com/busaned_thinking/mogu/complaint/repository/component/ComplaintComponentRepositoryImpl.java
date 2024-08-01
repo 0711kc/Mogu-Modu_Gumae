@@ -1,13 +1,15 @@
-package com.busaned_thinking.mogu.complaint.repository;
+package com.busaned_thinking.mogu.complaint.repository.component;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
 import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
+import com.busaned_thinking.mogu.complaint.repository.module.ComplaintImageRepository;
+import com.busaned_thinking.mogu.complaint.repository.module.ComplaintRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -27,8 +29,7 @@ public class ComplaintComponentRepositoryImpl implements ComplaintComponentRepos
 	}
 
 	@Override
-	public Complaint findByIdComplaint(Long id) {
-		return complaintRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
+	public Optional<Complaint> findByIdComplaint(Long id) {
+		return complaintRepository.findById(id);
 	}
 }

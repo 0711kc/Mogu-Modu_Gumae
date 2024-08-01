@@ -10,10 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.busaned_thinking.mogu.alarmSignal.controller.dto.response.AlarmSignalResponse;
 import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
-import com.busaned_thinking.mogu.alarmSignal.repository.AlarmSignalRepository;
-import com.busaned_thinking.mogu.ask.repository.AskRepository;
+import com.busaned_thinking.mogu.alarmSignal.repository.component.AlarmSignalComponentRepository;
 import com.busaned_thinking.mogu.user.entity.User;
-import com.busaned_thinking.mogu.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +20,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class AlarmSignalServiceImpl implements AlarmSignalService {
-	private final AlarmSignalRepository alarmSignalRepository;
-	private final AskRepository askRepository;
-	private final UserRepository userRepository;
+	private final AlarmSignalComponentRepository alarmSignalComponentRepository;
 
 	@Override
 	public ResponseEntity<Void> deleteAlarmSignal(Long id) {
-		AlarmSignal alarmSignal = alarmSignalRepository.findById(id)
+		AlarmSignal alarmSignal = alarmSignalComponentRepository.findAlarmSignalById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 알림을 찾을 수 없습니다."));
-		alarmSignalRepository.deleteById(alarmSignal.getId());
+		alarmSignalComponentRepository.deleteAlarmSignalById(alarmSignal.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override
 	public ResponseEntity<List<AlarmSignalResponse>> findAlarmSignal(String userId) {
-		User user = userRepository.findByUserId(userId)
+		User user = alarmSignalComponentRepository.findUserById(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		List<AlarmSignal> alarmSignals = alarmSignalRepository.findByUserUid(user.getUid());
+		List<AlarmSignal> alarmSignals = alarmSignalComponentRepository.findAlarmSignalByUserUid(user.getUid());
 		List<AlarmSignalResponse> alarmSignalResponses = alarmSignals.stream()
 			.map(AlarmSignalResponse::from)
 			.toList();

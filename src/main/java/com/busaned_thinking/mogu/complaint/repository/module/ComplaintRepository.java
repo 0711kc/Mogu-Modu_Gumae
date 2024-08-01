@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.complaint.repository;
+package com.busaned_thinking.mogu.complaint.repository.module;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
