@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.signal.entity;
+package com.busaned_thinking.mogu.alarmSignal.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,5 @@
 package com.busaned_thinking.mogu.complaint.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.busaned_thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.busaned_thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
 import com.busaned_thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
-import com.busaned_thinking.mogu.complaint.service.ComplaintService;
-import com.busaned_thinking.mogu.image.service.ImageService;
+import com.busaned_thinking.mogu.complaint.service.component.ComplaintComponentService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +26,24 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/complaint")
 @RequiredArgsConstructor
 public class ComplaintController {
-	private final ComplaintService complaintService;
-	private final ImageService imageService;
+	private final ComplaintComponentService complaintComponentService;
 
 	@PostMapping
 	public ResponseEntity<ComplaintResponse> createComplaint(
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		List<String> imageLinks = imageService.uploadAll(multipartFileList.orElseGet(ArrayList::new));
-		return complaintService.createComplaint(complaintRequest, imageLinks);
+		return complaintComponentService.createComplaint(complaintRequest, multipartFileList);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ComplaintResponse> findComplaint(@PathVariable final Long id) {
-		return complaintService.findComplaint(id);
+		return complaintComponentService.findComplaint(id);
 	}
 
 	@PatchMapping("/{id}")
 	public ResponseEntity<ComplaintResponse> updateComplaint(@PathVariable final Long id,
 		@RequestBody @Valid UpdateComplaintRequest updateComplaintRequest) {
-		return complaintService.updateComplaint(id, updateComplaintRequest);
+		return complaintComponentService.updateComlaint(id, updateComplaintRequest);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.ask.entity.Ask;
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
@@ -11,7 +12,6 @@ import com.busaned_thinking.mogu.config.S3Config;
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.post.entity.HiddenPost;
 import com.busaned_thinking.mogu.search.entity.Search;
-import com.busaned_thinking.mogu.signal.entity.AlarmSignal;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
