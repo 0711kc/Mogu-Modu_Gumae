@@ -1,4 +1,4 @@
-package com.busaned_thinking.mogu.ask.repository;
+package com.busaned_thinking.mogu.ask.repository.module;
 
 import java.util.List;
 import java.util.Optional;
