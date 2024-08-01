@@ -3,12 +3,12 @@ package com.busaned_thinking.mogu.user.controller.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.busaned_thinking.mogu.alarmSignal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.chat.entity.Chat;
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
 import com.busaned_thinking.mogu.location.entity.ActivityArea;
 import com.busaned_thinking.mogu.post.entity.HiddenPost;
 import com.busaned_thinking.mogu.search.entity.Search;
-import com.busaned_thinking.mogu.signal.entity.AlarmSignal;
 import com.busaned_thinking.mogu.user.entity.Manner;
 import com.busaned_thinking.mogu.user.entity.Role;
 import com.busaned_thinking.mogu.user.entity.User;
