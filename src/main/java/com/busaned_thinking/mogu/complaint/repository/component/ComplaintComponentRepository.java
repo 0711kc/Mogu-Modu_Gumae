@@ -1,6 +1,7 @@
-package com.busaned_thinking.mogu.complaint.repository;
+package com.busaned_thinking.mogu.complaint.repository.component;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.busaned_thinking.mogu.complaint.entity.Complaint;
 import com.busaned_thinking.mogu.complaint.entity.ComplaintImage;
@@ -11,5 +12,5 @@ public interface ComplaintComponentRepository {
 
 	Complaint saveComplaint(Complaint complaint);
 
-	Complaint findByIdComplaint(Long id);
+	Optional<Complaint> findByIdComplaint(Long id);
 }
