@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bunsaned3thinking.mogu.chat.service.module.ChatService;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.location.service.LocationService;
@@ -25,13 +26,17 @@ public class PostComponentServiceImpl implements PostComponentService {
 	private final PostService postService;
 	private final LocationService locationService;
 	private final ImageService imageService;
+	private final ChatService chatService;
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> createPost(final String userId, final PostRequest postRequest,
 		final List<MultipartFile> multipartFileList) {
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
 		Location location = locationService.createLocation(postRequest.getLongitude(), postRequest.getLatitude());
-		return postService.createPost(userId, postRequest, location, imageLinks);
+		ResponseEntity<PostWithDetailResponse> response = postService.createPost(userId, postRequest, location,
+			imageLinks);
+		chatService.createChat(response.getBody().getId());
+		return response;
 	}
 
 	@Override

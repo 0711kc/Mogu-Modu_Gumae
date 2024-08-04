@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.ask.service;
+package com.bunsaned3thinking.mogu.ask.service.module;
 
 import java.util.List;
 

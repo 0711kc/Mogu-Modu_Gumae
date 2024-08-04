@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.chat.repository;
+package com.bunsaned3thinking.mogu.chat.repository.module;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

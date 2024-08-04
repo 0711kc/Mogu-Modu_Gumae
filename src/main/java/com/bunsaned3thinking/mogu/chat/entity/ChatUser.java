@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(ChatUserId.class)
 public class ChatUser {
-
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "chat_id")
@@ -30,10 +29,21 @@ public class ChatUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_uid")
 	private User user;
 
-	@Column()
-	private boolean isExit;
+	@Column
+	@Builder.Default
+	private boolean isExit = false;
 
+	public static ChatUser of(Chat chat, User user) {
+		return ChatUser.builder()
+			.chat(chat)
+			.user(user)
+			.build();
+	}
+
+	public void updateIsExit(boolean isExit) {
+		this.isExit = isExit;
+	}
 }
