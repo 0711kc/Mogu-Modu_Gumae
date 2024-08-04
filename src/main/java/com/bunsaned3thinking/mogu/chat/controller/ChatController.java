@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bunsaned3thinking.mogu.chat.controller.dto.response.ChatMessageResponse;
 import com.bunsaned3thinking.mogu.chat.controller.dto.response.ChatResponse;
 import com.bunsaned3thinking.mogu.chat.service.module.ChatService;
 
@@ -39,5 +40,12 @@ public class ChatController {
 	@DeleteMapping("/{chatId}/user/{userId}")
 	public ResponseEntity<Void> exitChat(@PathVariable final String userId, @PathVariable final Long chatId) {
 		return chatService.exitChatUser(userId, chatId);
+	}
+
+	@GetMapping("/{chatId}/user/{userId}")
+	public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable final Long chatId,
+		@PathVariable final String userId) {
+		// TODO 메시지 목록 조회 (userId는 본인 조회용)
+		return null;
 	}
 }

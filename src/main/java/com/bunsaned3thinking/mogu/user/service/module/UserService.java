@@ -19,4 +19,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> findUser(String userId);
 
 	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
+
+	boolean checkUser(String userId);
 }

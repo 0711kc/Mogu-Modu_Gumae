@@ -29,17 +29,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Chat {
 	@Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "post_id")
 	private Long id;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
-	private List<ChatUser> chatUsers = new ArrayList<>();
+	private List<ChatUser> users = new ArrayList<>();
 
 	@Size(max = 1000)
 	@Column(length = 1000)
@@ -62,6 +61,6 @@ public class Chat {
 	}
 
 	public void addChatUser(ChatUser chatUser) {
-		this.chatUsers.add(chatUser);
+		this.users.add(chatUser);
 	}
 }

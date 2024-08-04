@@ -63,6 +63,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean checkUser(String userId) {
+		return userRepository.existsByUserId(userId);
+	}
+
+	@Override
 	public ResponseEntity<UserResponse> updateProfileImage(String userId, @NonNull String profileImage) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));

@@ -33,11 +33,11 @@ public class ChatResponse {
 			// TODO POST 안에 Thumbnail (대표 이미지 링크) String Type 저장해두기
 			// .postThumbnail(chat.getPost().getThumbnail())
 			.postThumbnail("tempLink")
-			.userImage(chat.getChatUsers().stream()
+			.userImage(chat.getUsers().stream()
 				.map(ChatUser::getUser)
 				.map(User::getProfileImage)
 				.toList())
-			.userUid(chat.getChatUsers().stream()
+			.userUid(chat.getUsers().stream()
 				.map(ChatUser::getUser)
 				.map(User::getUid)
 				.map(Objects::toString)
