@@ -12,7 +12,7 @@ import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Report;
-import com.bunsaned3thinking.mogu.search.entity.Search;
+import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -115,9 +115,9 @@ public class User {
 	@Builder.Default
 	private List<HiddenPost> hiddenPosts = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
-	private List<Search> searches = new ArrayList<>();
+	private List<SearchHistory> searchHistories = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@Builder.Default

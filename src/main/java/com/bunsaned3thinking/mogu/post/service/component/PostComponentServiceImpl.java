@@ -17,6 +17,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.service.module.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,18 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findReportedPosts() {
-		return postService.findReportedPosts();
+	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
+		return postService.findAllReportedPost();
+	}
+
+	@Override
+	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(String userId) {
+		return postService.findAllSearchHistoryByUserId(userId);
+	}
+
+	@Override
+	public ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId) {
+		return postService.deleteSearchHistory(searchHistoryId, userId);
 	}
 
 	@Override
@@ -76,8 +87,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title) {
-		return postService.searchPostsByTitle(title);
+	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId) {
+		return postService.searchPostsByTitle(title, userId);
 	}
 
 }
