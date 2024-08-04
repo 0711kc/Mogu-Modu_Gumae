@@ -1,6 +1,7 @@
 package com.bunsaned3thinking.mogu.post.entity;
 
-import jakarta.persistence.CascadeType;
+import com.bunsaned3thinking.mogu.user.entity.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,11 +27,19 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Size(max = 10)
-	@Column(length = 10)
-	private String type;
+	@Column
+	private Short type;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Size(max = 500)
+	@Column(length = 500)
+	private String content;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post post;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_uid")
+	private User user;
+
 }

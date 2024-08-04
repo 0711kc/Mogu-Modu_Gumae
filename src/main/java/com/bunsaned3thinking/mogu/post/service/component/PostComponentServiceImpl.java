@@ -12,9 +12,11 @@ import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.location.service.LocationService;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
+import com.bunsaned3thinking.mogu.post.controller.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
 import com.bunsaned3thinking.mogu.post.service.module.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,11 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
+	public ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest) {
+		return postService.createReport(postId, userId, reportRequest);
+	}
+
+	@Override
 	public ResponseEntity<PostResponse> findPost(final Long postId) {
 		return postService.findPost(postId);
 	}
@@ -47,6 +54,11 @@ public class PostComponentServiceImpl implements PostComponentService {
 	@Override
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(final Long postId) {
 		return postService.findPostWithDetail(postId);
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findReportedPosts() {
+		return postService.findReportedPosts();
 	}
 
 	@Override
@@ -67,4 +79,5 @@ public class PostComponentServiceImpl implements PostComponentService {
 	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title) {
 		return postService.searchPostsByTitle(title);
 	}
+
 }
