@@ -25,12 +25,14 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.Report;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
+import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -135,9 +137,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findReportedPosts() {
-		List<Post> reportedPost = postComponentRepository.findAllReportedPosts();
-		List<PostResponse> responses = reportedPost.stream()
+	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
+		List<Post> reportedPosts = postComponentRepository.findAllReportedPost();
+		List<PostResponse> responses = reportedPosts.stream()
 			.map(PostResponse::from)
 			.toList();
 		return ResponseEntity.status(HttpStatus.OK)
@@ -146,8 +148,27 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword) {
+	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistoryByUserId(String userId) {
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		List<SearchHistory> searchHistories = user.getSearchHistories();
+		List<SearchHistoryResponse> searchHistoryResponses = searchHistories
+			.stream()
+			.map(SearchHistoryResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(searchHistoryResponses);
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId) {
 		List<Post> posts = postComponentRepository.searchPostsByTitle(keyword);
+
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		user.getSearchHistories().add(postComponentRepository.saveSearchHistory(keyword, user));
+
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)
 			.toList();
@@ -177,11 +198,22 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ResponseEntity<Void> deletePost(String userId, Long postId) {
 		Post post = postComponentRepository.findPostById(postId)
-			.orElseThrow(() -> new IllegalArgumentException("[Error] 게시글을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
 		postComponentRepository.deletePostDetailByPostId(post.getId());
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Override
+	public ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId) {
+		SearchHistory searchHistory = postComponentRepository.findSearchHistoryById(searchHistoryId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 검색기록을 찾을 수 없습니다."));
+		if (!searchHistory.getUser().getUserId().equals(userId)) {
+			throw new IllegalArgumentException("[Error] 자신이 검색한 기록만 삭제할 수 있습니다.");
+		}
+		postComponentRepository.deleteSearchHistoryById(searchHistoryId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 

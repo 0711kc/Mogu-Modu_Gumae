@@ -23,6 +23,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.service.component.PostComponentService;
 
 import jakarta.validation.Valid;
@@ -60,13 +61,19 @@ public class PostController {
 	}
 
 	@GetMapping("/reports")
-	public ResponseEntity<List<PostResponse>> findReportedPosts() {
-		return postComponentService.findReportedPosts();
+	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
+		return postComponentService.findAllReportedPost();
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<List<PostResponse>> searchPosts(@RequestParam(name = "title") String title) {
-		return postComponentService.searchPostByTitle(title);
+	@GetMapping("/search/{userId}")
+	public ResponseEntity<List<PostResponse>> searchPosts(@RequestParam(name = "title") String title,
+		@PathVariable final String userId) {
+		return postComponentService.searchPostByTitle(title, userId);
+	}
+
+	@GetMapping("/searchHistories/{userId}")
+	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(@PathVariable final String userId) {
+		return postComponentService.findAllSearchHistory(userId);
 	}
 
 	@PatchMapping("/{postId}/{userId}")
@@ -82,6 +89,12 @@ public class PostController {
 	@DeleteMapping("/{postId}/{userId}")
 	public ResponseEntity<Void> deletePost(@PathVariable final Long postId, @PathVariable final String userId) {
 		return postComponentService.deletePost(userId, postId);
+	}
+
+	@DeleteMapping("/searchHistory/{searchHistoryId}/{userId}")
+	public ResponseEntity<Void> deleteSearchHistory(@PathVariable final Long searchHistoryId,
+		@PathVariable final String userId) {
+		return postComponentService.deleteSearchHistory(searchHistoryId, userId);
 	}
 
 }
