@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.chat.repository.module.ChatRepository;
 import com.bunsaned3thinking.mogu.chat.repository.module.ChatUserRepository;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.repository.module.PostRepository;
+import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,8 @@ public class ChatComponentRepositoryImpl implements ChatComponentRepository {
 	}
 
 	@Override
-	public Optional<ChatUser> findChatUserByUserIdAndChatId(String userId, Long chatId) {
-		return chatUserRepository.findByUserIdAndChatId(userId, chatId);
+	public Optional<ChatUser> findChatUserByUserUidAndChatId(Long userUid, Long chatId) {
+		return chatUserRepository.findByUserUidAndChatId(userUid, chatId);
 	}
 
 	@Override
@@ -73,5 +74,10 @@ public class ChatComponentRepositoryImpl implements ChatComponentRepository {
 	@Override
 	public void deleteChatById(Long chatId) {
 		chatRepository.deleteById(chatId);
+	}
+
+	@Override
+	public Optional<User> findUserByUserId(String userId) {
+		return userRepository.findByUserId(userId);
 	}
 }

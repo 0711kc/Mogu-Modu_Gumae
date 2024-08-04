@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -86,6 +87,7 @@ public class Post {
 	private Location location;
 
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
 	private Chat chat;
 
 	@ManyToOne(fetch = FetchType.LAZY)

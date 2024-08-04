@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bunsaned3thinking.mogu.alarm.service.AlarmSignalService;
 import com.bunsaned3thinking.mogu.ask.controller.dto.response.AskResponse;
 import com.bunsaned3thinking.mogu.ask.service.module.AskService;
+import com.bunsaned3thinking.mogu.chat.service.module.ChatService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class AskComponentServiceImpl implements AskComponentService {
 	private final AskService askService;
 	private final AlarmSignalService alarmSignalService;
+	private final ChatService chatService;
 
 	@Override
 	public ResponseEntity<AskResponse> createAsk(String userId, Long postId) {
@@ -39,6 +41,9 @@ public class AskComponentServiceImpl implements AskComponentService {
 	@Override
 	public ResponseEntity<AskResponse> updateAsk(String userId, Long postId, boolean state) {
 		ResponseEntity<AskResponse> response = askService.updateAskState(userId, postId, state);
+		if (state) {
+			chatService.enterChatUser(userId, postId);
+		}
 		alarmSignalService.createAlarmSignal(userId, postId);
 		return response;
 	}

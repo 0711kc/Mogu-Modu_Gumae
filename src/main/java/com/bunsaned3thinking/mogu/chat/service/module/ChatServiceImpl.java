@@ -13,6 +13,7 @@ import com.bunsaned3thinking.mogu.chat.entity.Chat;
 import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.repository.component.ChatComponentRepository;
 import com.bunsaned3thinking.mogu.post.entity.Post;
+import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -76,17 +77,32 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public ResponseEntity<Void> exitChatUser(String userId, Long chatId) {
-		ChatUser chatUser = chatComponentRepository.findChatUserByUserIdAndChatId(userId, chatId)
+		User user = chatComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		ChatUser chatUser = chatComponentRepository.findChatUserByUserUidAndChatId(user.getUid(), chatId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 해당 채팅방에 들어간 사용자를 찾을 수 없습니다."));
 		chatUser.updateIsExit(true);
 		chatComponentRepository.saveChatUser(chatUser);
 		List<ChatUser> chatUsers = chatComponentRepository.findChatUserByChatId(chatId);
 		List<ChatUser> remainUsers = chatUsers.stream()
-			.filter(user -> !user.isExit())
+			.filter(existChatUser -> !existChatUser.isExit())
 			.toList();
 		if (remainUsers.isEmpty()) {
 			chatComponentRepository.deleteChatById(chatId);
 		}
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Override
+	public ResponseEntity<ChatResponse> enterChatUser(String userId, Long chatId) {
+		Chat chat = chatComponentRepository.findChatById(chatId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 채팅방을 찾을 수 없습니다."));
+		User user = chatComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		ChatUser chatUser = ChatUser.of(chat, user);
+		chatComponentRepository.saveChatUser(chatUser);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(ChatResponse.from(chat));
 	}
 }

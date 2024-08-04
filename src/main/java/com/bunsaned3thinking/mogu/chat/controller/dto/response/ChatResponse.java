@@ -2,6 +2,7 @@ package com.bunsaned3thinking.mogu.chat.controller.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import com.bunsaned3thinking.mogu.chat.entity.Chat;
 import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
@@ -22,17 +23,24 @@ public class ChatResponse {
 
 	private final String postThumbnail;
 	private final List<String> userImage;
+	private final List<String> userUid;
 
 	public static ChatResponse from(Chat chat) {
 		return ChatResponse.builder()
 			.id(chat.getId())
 			.lastMsg(chat.getLastMsg())
 			.lastTime(chat.getLastTime())
+			// TODO POST 안에 Thumbnail (대표 이미지 링크) String Type 저장해두기
 			// .postThumbnail(chat.getPost().getThumbnail())
 			.postThumbnail("tempLink")
 			.userImage(chat.getChatUsers().stream()
 				.map(ChatUser::getUser)
 				.map(User::getProfileImage)
+				.toList())
+			.userUid(chat.getChatUsers().stream()
+				.map(ChatUser::getUser)
+				.map(User::getUid)
+				.map(Objects::toString)
 				.toList())
 			.build();
 	}
