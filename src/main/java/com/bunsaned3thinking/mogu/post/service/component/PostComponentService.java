@@ -22,4 +22,6 @@ public interface PostComponentService {
 		UpdatePostRequest updatePostRequest, List<MultipartFile> multipartFileList);
 
 	ResponseEntity<Void> deletePost(String userId, Long postId);
+
+	ResponseEntity<List<PostResponse>> searchPostByTitle(String title);
 }

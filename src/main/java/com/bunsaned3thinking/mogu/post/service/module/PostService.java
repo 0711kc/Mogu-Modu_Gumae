@@ -12,6 +12,8 @@ import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailRes
 
 public interface PostService {
 
+	ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword);
+
 	ResponseEntity<Void> deletePost(String userId, Long postId);
 
 	ResponseEntity<PostWithDetailResponse> createPost(String memberId, PostRequest postRequest, Location location,

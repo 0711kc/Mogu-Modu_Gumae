@@ -20,4 +20,6 @@ public interface PostComponentRepository {
 	Optional<Post> findPostById(Long id);
 
 	void deletePostDetailByPostId(Long id);
+
+	List<Post> searchPostsByTitle(String keyword);
 }
