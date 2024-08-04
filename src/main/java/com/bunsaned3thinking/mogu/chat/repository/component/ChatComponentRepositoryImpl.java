@@ -11,7 +11,7 @@ import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.repository.module.ChatRepository;
 import com.bunsaned3thinking.mogu.chat.repository.module.ChatUserRepository;
 import com.bunsaned3thinking.mogu.post.entity.Post;
-import com.bunsaned3thinking.mogu.post.repository.module.PostRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
 
@@ -21,14 +21,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class ChatComponentRepositoryImpl implements ChatComponentRepository {
-	private final PostRepository postRepository;
+	private final PostJpaRepository postJpaRepository;
 	private final ChatRepository chatRepository;
 	private final ChatUserRepository chatUserRepository;
 	private final UserRepository userRepository;
 
 	@Override
 	public Optional<Post> findPostById(Long postId) {
-		return postRepository.findById(postId);
+		return postJpaRepository.findById(postId);
 	}
 
 	@Override

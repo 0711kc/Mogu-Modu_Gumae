@@ -2,6 +2,7 @@ package com.bunsaned3thinking.mogu.post.repository.component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,10 @@ import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostDocs;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
+import com.bunsaned3thinking.mogu.post.entity.Report;
 import com.bunsaned3thinking.mogu.post.repository.module.PostDetailRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.ReportRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
@@ -28,6 +31,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	private final PostDetailRepository postDetailRepository;
 	private final PostImageRepository postImageRepository;
 	private final PostJpaRepository postJpaRepository;
+	private final ReportRepository reportRepository;
 
 	@Override
 	public Optional<User> findUserByUserId(String userId) {
@@ -51,6 +55,11 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 			PostDocs.of(post.getId(), post.getTitle(), post.getPostDetail().getContent(),
 				post.getUser().getNickname()));
 		return savedPost;
+	}
+
+	@Override
+	public Report saveReport(Report report) {
+		return reportRepository.save(report);
 	}
 
 	@Override
@@ -114,6 +123,24 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();
+	}
+
+	@Override
+	public List<Report> findAllReport() {
+		return reportRepository.findAll();
+	}
+
+	@Override
+	public boolean isReportExists(Post post, User user) {
+		return findAllReport().stream()
+			.anyMatch(report -> report.getPost().equals(post) && report.getUser().equals(user));
+	}
+
+	@Override
+	public List<Post> findAllReportedPosts() {
+		return postJpaRepository.findAll().stream()
+			.filter(post -> !post.getReports().isEmpty())
+			.collect(Collectors.toList());
 	}
 
 }

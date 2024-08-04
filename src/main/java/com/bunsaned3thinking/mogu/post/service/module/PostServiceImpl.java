@@ -20,13 +20,16 @@ import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.exception.DeletedPostException;
 import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
+import com.bunsaned3thinking.mogu.post.controller.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
+import com.bunsaned3thinking.mogu.post.entity.Report;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -64,6 +67,25 @@ public class PostServiceImpl implements PostService {
 		return postImageLinks.stream()
 			.map(postImageLink -> PostImage.from(postImageLink, postDetail))
 			.toList();
+	}
+
+	@Override
+	public ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시물을 찾을 수 없습니다."));
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		boolean isReportExists = postComponentRepository.isReportExists(post, user);
+		if (isReportExists) {
+			throw new IllegalArgumentException("[Error] 게시물 신고는 한 번만 가능합니다.");
+		}
+		Report report = reportRequest.toEntity(post, user);
+		Report savedReport = postComponentRepository.saveReport(report);
+		post.getReports().add(savedReport);
+		user.getReports().add(savedReport);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(ReportResponse.from(savedReport));
 	}
 
 	@Override
@@ -110,6 +132,17 @@ public class PostServiceImpl implements PostService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostWithDetailResponse.from(updatedPost));
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findReportedPosts() {
+		List<Post> reportedPost = postComponentRepository.findAllReportedPosts();
+		List<PostResponse> responses = reportedPost.stream()
+			.map(PostResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
 	}
 
 	@Override

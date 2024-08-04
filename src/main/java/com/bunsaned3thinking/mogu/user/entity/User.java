@@ -11,6 +11,7 @@ import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
+import com.bunsaned3thinking.mogu.post.entity.Report;
 import com.bunsaned3thinking.mogu.search.entity.Search;
 
 import jakarta.persistence.CascadeType;
@@ -117,6 +118,10 @@ public class User {
 	@OneToMany(fetch = FetchType.LAZY)
 	@Builder.Default
 	private List<Search> searches = new ArrayList<>();
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<Report> reports = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
