@@ -18,4 +18,6 @@ public interface ChatService {
 	ResponseEntity<ChatResponse> updateChat(Long id);
 
 	ResponseEntity<Void> exitChatUser(String userId, Long chatId);
+
+	ResponseEntity<ChatResponse> enterChatUser(String userId, Long chatId);
 }

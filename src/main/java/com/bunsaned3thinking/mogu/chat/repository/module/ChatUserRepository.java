@@ -9,7 +9,7 @@ import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.entity.ChatUserId;
 
 public interface ChatUserRepository extends JpaRepository<ChatUser, ChatUserId> {
-	Optional<ChatUser> findByUserIdAndChatId(String userId, Long chatId);
+	Optional<ChatUser> findByUserUidAndChatId(Long userUid, Long chatId);
 
 	List<ChatUser> findByChatId(Long chatId);
 }

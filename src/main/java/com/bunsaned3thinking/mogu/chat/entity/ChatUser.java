@@ -29,7 +29,7 @@ public class ChatUser {
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_uid")
 	private User user;
 
 	@Column
