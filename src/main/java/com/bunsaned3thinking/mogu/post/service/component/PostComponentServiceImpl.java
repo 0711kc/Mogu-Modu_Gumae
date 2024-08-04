@@ -62,4 +62,9 @@ public class PostComponentServiceImpl implements PostComponentService {
 	public ResponseEntity<Void> deletePost(final String userId, final Long postId) {
 		return postService.deletePost(userId, postId);
 	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title) {
+		return postService.searchPostsByTitle(title);
+	}
 }

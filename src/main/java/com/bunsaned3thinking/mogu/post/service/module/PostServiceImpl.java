@@ -112,6 +112,17 @@ public class PostServiceImpl implements PostService {
 			.body(PostWithDetailResponse.from(updatedPost));
 	}
 
+	@Override
+	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword) {
+		List<Post> posts = postComponentRepository.searchPostsByTitle(keyword);
+		List<PostResponse> responses = posts.stream()
+			.map(PostResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
+
 	private void update(Post post, UpdatePostRequest updatePostRequest, Location location, List<PostImage> postImages) {
 		Category category = post.getCategory();
 		LocalDateTime purchaseDate = updatePostRequest.getPurchaseDate();
