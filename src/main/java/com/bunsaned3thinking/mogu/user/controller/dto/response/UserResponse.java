@@ -2,13 +2,7 @@ package com.bunsaned3thinking.mogu.user.controller.dto.response;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.bunsaned3thinking.mogu.alarm.entity.AlarmSignal;
-import com.bunsaned3thinking.mogu.chat.entity.Chat;
-import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
-import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
-import com.bunsaned3thinking.mogu.search.entity.Search;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
@@ -37,11 +31,11 @@ public class UserResponse {
 	private LocalDateTime registerDate;
 	private Point2D.Double activityAreas;
 	private Short distanceMeters;
-	private List<Chat> chats;
-	private List<Complaint> complaints;
-	private List<HiddenPost> hiddenPosts;
-	private List<Search> searches;
-	private List<AlarmSignal> alarmSignals;
+	// private List<Chat> chats;
+	// private List<Complaint> complaints;
+	// private List<HiddenPost> hiddenPosts;
+	// private List<Search> searches;
+	// private List<AlarmSignal> alarmSignals;
 
 	public static UserResponse from(User user) {
 		return UserResponse.builder()
@@ -59,11 +53,11 @@ public class UserResponse {
 			.registerDate(user.getRegisterDate())
 			.activityAreas(user.getActivityArea().getReferencePoint())
 			.distanceMeters(user.getActivityArea().getDistanceMeters())
-			.chats(user.getChats())
-			.complaints(user.getComplaints())
-			.hiddenPosts(user.getHiddenPosts())
-			.searches(user.getSearches())
-			.alarmSignals(user.getAlarmSignals())
+			// .chats(user.getChats())
+			// .complaints(user.getComplaints())
+			// .hiddenPosts(user.getHiddenPosts())
+			// .searches(user.getSearches())
+			// .alarmSignals(user.getAlarmSignals())
 			.build();
 	}
 }

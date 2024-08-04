@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
+import com.bunsaned3thinking.mogu.post.controller.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
 import com.bunsaned3thinking.mogu.post.service.component.PostComponentService;
 
 import jakarta.validation.Valid;
@@ -39,6 +42,13 @@ public class PostController {
 		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
 	}
 
+	@PostMapping("/report/{postId}/{userId}")
+	public ResponseEntity<ReportResponse> createReport(@PathVariable final Long postId,
+		@PathVariable final String userId,
+		@RequestBody @Valid final ReportRequest reportRequest) {
+		return postComponentService.createReport(postId, userId, reportRequest);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<PostResponse> findPost(@PathVariable final Long id) {
 		return postComponentService.findPost(id);
@@ -47,6 +57,16 @@ public class PostController {
 	@GetMapping("/detail/{id}")
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(@PathVariable final Long id) {
 		return postComponentService.findPostWithDetail(id);
+	}
+
+	@GetMapping("/reports")
+	public ResponseEntity<List<PostResponse>> findReportedPosts() {
+		return postComponentService.findReportedPosts();
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<PostResponse>> searchPosts(@RequestParam(name = "title") String title) {
+		return postComponentService.searchPostByTitle(title);
 	}
 
 	@PatchMapping("/{postId}/{userId}")
@@ -64,8 +84,4 @@ public class PostController {
 		return postComponentService.deletePost(userId, postId);
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<List<PostResponse>> searchPosts(@RequestParam(name = "title") String title) {
-		return postComponentService.searchPostByTitle(title);
-	}
 }
