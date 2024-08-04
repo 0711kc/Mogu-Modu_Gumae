@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
+import com.bunsaned3thinking.mogu.chat.entity.Chat;
 import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -83,6 +84,9 @@ public class Post {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	private Location location;
+
+	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+	private Chat chat;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")

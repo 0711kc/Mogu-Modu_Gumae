@@ -4,12 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bunsaned3thinking.mogu.post.entity.Post;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,19 +33,34 @@ public class Chat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
-	@OneToMany
+	@OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<ChatUser> chatUsers = new ArrayList<>();
 
 	@Size(max = 1000)
 	@Column(length = 1000)
-	private String lastMsg;
+	@Builder.Default
+	private String lastMsg = "";
 
-	private LocalDateTime lastTime;
+	@Column
+	@Builder.Default
+	private LocalDateTime lastTime = LocalDateTime.now();
 
-	@Size(max = 12)
-	@Column(length = 12)
-	private String lastUser;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id")
+	private Post post;
+
+	public static Chat from(Post post) {
+		return Chat.builder()
+			.post(post)
+			.build();
+	}
+
+	public void addChatUser(ChatUser chatUser) {
+		this.chatUsers.add(chatUser);
+	}
 }

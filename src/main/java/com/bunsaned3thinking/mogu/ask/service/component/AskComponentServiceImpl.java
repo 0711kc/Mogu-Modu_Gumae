@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.alarm.service.AlarmSignalService;
 import com.bunsaned3thinking.mogu.ask.controller.dto.response.AskResponse;
-import com.bunsaned3thinking.mogu.ask.service.AskService;
+import com.bunsaned3thinking.mogu.ask.service.module.AskService;
 
 import lombok.RequiredArgsConstructor;
 
