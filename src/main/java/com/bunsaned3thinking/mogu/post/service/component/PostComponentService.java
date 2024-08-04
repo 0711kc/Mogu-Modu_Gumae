@@ -11,6 +11,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
+import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 
 public interface PostComponentService {
 	ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest,
@@ -23,12 +24,15 @@ public interface PostComponentService {
 	ResponseEntity<PostWithDetailResponse> updatePost(Long postId, String userId,
 		UpdatePostRequest updatePostRequest, List<MultipartFile> multipartFileList);
 
-	ResponseEntity<Void> deletePost(String userId, Long postId);
-
-	ResponseEntity<List<PostResponse>> searchPostByTitle(String title);
+	ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId);
 
 	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 
-	ResponseEntity<List<PostResponse>> findReportedPosts();
+	ResponseEntity<List<PostResponse>> findAllReportedPost();
 
+	ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(String userId);
+
+	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
+
+	ResponseEntity<Void> deletePost(String userId, Long postId);
 }

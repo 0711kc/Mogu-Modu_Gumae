@@ -17,6 +17,8 @@ import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.ReportRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
+import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
+import com.bunsaned3thinking.mogu.searchhistory.repository.SearchHistoryRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
 
@@ -32,6 +34,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	private final PostImageRepository postImageRepository;
 	private final PostJpaRepository postJpaRepository;
 	private final ReportRepository reportRepository;
+	private final SearchHistoryRepository searchHistoryRepository;
 
 	@Override
 	public Optional<User> findUserByUserId(String userId) {
@@ -63,13 +66,28 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
+	public SearchHistory saveSearchHistory(String keyword, User user) {
+		return searchHistoryRepository.save(SearchHistory.of(keyword, user));
+	}
+
+	@Override
 	public Optional<Post> findPostById(Long id) {
 		return postJpaRepository.findById(id);
 	}
 
 	@Override
+	public Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId) {
+		return searchHistoryRepository.findById(searchHistoryId);
+	}
+
+	@Override
 	public void deletePostDetailByPostId(Long id) {
 		postDetailRepository.deleteByPostId(id);
+	}
+
+	@Override
+	public void deleteSearchHistoryById(Long searchHistoryId) {
+		searchHistoryRepository.deleteById(searchHistoryId);
 	}
 
 	@Override
@@ -137,10 +155,9 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public List<Post> findAllReportedPosts() {
+	public List<Post> findAllReportedPost() {
 		return postJpaRepository.findAll().stream()
 			.filter(post -> !post.getReports().isEmpty())
 			.collect(Collectors.toList());
 	}
-
 }

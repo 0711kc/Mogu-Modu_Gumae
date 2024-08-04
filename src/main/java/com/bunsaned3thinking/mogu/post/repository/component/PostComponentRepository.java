@@ -7,6 +7,7 @@ import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.Report;
+import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 public interface PostComponentRepository {
@@ -20,9 +21,11 @@ public interface PostComponentRepository {
 
 	Report saveReport(Report report);
 
+	SearchHistory saveSearchHistory(String keyword, User user);
+
 	Optional<Post> findPostById(Long id);
 
-	void deletePostDetailByPostId(Long id);
+	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
 
 	List<Post> searchPostsByTitle(String keyword);
 
@@ -30,5 +33,9 @@ public interface PostComponentRepository {
 
 	boolean isReportExists(Post post, User user);
 
-	List<Post> findAllReportedPosts();
+	List<Post> findAllReportedPost();
+
+	void deletePostDetailByPostId(Long id);
+
+	void deleteSearchHistoryById(Long searchHistoryId);
 }
