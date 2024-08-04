@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.bunsaned3thinking.mogu.alarm.entity.AlarmSignal;
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
-import com.bunsaned3thinking.mogu.chat.entity.Chat;
+import com.bunsaned3thinking.mogu.chat.entity.ChatMessage;
+import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
+import com.bunsaned3thinking.mogu.chat.entity.UnreadMessage;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
@@ -103,9 +105,9 @@ public class User {
 	@Builder.Default
 	private List<Ask> asks = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
-	private List<Chat> chats = new ArrayList<>();
+	private List<ChatUser> chats = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@Builder.Default
@@ -127,6 +129,14 @@ public class User {
 	@Builder.Default
 	private List<AlarmSignal> alarmSignals = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<UnreadMessage> unreadMessages = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<ChatMessage> chatMessages = new ArrayList<>();
+
 	public static User of(String userId, String password, String registration, String name, String nickname,
 		String phone, String email, Short role, ActivityArea activityArea) {
 		return User.builder()
@@ -140,6 +150,15 @@ public class User {
 			.role(role)
 			.activityArea(activityArea)
 			.build();
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		System.out.println("AAA");
+		if (!(object instanceof User user)) {
+			return false;
+		}
+		return user.getUid().equals(this.uid);
 	}
 
 	public void update(String name) {

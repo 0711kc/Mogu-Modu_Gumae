@@ -2,7 +2,6 @@ package com.bunsaned3thinking.mogu.chat.entity;
 
 import com.bunsaned3thinking.mogu.user.entity.User;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -20,45 +19,33 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@IdClass(ChatUserId.class)
-public class ChatUser {
+@IdClass(UnreadMessageId.class)
+public class UnreadMessage {
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "chat_id")
-	private Chat chat;
+	@JoinColumn(name = "message_id")
+	private ChatMessage message;
 
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_uid")
 	private User user;
-	//
-	// @OneToMany(mappedBy = "senderChatUser", fetch = FetchType.LAZY)
-	// @Builder.Default
-	// private List<ChatMessage> chatMessage = new ArrayList<>();
 
-	@Column
-	@Builder.Default
-	private boolean isExit = false;
-
-	public static ChatUser of(Chat chat, User user) {
-		return ChatUser.builder()
-			.chat(chat)
+	public static UnreadMessage of(ChatMessage message, User user) {
+		return UnreadMessage.builder()
+			.message(message)
 			.user(user)
 			.build();
 	}
 
-	public void updateIsExit(boolean isExit) {
-		this.isExit = isExit;
-	}
-
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof ChatUser chatUser)) {
+		if (!(object instanceof UnreadMessage unreadMessage)) {
 			return false;
 		}
-		if (!chatUser.getUser().getUid().equals(this.user.getUid())) {
+		if (!unreadMessage.getMessage().getId().equals(this.message.getId())) {
 			return false;
 		}
-		return chatUser.getChat().getId().equals(this.chat.getId());
+		return unreadMessage.getUser().getUid().equals(this.user.getUid());
 	}
 }

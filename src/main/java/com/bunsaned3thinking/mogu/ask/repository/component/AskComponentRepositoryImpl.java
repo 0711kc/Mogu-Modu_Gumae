@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.ask.repository.module.AskRepository;
 import com.bunsaned3thinking.mogu.post.entity.Post;
-import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class AskComponentRepositoryImpl implements AskComponentRepository {
 	private final AskRepository askRepository;
 	private final UserRepository userRepository;
-	private final PostDocsElasticRepository postDocsElasticRepository;
 	private final PostJpaRepository postJpaRepository;
 
 	@Override
@@ -30,7 +28,6 @@ public class AskComponentRepositoryImpl implements AskComponentRepository {
 
 	@Override
 	public Optional<Post> findPostById(Long postId) {
-		// return postDocsElasticRepository.findById(postId);
 		return postJpaRepository.findById(postId);
 	}
 

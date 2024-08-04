@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.bunsaned3thinking.mogu.chat.controller.dto.response.ChatMessageResponse;
 import com.bunsaned3thinking.mogu.chat.controller.dto.response.ChatResponse;
 
 public interface ChatService {
@@ -19,5 +20,11 @@ public interface ChatService {
 
 	ResponseEntity<Void> exitChatUser(String userId, Long chatId);
 
-	ResponseEntity<ChatResponse> enterChatUser(String userId, Long chatId);
+	void enterChatUser(String userId, Long chatId);
+
+	boolean checkChatUser(Long chatId, String userId);
+
+	ChatMessageResponse createChatMessage(Long chatId, String userId, String message, List<String> readUserIds);
+
+	void readMessage(Long chatId, String userId);
 }
