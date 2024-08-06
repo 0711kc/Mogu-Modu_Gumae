@@ -38,14 +38,9 @@ public class UserController {
 
 	@PatchMapping("/{userId}")
 	public ResponseEntity<UserResponse> updateUser(@PathVariable final String userId,
-		@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-		return userComponentService.updateUser(userId, updateUserRequest);
-	}
-
-	@PatchMapping("/{userId}/image")
-	public ResponseEntity<UserResponse> updateProfileImage(@PathVariable final String userId,
-		@RequestPart(name = "image") MultipartFile multipartFile) {
-		return userComponentService.updateProfileImage(userId, multipartFile);
+		@RequestPart(name = "request", required = false) @Valid UpdateUserRequest updateUserRequest,
+		@RequestPart(name = "image", required = false) MultipartFile multipartFile) {
+		return userComponentService.updateUser(userId, updateUserRequest, multipartFile);
 	}
 
 	@DeleteMapping("/{userId}")

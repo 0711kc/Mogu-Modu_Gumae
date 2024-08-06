@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void update(User user, UpdateUserRequest updateUserRequest) {
-		String name = updateUserRequest.getName();
-		user.update(name);
+		String nickname = updateUserRequest.getNickname();
+		user.update(nickname);
 	}
 
 	@Override

@@ -35,18 +35,24 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest) {
-		return userService.updateUser(userId, updateUserRequest);
-	}
-
-	@Override
-	public ResponseEntity<UserResponse> updateProfileImage(String userId, MultipartFile multipartFile) {
-		String imageLink = imageService.upload(multipartFile);
-		return userService.updateProfileImage(userId, imageLink);
-	}
-
-	@Override
 	public ResponseEntity<Void> deleteUser(String userId) {
 		return userService.deleteUser(userId);
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
+		MultipartFile multipartFile) {
+		ResponseEntity<UserResponse> response = null;
+		if (multipartFile != null) {
+			String imageLink = imageService.upload(multipartFile);
+			response = userService.updateProfileImage(userId, imageLink);
+		}
+		if (updateUserRequest != null) {
+			response = userService.updateUser(userId, updateUserRequest);
+		}
+		if (response == null) {
+			throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
+		}
+		return response;
 	}
 }

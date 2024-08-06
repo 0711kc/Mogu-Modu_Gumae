@@ -44,16 +44,12 @@ public class User {
 	private Long uid;
 
 	@Size(max = 12)
-	@Column(length = 12, unique = true)
+	@Column(length = 12, unique = true, updatable = false)
 	private String userId;
 
 	@Size(max = 80)
 	@Column(length = 80)
 	private String password;
-
-	@Size(max = 12)
-	@Column(length = 12, unique = true)
-	private String registration;
 
 	@Size(max = 12)
 	@Column(length = 12)
@@ -71,7 +67,7 @@ public class User {
 	@Column(length = 30, unique = true)
 	private String email;
 
-	@Column
+	@Column(updatable = false)
 	private Role role;
 
 	@Column
@@ -89,13 +85,13 @@ public class User {
 	@Size(max = 80)
 	@Column(length = 80)
 	@Builder.Default
-	private String profileImage = S3Config.basicUserImage();
+	private String profileImage = S3Config.UserImage;
 
 	@Column
 	@Builder.Default
 	private Integer level = 0;
 
-	@Column
+	@Column(updatable = false)
 	@Builder.Default
 	private LocalDateTime registerDate = LocalDateTime.now();
 
@@ -142,12 +138,11 @@ public class User {
 	@Builder.Default
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
-	public static User of(String userId, String password, String registration, String name, String nickname,
+	public static User of(String userId, String password, String name, String nickname,
 		String phone, String email, Role role, ActivityArea activityArea) {
 		return User.builder()
 			.userId(userId)
 			.password(password)
-			.registration(registration)
 			.name(name)
 			.nickname(nickname)
 			.phone(phone)
@@ -165,8 +160,8 @@ public class User {
 		return user.getUid().equals(this.uid);
 	}
 
-	public void update(String name) {
-		this.name = name;
+	public void update(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public void updateProfileImage(String profileImage) {
