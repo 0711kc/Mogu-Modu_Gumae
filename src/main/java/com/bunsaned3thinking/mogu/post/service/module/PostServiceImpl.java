@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.post.service.module;
 
+import java.awt.geom.Point2D;
 import java.beans.FeatureDescriptor;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.exception.DeletedPostException;
-import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
 	private final PostComponentRepository postComponentRepository;
 
 	@Override
-	public ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest, Location location,
+	public ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest,
 		List<String> postImageLinks) {
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
 		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
 		postComponentRepository.saveAllPostImages(postImages);
 		postDetail.updatePostImages(postImages);
-		Post post = postRequest.toEntity(user, location, postDetail);
+		Post post = postRequest.toEntity(user, postDetail);
 		postDetail.initialize(post);
 		postComponentRepository.savePostDetail(postDetail);
 		Post savedPost = postComponentRepository.savePost(post);
@@ -110,8 +110,7 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> updatePost(String userId, Long postId,
-		UpdatePostRequest updatePostRequest,
-		List<String> postImageLinks, Location location) {
+		UpdatePostRequest updatePostRequest, List<String> postImageLinks) {
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
@@ -128,7 +127,7 @@ public class PostServiceImpl implements PostService {
 			postImages = createPostImages(postImageLinks, post.getPostDetail());
 		}
 		copyNonNullProperties(updatePostRequest, originPost);
-		update(post, originPost, location, postImages);
+		update(post, originPost, postImages);
 		postComponentRepository.savePostDetail(post.getPostDetail());
 		Post updatedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
@@ -177,16 +176,14 @@ public class PostServiceImpl implements PostService {
 			.body(responses);
 	}
 
-	private void update(Post post, UpdatePostRequest updatePostRequest, Location location, List<PostImage> postImages) {
+	private void update(Post post, UpdatePostRequest updatePostRequest, List<PostImage> postImages) {
 		Category category = post.getCategory();
 		LocalDateTime purchaseDate = updatePostRequest.getPurchaseDate();
 		int userCount = updatePostRequest.getUserCount();
 		String title = updatePostRequest.getTitle();
 		int discountCost = updatePostRequest.getDiscountCost();
 		int originalCost = updatePostRequest.getOriginalCost();
-		if (location == null) {
-			location = post.getLocation();
-		}
+		Point2D.Double location = new Point2D.Double(updatePostRequest.getLongitude(), updatePostRequest.getLatitude());
 		post.update(category, purchaseDate, userCount, title, discountCost, originalCost, location);
 
 		String content = updatePostRequest.getContent();

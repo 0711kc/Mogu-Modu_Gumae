@@ -1,12 +1,12 @@
 package com.bunsaned3thinking.mogu.post.entity;
 
+import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.chat.entity.Chat;
-import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -89,8 +89,9 @@ public class Post {
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	private PostDetail postDetail;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	private Location location;
+	// @OneToOne(fetch = FetchType.LAZY)
+	@Column
+	private Point2D.Double location;
 
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
@@ -101,7 +102,7 @@ public class Post {
 	private User user;
 
 	public void update(Category category, LocalDateTime purchaseDate, int userCount, String title, int discountCost,
-		int originalCost, Location location) {
+		int originalCost, Point2D.Double location) {
 		this.category = category;
 		this.purchaseDate = purchaseDate;
 		this.userCount = userCount;

@@ -59,8 +59,8 @@ public class UpdatePostRequest {
 			.purchaseDate(post.getPurchaseDate())
 			.shareCondition(postDetail.getShareCondition())
 			.userCount(post.getUserCount())
-			.longitude(post.getLocation().getLongitude())
-			.latitude(post.getLocation().getLatitude())
+			.longitude(post.getLocation().getX())
+			.latitude(post.getLocation().getY())
 			.build();
 	}
 }

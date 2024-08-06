@@ -10,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.chat.service.module.ChatService;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
-import com.bunsaned3thinking.mogu.location.entity.Location;
-import com.bunsaned3thinking.mogu.location.service.LocationService;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
@@ -28,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class PostComponentServiceImpl implements PostComponentService {
 	private final PostService postService;
-	private final LocationService locationService;
 	private final ImageService imageService;
 	private final ChatService chatService;
 
@@ -36,8 +33,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 	public ResponseEntity<PostWithDetailResponse> createPost(final String userId, final PostRequest postRequest,
 		final List<MultipartFile> multipartFileList) {
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
-		Location location = locationService.createLocation(postRequest.getLongitude(), postRequest.getLatitude());
-		ResponseEntity<PostWithDetailResponse> response = postService.createPost(userId, postRequest, location,
+		ResponseEntity<PostWithDetailResponse> response = postService.createPost(userId, postRequest,
 			imageLinks);
 		chatService.createChat(Objects.requireNonNull(response.getBody()).getId());
 		return response;
@@ -77,9 +73,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 	public ResponseEntity<PostWithDetailResponse> updatePost(final Long postId, final String userId,
 		final UpdatePostRequest updatePostRequest, final List<MultipartFile> multipartFileList) {
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
-		Location location = locationService.createLocation(updatePostRequest.getLongitude(),
-			updatePostRequest.getLatitude());
-		return postService.updatePost(userId, postId, updatePostRequest, imageLinks, location);
+		return postService.updatePost(userId, postId, updatePostRequest, imageLinks);
 	}
 
 	@Override
