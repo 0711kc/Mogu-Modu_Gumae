@@ -26,8 +26,6 @@ public interface ChatComponentRepository {
 
 	boolean existsUserByUserId(String userId);
 
-	Optional<ChatUser> findChatUserByUserUidAndChatId(Long userUid, Long chatId);
-
 	Optional<ChatUser> findChatUserByUserIdAndChatId(String userId, Long chatId);
 
 	List<ChatUser> findChatUserByChatId(Long chatId);
