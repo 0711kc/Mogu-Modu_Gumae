@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.post.repository.component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,4 +39,8 @@ public interface PostComponentRepository {
 	void deletePostDetailByPostId(Long id);
 
 	void deleteSearchHistoryById(Long searchHistoryId);
+
+	List<Post> findAllPostsByPurchaseDate(LocalDate purchaseDate);
+
+	void saveAllPosts(List<Post> posts);
 }

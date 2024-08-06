@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.ask.entity.AskState;
 import com.bunsaned3thinking.mogu.ask.repository.component.AskComponentRepositoryImpl;
 import com.bunsaned3thinking.mogu.post.entity.Post;
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +35,9 @@ public class AskServiceImpl implements AskService {
 		boolean isExistAsk = askComponentRepository.existsAskByUserUidAndPostId(user.getUid(), postId);
 		if (isExistAsk) {
 			throw new IllegalArgumentException("[Error] 이미 참여 신청이 완료된 게시글입니다.");
+		}
+		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
+			throw new IllegalArgumentException("[Error] 마감된 게시글은 신청할 수 없습니다.");
 		}
 		Ask ask = Ask.from(post, user);
 		Ask savedAsk = askComponentRepository.saveAsk(ask);

@@ -1,6 +1,6 @@
 package com.bunsaned3thinking.mogu.post.controller.dto.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,8 +34,8 @@ public class UpdatePostRequest {
 
 	private Integer originalCost;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	private LocalDateTime purchaseDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate purchaseDate;
 
 	private Boolean shareCondition;
 

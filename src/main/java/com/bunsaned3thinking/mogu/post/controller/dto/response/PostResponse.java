@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.post.controller.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.bunsaned3thinking.mogu.post.entity.Post;
@@ -27,8 +28,8 @@ public class PostResponse {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime postDate;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-	private final LocalDateTime purchaseDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+	private final LocalDate purchaseDate;
 
 	public static PostResponse from(final Post post) {
 		return PostResponse.builder()

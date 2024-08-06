@@ -1,7 +1,7 @@
 package com.bunsaned3thinking.mogu.post.controller.dto.request;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -42,8 +42,8 @@ public class PostRequest {
 	private Integer originalCost;
 
 	@NotNull(message = "구매 예정 날짜를 입력해주세요")
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	private LocalDateTime purchaseDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate purchaseDate;
 
 	@NotNull(message = "구매 여부를 입력해주세요")
 	private Boolean purchaseState;
