@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class NoticeRequest {
-
 	@NotBlank(message = "제목을 입력해주세요.")
 	@Size(max = 50)
 	private String title;
@@ -24,7 +23,10 @@ public class NoticeRequest {
 	private String content;
 
 	public Notice toEntity() {
-		return Notice.builder().title(title).content(content).build();
+		return Notice.builder()
+			.title(title)
+			.content(content)
+			.build();
 	}
 
 }
