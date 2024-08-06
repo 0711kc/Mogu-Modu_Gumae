@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.exception.handler;
+package com.bunsaned3thinking.mogu.common.exception.handler;
 
 import java.util.List;
 

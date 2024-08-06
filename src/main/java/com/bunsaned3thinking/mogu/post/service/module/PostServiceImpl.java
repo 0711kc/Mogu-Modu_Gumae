@@ -17,8 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bunsaned3thinking.mogu.config.S3Config;
-import com.bunsaned3thinking.mogu.exception.DeletedPostException;
+import com.bunsaned3thinking.mogu.common.config.S3Config;
+import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;

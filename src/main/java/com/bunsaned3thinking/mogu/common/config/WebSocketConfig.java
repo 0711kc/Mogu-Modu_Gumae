@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.config;
+package com.bunsaned3thinking.mogu.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;

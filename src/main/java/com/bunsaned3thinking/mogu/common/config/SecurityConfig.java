@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.config;
+package com.bunsaned3thinking.mogu.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.bunsaned3thinking.mogu.jwt.ExceptionHandlerFilter;
-import com.bunsaned3thinking.mogu.jwt.JWTFilter;
-import com.bunsaned3thinking.mogu.jwt.JWTUtil;
-import com.bunsaned3thinking.mogu.jwt.LoginFilter;
+import com.bunsaned3thinking.mogu.common.jwt.ExceptionHandlerFilter;
+import com.bunsaned3thinking.mogu.common.jwt.JWTFilter;
+import com.bunsaned3thinking.mogu.common.jwt.JWTUtil;
+import com.bunsaned3thinking.mogu.common.jwt.LoginFilter;
 
 import lombok.RequiredArgsConstructor;
 

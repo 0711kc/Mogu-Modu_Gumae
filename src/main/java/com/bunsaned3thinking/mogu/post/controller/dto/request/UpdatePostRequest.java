@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.bunsaned3thinking.mogu.exception.DeletedPostException;
+import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;

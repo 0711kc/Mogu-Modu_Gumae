@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.jwt;
+package com.bunsaned3thinking.mogu.common.jwt;
 
 import java.util.ArrayList;
 import java.util.Collection;
