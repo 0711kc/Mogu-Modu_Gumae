@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,12 @@ public class ImageServiceImpl implements ImageService {
 	@Override
 	public String upload(MultipartFile file) {
 		try {
-			String originalFileName = file.getOriginalFilename();
-			String fileName = changeFileName(originalFileName);
+			String fileName = createFileName();
 			ObjectMetadata metadata = new ObjectMetadata();
 			metadata.setContentType(file.getContentType());
 			metadata.setContentLength(file.getSize());
 			s3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-			return s3Client.getUrl(bucket, fileName).toString();
+			return fileName;
 		} catch (IOException e) {
 			throw new IllegalArgumentException();
 		}
@@ -46,8 +46,8 @@ public class ImageServiceImpl implements ImageService {
 			.toList();
 	}
 
-	private String changeFileName(String originalFileName) {
+	private String createFileName() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-		return originalFileName + "_" + LocalDateTime.now().format(formatter);
+		return UUID.randomUUID() + "_" + LocalDateTime.now().format(formatter);
 	}
 }

@@ -2,6 +2,7 @@ package com.bunsaned3thinking.mogu.post.controller.dto.response;
 
 import java.util.List;
 
+import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 
@@ -29,6 +30,7 @@ public class PostDetailResponse {
 			.shareCondition(postDetail.getShareCondition())
 			.postImages(postDetail.getPostImages().stream()
 				.map(PostImage::getImage)
+				.map(S3Util::toS3ImageUrl)
 				.toList())
 			.build();
 	}

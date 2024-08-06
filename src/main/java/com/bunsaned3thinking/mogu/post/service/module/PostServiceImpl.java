@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
 
 	private List<PostImage> createPostImages(List<String> postImageLinks, PostDetail postDetail) {
 		if (postImageLinks.isEmpty()) {
-			return List.of(PostImage.from(S3Config.basicPostImage(), postDetail));
+			return List.of(PostImage.from(S3Config.PostImage, postDetail));
 		}
 		return postImageLinks.stream()
 			.map(postImageLink -> PostImage.from(postImageLink, postDetail))
