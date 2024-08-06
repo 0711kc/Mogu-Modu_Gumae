@@ -12,9 +12,8 @@ public interface UserComponentService {
 
 	ResponseEntity<UserResponse> findUser(String userId);
 
-	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
-
-	ResponseEntity<UserResponse> updateProfileImage(String userId, MultipartFile multipartFile);
-
 	ResponseEntity<Void> deleteUser(String userId);
+
+	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
+		MultipartFile multipartFile);
 }

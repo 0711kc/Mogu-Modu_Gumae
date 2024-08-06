@@ -26,10 +26,6 @@ public class UserRequest {
 	@Size(max = 80)
 	private String password;
 
-	@NotBlank(message = "주민등록번호를 입력해주세요.")
-	@Size(max = 12)
-	private String registration;
-
 	@NotBlank(message = "이름을 입력해주세요.")
 	@Size(max = 12)
 	private String name;
@@ -59,7 +55,6 @@ public class UserRequest {
 		return User.builder()
 			.userId(userId)
 			.password(password)
-			.registration(registration)
 			.name(name)
 			.nickname(nickname)
 			.phone(phone)

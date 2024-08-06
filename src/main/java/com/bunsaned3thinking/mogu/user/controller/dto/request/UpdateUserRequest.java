@@ -16,11 +16,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateUserRequest {
 	@Size(max = 12)
-	private String name;
+	private String nickname;
 
 	public static UpdateUserRequest from(User user) {
 		return UpdateUserRequest.builder()
-			.name(user.getName())
+			.nickname(user.getNickname())
 			.build();
 	}
 }
