@@ -19,7 +19,7 @@ public class ChatMessageResponse {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime time;
 	private final long userUid;
-	private final String userId;
+	private final String userNickname;
 
 	public static ChatMessageResponse from(final ChatMessage chatMessage) {
 		return ChatMessageResponse.builder()
@@ -28,7 +28,7 @@ public class ChatMessageResponse {
 			.unreadCount(chatMessage.getUnreadUsers().size())
 			.time(chatMessage.getTime())
 			.userUid(chatMessage.getUser().getUid())
-			.userId(chatMessage.getUser().getUserId())
+			.userNickname(chatMessage.getUser().getNickname())
 			.build();
 	}
 }

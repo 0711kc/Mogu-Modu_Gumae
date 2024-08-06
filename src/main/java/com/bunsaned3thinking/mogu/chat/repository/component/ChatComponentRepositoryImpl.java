@@ -69,11 +69,6 @@ public class ChatComponentRepositoryImpl implements ChatComponentRepository {
 	}
 
 	@Override
-	public Optional<ChatUser> findChatUserByUserUidAndChatId(Long userUid, Long chatId) {
-		return chatUserRepository.findByUserUidAndChatId(userUid, chatId);
-	}
-
-	@Override
 	public Optional<ChatUser> findChatUserByUserIdAndChatId(String userId, Long chatId) {
 		return chatUserRepository.findByUserIdAndChatId(userId, chatId);
 	}
@@ -95,7 +90,7 @@ public class ChatComponentRepositoryImpl implements ChatComponentRepository {
 
 	@Override
 	public boolean existsChatUserByChatIdAndUserId(Long chatId, String userId) {
-		return chatUserRepository.existsByPostIdAndUserId(chatId, userId);
+		return chatUserRepository.existsByPostIdAndUserUid(chatId, userId);
 	}
 
 	@Override

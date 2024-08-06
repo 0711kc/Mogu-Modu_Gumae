@@ -45,7 +45,6 @@ public class ChatController {
 	@GetMapping("/{chatId}/user/{userId}")
 	public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable final Long chatId,
 		@PathVariable final String userId) {
-		// TODO 메시지 목록 조회 (userId는 본인 조회용)
-		return null;
+		return chatService.findAllChatMessages(chatId, userId);
 	}
 }

@@ -156,4 +156,19 @@ public class ChatServiceImpl implements ChatService {
 
 		chatComponentRepository.saveChatMessages(chatMessages);
 	}
+
+	@Override
+	public ResponseEntity<List<ChatMessageResponse>> findAllChatMessages(Long chatId, String userId) {
+		boolean isExistChatUser = chatComponentRepository.existsChatUserByChatIdAndUserId(chatId, userId);
+		if (!isExistChatUser) {
+			throw new IllegalArgumentException("[Error] 채팅방에 참여한 사용자가 아닙니다.");
+		}
+		List<ChatMessage> chatMessages = chatComponentRepository.findChatMessagesByChatId(chatId);
+		List<ChatMessageResponse> responses = chatMessages.stream()
+			.map(ChatMessageResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
 }

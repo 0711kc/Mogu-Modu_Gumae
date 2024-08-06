@@ -10,8 +10,6 @@ import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.entity.ChatUserId;
 
 public interface ChatUserRepository extends JpaRepository<ChatUser, ChatUserId> {
-	Optional<ChatUser> findByUserUidAndChatId(Long userUid, Long chatId);
-
 	@Query("select cu from ChatUser cu left join fetch cu.user "
 		+ "where cu.user.userId = :userId and cu.chat.id = :chatId")
 	Optional<ChatUser> findByUserIdAndChatId(String userId, Long chatId);
@@ -20,5 +18,5 @@ public interface ChatUserRepository extends JpaRepository<ChatUser, ChatUserId> 
 
 	@Query("select case when count(cu) > 0 then true else false end from ChatUser cu left join cu.user "
 		+ "where cu.user.userId = :userId and cu.chat.id = :chatId")
-	boolean existsByPostIdAndUserId(Long chatId, String userId);
+	boolean existsByPostIdAndUserUid(Long chatId, String userId);
 }

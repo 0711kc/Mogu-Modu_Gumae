@@ -27,4 +27,6 @@ public interface ChatService {
 	ChatMessageResponse createChatMessage(Long chatId, String userId, String message, List<String> readUserIds);
 
 	void readMessage(Long chatId, String userId);
+
+	ResponseEntity<List<ChatMessageResponse>> findAllChatMessages(Long chatId, String userId);
 }
