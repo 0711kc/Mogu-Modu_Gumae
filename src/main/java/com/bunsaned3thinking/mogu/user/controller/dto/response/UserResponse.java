@@ -3,6 +3,7 @@ package com.bunsaned3thinking.mogu.user.controller.dto.response;
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 
+import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -45,7 +46,7 @@ public class UserResponse {
 			.role(user.getRole().getResponse())
 			.isBlock(user.getIsBlock())
 			.blockDate(user.getBlockDate())
-			.profileImage(user.getProfileImage())
+			.profileImage(S3Util.toS3ImageUrl(user.getProfileImage()))
 			.level(user.getLevel())
 			.manner(user.getManner().getDescription())
 			.registerDate(user.getRegisterDate())

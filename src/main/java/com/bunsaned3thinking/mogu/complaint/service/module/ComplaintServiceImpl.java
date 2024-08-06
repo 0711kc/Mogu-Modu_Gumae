@@ -80,7 +80,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks, Complaint complaint) {
 		if (complaintImageLinks.isEmpty()) {
-			return List.of(ComplaintImage.of(complaint, S3Config.basicPostImage()));
+			return List.of(ComplaintImage.of(complaint, S3Config.PostImage));
 		}
 		return complaintImageLinks.stream()
 			.map(complaintImageLink -> ComplaintImage.of(complaint, complaintImageLink))

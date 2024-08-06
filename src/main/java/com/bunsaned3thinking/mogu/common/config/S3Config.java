@@ -11,7 +11,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
 public class S3Config {
-
 	@Value("${s3.credentials.access-key}")
 	private String accessKey;
 
@@ -21,6 +20,25 @@ public class S3Config {
 	@Value("${s3.credentials.region}")
 	private String region;
 
+	public static String ImageURL;
+	public static String UserImage;
+	public static String PostImage;
+
+	@Value("${s3.basic.user}")
+	private void setBasicUserImage(String userImage) {
+		S3Config.UserImage = userImage;
+	}
+
+	@Value("${s3.basic.post}")
+	private void setBasicPostImage(String postImage) {
+		S3Config.PostImage = postImage;
+	}
+
+	@Value("${s3.basic.url}")
+	private void setBasicImageUrl(String url) {
+		S3Config.ImageURL = url;
+	}
+
 	@Bean
 	public AmazonS3Client s3Client() {
 		BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -29,14 +47,5 @@ public class S3Config {
 			.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
 			.build();
 	}
-
-	public static String basicUserImage() {
-		return "https://moguimages.s3.ap-northeast-2.amazonaws.com/ano.png";
-	}
-
-	public static String basicPostImage() {
-		return "https://moguimages.s3.ap-northeast-2.amazonaws.com/basicPostImage.png";
-	}
-
 }
 

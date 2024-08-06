@@ -2,6 +2,7 @@ package com.bunsaned3thinking.mogu.complaint.controller.dto.response;
 
 import java.util.List;
 
+import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
 
@@ -29,6 +30,7 @@ public class ComplaintResponse {
 			.state(complaint.getState().getResponse())
 			.imageLinks(complaint.getComplaintImages().stream()
 				.map(ComplaintImage::getImage)
+				.map(S3Util::toS3ImageUrl)
 				.toList())
 			.build();
 	}
