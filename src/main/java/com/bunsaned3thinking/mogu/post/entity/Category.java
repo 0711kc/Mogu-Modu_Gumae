@@ -19,8 +19,7 @@ public enum Category {
 	LIFE((short)5, "생활/주방", "life"),
 	CHILD((short)6, "육아용품", "child"),
 	OTHER((short)7, "기타", "other"),
-	FREE((short)8, "무료 나눔", "free"),
-	;
+	FREE((short)8, "무료 나눔", "free");
 
 	private final short index;
 	private final String response;

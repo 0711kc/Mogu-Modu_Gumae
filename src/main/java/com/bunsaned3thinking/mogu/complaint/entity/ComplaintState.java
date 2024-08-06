@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ComplaintState {
-
 	PROCESSING((short)0, "처리중"),
 	COMPLETED((short)1, "처리완료");
 

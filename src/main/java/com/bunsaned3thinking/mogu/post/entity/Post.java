@@ -33,49 +33,45 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// @Document(indexName = "posts", createIndex = false)
 public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column
 	private Category category;
 
 	@Column
-	@Builder.Default
-	// @Field(type = FieldType.Boolean)
-	private Boolean isHidden = false;
-
-	@Column
-	@Builder.Default
-	// @Field(type = FieldType.Date)
-	private LocalDateTime postDate = LocalDateTime.now();
-
-	@Column
-	// @Field(type = FieldType.Date)
 	private LocalDateTime purchaseDate;
 
 	@Column
-	// @Field(type = FieldType.Integer)
 	private Integer userCount;
 
 	@Column
 	@Builder.Default
-	// @Field(type = FieldType.Keyword)
+	private Boolean isHidden = false;
+
+	@Column
+	@Builder.Default
+	private LocalDateTime postDate = LocalDateTime.now();
+
+	@Column
+	@Builder.Default
 	private RecruitState recruitState = RecruitState.DEFAULT;
 
 	@Size(max = 50)
 	@Column(length = 50)
-	// @Field(type = FieldType.Text)
 	private String title;
 
 	@Column
-	// @Field(type = FieldType.Integer)
 	private Integer discountCost;
 
 	@Column
-	// @Field(type = FieldType.Integer)
 	private Integer originalCost;
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<HiddenPost> hiddenPosts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@Builder.Default
