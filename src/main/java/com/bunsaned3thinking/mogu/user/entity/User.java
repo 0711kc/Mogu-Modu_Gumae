@@ -118,7 +118,7 @@ public class User {
 	@Builder.Default
 	private List<Complaint> complaints = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
 	private List<HiddenPost> hiddenPosts = new ArrayList<>();
 
