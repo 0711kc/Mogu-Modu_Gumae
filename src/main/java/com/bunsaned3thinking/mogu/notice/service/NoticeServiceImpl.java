@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.notice.controller.dto.response.NoticeResponse;
 import com.bunsaned3thinking.mogu.notice.entity.Notice;
 import com.bunsaned3thinking.mogu.notice.repository.NoticeRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,7 +31,8 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public ResponseEntity<NoticeResponse> findNotice(Long id) {
-		Notice notice = noticeRepository.findById(id).orElseThrow(() -> new RuntimeException("[Error] 공지를 찾을 수 없습니다."));
+		Notice notice = noticeRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 공지를 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(NoticeResponse.from(notice));
@@ -38,14 +40,18 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public ResponseEntity<Void> deleteNotice(Long id) {
-		Notice notice = noticeRepository.findById(id).orElseThrow(() -> new RuntimeException("[Error] 공지를 찾을 수 없습니다."));
+		boolean isExistNotice = noticeRepository.existsById(id);
+		if (!isExistNotice) {
+			throw new EntityNotFoundException("[Error] 공지를 찾을 수 없습니다.");
+		}
 		noticeRepository.deleteById(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override
 	public ResponseEntity<NoticeResponse> updateNotice(Long id, UpdateNoticeRequest updateNoticeRequest) {
-		Notice notice = noticeRepository.findById(id).orElseThrow(() -> new RuntimeException("[Error] 공지를 찾을 수 없습니다."));
+		Notice notice = noticeRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 공지를 찾을 수 없습니다."));
 		UpdateNoticeRequest originNotice = UpdateNoticeRequest.from(notice);
 		UpdateUtil.copyNonNullProperties(updateNoticeRequest, originNotice);
 		update(notice, originNotice);
