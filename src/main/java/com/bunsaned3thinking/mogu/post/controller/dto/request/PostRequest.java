@@ -1,10 +1,10 @@
 package com.bunsaned3thinking.mogu.post.controller.dto.request;
 
+import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
@@ -60,7 +60,7 @@ public class PostRequest {
 	@NotNull(message = "위도를 입력해주세요")
 	private Double latitude;
 
-	public Post toEntity(User user, Location location, PostDetail postDetail) {
+	public Post toEntity(User user, PostDetail postDetail) {
 		return Post.builder()
 			.title(title)
 			.category(category)
@@ -68,7 +68,7 @@ public class PostRequest {
 			.originalCost(originalCost)
 			.purchaseDate(purchaseDate)
 			.recruitState(RecruitState.RECRUITING)
-			.location(location)
+			.location(new Point2D.Double(longitude, latitude))
 			.user(user)
 			.postDetail(postDetail)
 			.userCount(userCount)

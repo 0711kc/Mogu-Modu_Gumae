@@ -12,32 +12,23 @@ import lombok.Getter;
 @Builder
 public class PostResponse {
 	private final Long id;
-
 	private final String category;
-
 	private final Boolean isHidden;
-
 	private final String recruitState;
-
 	private final String title;
-
 	private final String userNickname;
-
 	private final Long userId;
-
 	private final Integer discountCost;
-
 	private final Integer originalCost;
+	private final Integer userCount;
+	private final Double longitude;
+	private final Double latitude;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime postDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime purchaseDate;
-
-	private final Integer userCount;
-
-	private final LocationResponse location;
 
 	public static PostResponse from(final Post post) {
 		return PostResponse.builder()
@@ -53,7 +44,8 @@ public class PostResponse {
 			.postDate(post.getPostDate())
 			.purchaseDate(post.getPurchaseDate())
 			.userCount(post.getUserCount())
-			.location(LocationResponse.from(post.getLocation()))
+			.longitude(post.getLocation().getX())
+			.latitude(post.getLocation().getY())
 			.build();
 	}
 }

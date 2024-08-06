@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
@@ -19,7 +18,7 @@ public interface PostService {
 
 	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 
-	ResponseEntity<PostWithDetailResponse> createPost(String memberId, PostRequest postRequest, Location location,
+	ResponseEntity<PostWithDetailResponse> createPost(String memberId, PostRequest postRequest,
 		List<String> postImageLinks);
 
 	ResponseEntity<PostResponse> findPost(Long id);
@@ -27,7 +26,7 @@ public interface PostService {
 	ResponseEntity<PostWithDetailResponse> findPostWithDetail(Long id);
 
 	ResponseEntity<PostWithDetailResponse> updatePost(String userId, Long postId, UpdatePostRequest updatePostRequest,
-		List<String> postImageLinks, Location location);
+		List<String> postImageLinks);
 
 	ResponseEntity<List<PostResponse>> findAllReportedPost();
 
