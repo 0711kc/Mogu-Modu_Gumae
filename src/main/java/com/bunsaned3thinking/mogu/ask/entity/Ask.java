@@ -35,7 +35,8 @@ public class Ask {
 	private Long id;
 
 	@Column
-	private Short state;
+	@Builder.Default
+	private AskState state = AskState.DEFAULT;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "post_id")
@@ -51,13 +52,12 @@ public class Ask {
 
 	public static Ask from(Post post, User user) {
 		return Ask.builder()
-			.state(AskState.DEFAULT.getIndex())
 			.post(post)
 			.user(user)
 			.build();
 	}
 
 	public void update(AskState askState) {
-		this.state = askState.getIndex();
+		this.state = askState;
 	}
 }

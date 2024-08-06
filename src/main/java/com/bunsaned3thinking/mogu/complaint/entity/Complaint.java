@@ -47,20 +47,20 @@ public class Complaint {
 
 	@Column
 	@Builder.Default
-	private Short state = ComplaintState.DEFAULT.getIndex();
+	private ComplaintState state = ComplaintState.DEFAULT;
 
 	@Size(max = 50)
 	@Column(length = 50)
 	private String title;
 
 	@Column
-	private Short type;
+	private ComplaintType type;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_uid")
 	private User user;
 
-	public void update(String answer, Short state) {
+	public void update(String answer, ComplaintState state) {
 		this.answer = answer;
 		this.state = state;
 	}

@@ -64,7 +64,7 @@ public class UserRequest {
 			.nickname(nickname)
 			.phone(phone)
 			.email(email)
-			.role(role.getIndex())
+			.role(role)
 			.activityArea(activityArea)
 			.build();
 	}

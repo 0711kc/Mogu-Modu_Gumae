@@ -33,7 +33,7 @@ public class ComplaintRequest {
 		return Complaint.builder()
 			.title(title)
 			.content(content)
-			.type(type.getIndex())
+			.type(type)
 			.user(user)
 			.build();
 	}

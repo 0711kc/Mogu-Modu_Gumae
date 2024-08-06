@@ -1,7 +1,6 @@
-package com.bunsaned3thinking.mogu.post.controller.dto.response;
+package com.bunsaned3thinking.mogu.report.dto.response;
 
-import com.bunsaned3thinking.mogu.post.entity.Report;
-import com.bunsaned3thinking.mogu.post.entity.ReportType;
+import com.bunsaned3thinking.mogu.report.entity.Report;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,7 @@ public class ReportResponse {
 			.content(report.getContent())
 			.postId(report.getPost().getId())
 			.userId(report.getUser().getUserId())
-			.type(ReportType.findByIndex(report.getType()).getResponse())
+			.type(report.getType().getResponse())
 			.build();
 	}
 }

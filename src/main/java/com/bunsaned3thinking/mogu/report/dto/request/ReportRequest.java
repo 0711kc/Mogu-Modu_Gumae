@@ -1,8 +1,8 @@
-package com.bunsaned3thinking.mogu.post.controller.dto.request;
+package com.bunsaned3thinking.mogu.report.dto.request;
 
 import com.bunsaned3thinking.mogu.post.entity.Post;
-import com.bunsaned3thinking.mogu.post.entity.Report;
-import com.bunsaned3thinking.mogu.post.entity.ReportType;
+import com.bunsaned3thinking.mogu.report.entity.Report;
+import com.bunsaned3thinking.mogu.report.entity.ReportType;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +28,7 @@ public class ReportRequest {
 	public Report toEntity(Post post, User user) {
 		return Report.builder()
 			.content(content)
-			.type(type.getIndex())
+			.type(type)
 			.post(post)
 			.user(user)
 			.build();
