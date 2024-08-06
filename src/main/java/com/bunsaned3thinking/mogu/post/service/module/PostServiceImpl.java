@@ -1,16 +1,9 @@
 package com.bunsaned3thinking.mogu.post.service.module;
 
 import java.awt.geom.Point2D;
-import java.beans.FeatureDescriptor;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
+import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
@@ -126,7 +120,7 @@ public class PostServiceImpl implements PostService {
 		if (!postImageLinks.isEmpty()) {
 			postImages = createPostImages(postImageLinks, post.getPostDetail());
 		}
-		copyNonNullProperties(updatePostRequest, originPost);
+		UpdateUtil.copyNonNullProperties(updatePostRequest, originPost);
 		update(post, originPost, postImages);
 		postComponentRepository.savePostDetail(post.getPostDetail());
 		Post updatedPost = postComponentRepository.savePost(post);
@@ -212,21 +206,5 @@ public class PostServiceImpl implements PostService {
 		}
 		postComponentRepository.deleteSearchHistoryById(searchHistoryId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
-
-	private static void copyNonNullProperties(Object src, Object target) {
-		BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
-	}
-
-	private static String[] getNullPropertyNames(Object source) {
-		final BeanWrapper src = new BeanWrapperImpl(source);
-		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-		Set<String> emptyNames = Arrays.stream(pds)
-			.map(FeatureDescriptor::getName)
-			.filter(name -> src.getPropertyValue(name) == null)
-			.collect(Collectors.toSet());
-		String[] result = new String[emptyNames.size()];
-		return emptyNames.toArray(result);
 	}
 }

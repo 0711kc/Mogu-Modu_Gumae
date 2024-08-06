@@ -1,14 +1,7 @@
 package com.bunsaned3thinking.mogu.complaint.service.module;
 
-import java.beans.FeatureDescriptor;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.config.S3Config;
+import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
@@ -64,7 +58,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 		Complaint complaint = complaintComponentRepository.findComplaintById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		UpdateComplaintRequest originComplaint = UpdateComplaintRequest.from(complaint);
-		copyNonNullProperties(updateComplaintRequest, originComplaint);
+		UpdateUtil.copyNonNullProperties(updateComplaintRequest, originComplaint);
 		update(complaint, originComplaint);
 		Complaint updatedComplaint = complaintComponentRepository.saveComplaint(complaint);
 		return ResponseEntity.status(HttpStatus.OK)
@@ -85,21 +79,5 @@ public class ComplaintServiceImpl implements ComplaintService {
 		return complaintImageLinks.stream()
 			.map(complaintImageLink -> ComplaintImage.of(complaint, complaintImageLink))
 			.toList();
-	}
-
-	private static void copyNonNullProperties(Object src, Object target) {
-		BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
-	}
-
-	private static String[] getNullPropertyNames(Object source) {
-		final BeanWrapper src = new BeanWrapperImpl(source);
-		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-		Set<String> emptyNames = Arrays.stream(pds)
-			.map(FeatureDescriptor::getName)
-			.filter(name -> src.getPropertyValue(name) == null)
-			.collect(Collectors.toSet());
-		String[] result = new String[emptyNames.size()];
-		return emptyNames.toArray(result);
 	}
 }
