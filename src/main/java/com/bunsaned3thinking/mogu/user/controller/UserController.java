@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
@@ -41,6 +42,13 @@ public class UserController {
 		@RequestPart(name = "request", required = false) @Valid UpdateUserRequest updateUserRequest,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) {
 		return userComponentService.updateUser(userId, updateUserRequest, multipartFile);
+	}
+
+	@PatchMapping("/{userId}/password")
+	public ResponseEntity<UserResponse> updateUserPassword(@PathVariable final String userId,
+		@RequestBody @Valid final UpdateUserPasswordRequest updateUserPasswordRequest) {
+		return userComponentService.updateUserPassword(userId, updateUserPasswordRequest);
+
 	}
 
 	@DeleteMapping("/{userId}")

@@ -23,7 +23,7 @@ public class UserRequest {
 	private String userId;
 
 	@NotBlank(message = "비밀번호를 입력해주세요.")
-	@Size(max = 80)
+	@Size(max = 16)
 	private String password;
 
 	@NotBlank(message = "이름을 입력해주세요.")

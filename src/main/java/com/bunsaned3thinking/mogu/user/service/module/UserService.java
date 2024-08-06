@@ -3,6 +3,7 @@ package com.bunsaned3thinking.mogu.user.service.module;
 import org.springframework.http.ResponseEntity;
 
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
+import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
@@ -21,4 +22,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
 
 	boolean checkUser(String userId);
+
+	ResponseEntity<UserResponse> updatePassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
 }

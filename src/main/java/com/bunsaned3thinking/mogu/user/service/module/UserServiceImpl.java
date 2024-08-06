@@ -1,13 +1,5 @@
 package com.bunsaned3thinking.mogu.user.service.module;
 
-import java.beans.FeatureDescriptor;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
+import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
@@ -53,11 +47,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean checkUser(String userId) {
+		return userRepository.existsByUserId(userId);
+	}
+
+	@Override
 	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		UpdateUserRequest originUser = UpdateUserRequest.from(user);
-		copyNonNullProperties(updateUserRequest, originUser);
+		UpdateUtil.copyNonNullProperties(updateUserRequest, originUser);
 		update(user, originUser);
 		User updatedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
@@ -66,8 +65,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean checkUser(String userId) {
-		return userRepository.existsByUserId(userId);
+	public ResponseEntity<UserResponse> updatePassword(String userId,
+		UpdateUserPasswordRequest updateUserPasswordRequest) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		user.updatePassword(bCryptPasswordEncoder.encode(updateUserPasswordRequest.getPassword()));
+		User savedUser = userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(savedUser));
 	}
 
 	@Override
@@ -92,21 +98,5 @@ public class UserServiceImpl implements UserService {
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		userRepository.deleteById(user.getUid());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
-
-	private static void copyNonNullProperties(Object src, Object target) {
-		BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
-	}
-
-	private static String[] getNullPropertyNames(Object source) {
-		final BeanWrapper src = new BeanWrapperImpl(source);
-		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-		Set<String> emptyNames = Arrays.stream(pds)
-			.map(FeatureDescriptor::getName)
-			.filter(name -> src.getPropertyValue(name) == null)
-			.collect(Collectors.toSet());
-		String[] result = new String[emptyNames.size()];
-		return emptyNames.toArray(result);
 	}
 }

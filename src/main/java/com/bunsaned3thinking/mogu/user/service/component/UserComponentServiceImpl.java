@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.location.service.ActivityAreaService;
+import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
@@ -54,5 +55,11 @@ public class UserComponentServiceImpl implements UserComponentService {
 			throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
 		}
 		return response;
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> updateUserPassword(String userId,
+		UpdateUserPasswordRequest updateUserPasswordRequest) {
+		return userService.updatePassword(userId, updateUserPasswordRequest);
 	}
 }
