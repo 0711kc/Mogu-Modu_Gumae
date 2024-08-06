@@ -24,9 +24,9 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 
 	@Override
 	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		List<MultipartFile> multipartFileList) {
+		List<MultipartFile> multipartFileList, String userId) {
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
-		return complaintService.createComplaint(complaintRequest, imageLinks);
+		return complaintService.createComplaint(complaintRequest, imageLinks, userId);
 	}
 
 	@Override

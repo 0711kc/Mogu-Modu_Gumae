@@ -13,6 +13,7 @@ import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
+import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 
@@ -101,7 +102,11 @@ public class User {
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private ActivityArea activityArea;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<Post> posts = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<Ask> asks = new ArrayList<>();
 
@@ -109,7 +114,7 @@ public class User {
 	@Builder.Default
 	private List<ChatUser> chats = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
 	private List<Complaint> complaints = new ArrayList<>();
 
@@ -121,15 +126,15 @@ public class User {
 	@Builder.Default
 	private List<SearchHistory> searchHistories = new ArrayList<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
 	private List<Report> reports = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<AlarmSignal> alarmSignals = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<UnreadMessage> unreadMessages = new ArrayList<>();
 
@@ -154,7 +159,6 @@ public class User {
 
 	@Override
 	public boolean equals(Object object) {
-		System.out.println("AAA");
 		if (!(object instanceof User user)) {
 			return false;
 		}

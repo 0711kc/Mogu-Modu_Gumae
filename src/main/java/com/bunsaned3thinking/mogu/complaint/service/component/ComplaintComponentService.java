@@ -12,7 +12,7 @@ import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintRes
 public interface ComplaintComponentService {
 
 	ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		List<MultipartFile> multipartFileList);
+		List<MultipartFile> multipartFileList, String userId);
 
 	ResponseEntity<ComplaintResponse> findComplaint(Long id);
 

@@ -11,7 +11,7 @@ import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintRes
 public interface ComplaintService {
 
 	ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		List<String> complaintImageLinks);
+		List<String> complaintImageLinks, String userId);
 
 	ResponseEntity<ComplaintResponse> findComplaint(Long id);
 

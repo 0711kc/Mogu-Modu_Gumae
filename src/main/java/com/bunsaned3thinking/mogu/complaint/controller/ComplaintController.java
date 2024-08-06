@@ -29,11 +29,13 @@ import lombok.RequiredArgsConstructor;
 public class ComplaintController {
 	private final ComplaintComponentService complaintComponentService;
 
-	@PostMapping
+	@PostMapping("/user/{userId}")
 	public ResponseEntity<ComplaintResponse> createComplaint(
+		@PathVariable final String userId,
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		return complaintComponentService.createComplaint(complaintRequest, multipartFileList.orElseGet(ArrayList::new));
+		return complaintComponentService.createComplaint(complaintRequest, multipartFileList.orElseGet(ArrayList::new),
+			userId);
 	}
 
 	@GetMapping("/{id}")

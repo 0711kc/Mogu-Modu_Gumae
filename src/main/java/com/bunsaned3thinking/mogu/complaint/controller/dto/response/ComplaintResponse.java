@@ -13,6 +13,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ComplaintResponse {
+	private final Long id;
 	private final String title;
 	private final String content;
 	private final String answer;
@@ -22,6 +23,7 @@ public class ComplaintResponse {
 
 	public static ComplaintResponse from(Complaint complaint) {
 		return ComplaintResponse.builder()
+			.id(complaint.getId())
 			.title(complaint.getTitle())
 			.content(complaint.getContent())
 			.answer(complaint.getAnswer())
