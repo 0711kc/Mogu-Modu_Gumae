@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
@@ -22,7 +23,6 @@ import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintState;
 import com.bunsaned3thinking.mogu.complaint.repository.component.ComplaintComponentRepository;
-import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;

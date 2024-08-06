@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.socket;
+package com.bunsaned3thinking.mogu.common.socket;
 
 import java.io.IOException;
 import java.util.HashMap;

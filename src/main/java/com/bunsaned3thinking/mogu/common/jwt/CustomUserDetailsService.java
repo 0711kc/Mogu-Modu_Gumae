@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.jwt;
+package com.bunsaned3thinking.mogu.common.jwt;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
