@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.notice.controller.dto.request;
 
+import java.time.LocalDateTime;
+
 import com.bunsaned3thinking.mogu.notice.entity.Notice;
 
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +28,7 @@ public class NoticeRequest {
 		return Notice.builder()
 			.title(title)
 			.content(content)
+			.date(LocalDateTime.now())
 			.build();
 	}
 
