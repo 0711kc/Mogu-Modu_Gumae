@@ -35,7 +35,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
 		ResponseEntity<PostWithDetailResponse> response = postService.createPost(userId, postRequest,
 			imageLinks);
-		chatService.createChat(Objects.requireNonNull(response.getBody()).getId());
+		chatService.createChat(Objects.requireNonNull(response.getBody()).getPost().getId());
 		return response;
 	}
 
@@ -79,6 +79,11 @@ public class PostComponentServiceImpl implements PostComponentService {
 	@Override
 	public ResponseEntity<Void> deletePost(final String userId, final Long postId) {
 		return postService.deletePost(userId, postId);
+	}
+
+	@Override
+	public ResponseEntity<PostResponse> closePost(Long postId, String userId) {
+		return postService.closePost(postId, userId);
 	}
 
 	@Override

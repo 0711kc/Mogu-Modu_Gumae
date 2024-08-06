@@ -35,4 +35,6 @@ public interface PostService {
 	ResponseEntity<Void> deletePost(String userId, Long postId);
 
 	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
+
+	ResponseEntity<PostResponse> closePost(Long postId, String userId);
 }

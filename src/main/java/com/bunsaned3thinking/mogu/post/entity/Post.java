@@ -1,6 +1,7 @@
 package com.bunsaned3thinking.mogu.post.entity;
 
 import java.awt.geom.Point2D;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Post {
 	private Category category;
 
 	@Column
-	private LocalDateTime purchaseDate;
+	private LocalDate purchaseDate;
 
 	@Column
 	private Integer userCount;
@@ -101,7 +102,7 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	public void update(Category category, LocalDateTime purchaseDate, int userCount, String title, int discountCost,
+	public void update(Category category, LocalDate purchaseDate, int userCount, String title, int discountCost,
 		int originalCost, Point2D.Double location) {
 		this.category = category;
 		this.purchaseDate = purchaseDate;

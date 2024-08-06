@@ -1,12 +1,13 @@
 package com.bunsaned3thinking.mogu.post.service.module;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
 import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
@@ -116,6 +118,9 @@ public class PostServiceImpl implements PostService {
 		} catch (DeletedPostException e) {
 			throw new IllegalArgumentException("[Error] 삭제된 게시글은 수정할 수 없습니다.");
 		}
+		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
+			throw new IllegalArgumentException("[Error] 마감된 게시글은 수정할 수 없습니다.");
+		}
 		List<PostImage> postImages = post.getPostDetail().getPostImages();
 		if (!postImageLinks.isEmpty()) {
 			postImages = createPostImages(postImageLinks, post.getPostDetail());
@@ -172,7 +177,7 @@ public class PostServiceImpl implements PostService {
 
 	private void update(Post post, UpdatePostRequest updatePostRequest, List<PostImage> postImages) {
 		Category category = post.getCategory();
-		LocalDateTime purchaseDate = updatePostRequest.getPurchaseDate();
+		LocalDate purchaseDate = updatePostRequest.getPurchaseDate();
 		int userCount = updatePostRequest.getUserCount();
 		String title = updatePostRequest.getTitle();
 		int discountCost = updatePostRequest.getDiscountCost();
@@ -206,5 +211,31 @@ public class PostServiceImpl implements PostService {
 		}
 		postComponentRepository.deleteSearchHistoryById(searchHistoryId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Override
+	public ResponseEntity<PostResponse> closePost(Long postId, String userId) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (!post.getUser().getUserId().equals(userId)) {
+			throw new IllegalArgumentException("[Error] 자신의 게시글만 마감할 수 있습니다.");
+		}
+		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
+			throw new IllegalArgumentException("[Error] 이미 마감된 게시글입니다.");
+		}
+		post.updateRecruitState(RecruitState.CLOSING);
+		// TODO 거래에 참여한 사용자의 레벨 추가
+		Post savedPost = postComponentRepository.savePost(post);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(PostResponse.from(savedPost));
+	}
+
+	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul")
+	public void autoClosePost() {
+		LocalDate purchaseDate = LocalDate.now().minusDays(1);
+		List<Post> posts = postComponentRepository.findAllPostsByPurchaseDate(purchaseDate);
+		posts.forEach(post -> post.updateRecruitState(RecruitState.CLOSING));
+		postComponentRepository.saveAllPosts(posts);
 	}
 }

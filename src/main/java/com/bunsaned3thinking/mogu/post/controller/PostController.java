@@ -43,13 +43,6 @@ public class PostController {
 		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
 	}
 
-	@PostMapping("/report/{postId}/{userId}")
-	public ResponseEntity<ReportResponse> createReport(@PathVariable final Long postId,
-		@PathVariable final String userId,
-		@RequestBody @Valid final ReportRequest reportRequest) {
-		return postComponentService.createReport(postId, userId, reportRequest);
-	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity<PostResponse> findPost(@PathVariable final Long id) {
 		return postComponentService.findPost(id);
@@ -58,6 +51,33 @@ public class PostController {
 	@GetMapping("/detail/{id}")
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(@PathVariable final Long id) {
 		return postComponentService.findPostWithDetail(id);
+	}
+
+	@PatchMapping("/{postId}/{userId}")
+	public ResponseEntity<PostWithDetailResponse> updatePost(
+		@PathVariable Long postId,
+		@PathVariable String userId,
+		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
+		return postComponentService.updatePost(postId, userId, updatePostRequest,
+			multipartFileList.orElseGet(ArrayList::new));
+	}
+
+	@PatchMapping("/{postId}/{userId}/close")
+	public ResponseEntity<PostResponse> closePost(@PathVariable final Long postId, @PathVariable final String userId) {
+		return postComponentService.closePost(postId, userId);
+	}
+
+	@DeleteMapping("/{postId}/{userId}")
+	public ResponseEntity<Void> deletePost(@PathVariable final Long postId, @PathVariable final String userId) {
+		return postComponentService.deletePost(userId, postId);
+	}
+
+	@PostMapping("/report/{postId}/{userId}")
+	public ResponseEntity<ReportResponse> createReport(@PathVariable final Long postId,
+		@PathVariable final String userId,
+		@RequestBody @Valid final ReportRequest reportRequest) {
+		return postComponentService.createReport(postId, userId, reportRequest);
 	}
 
 	@GetMapping("/reports")
@@ -76,25 +96,9 @@ public class PostController {
 		return postComponentService.findAllSearchHistory(userId);
 	}
 
-	@PatchMapping("/{postId}/{userId}")
-	public ResponseEntity<PostWithDetailResponse> updatePost(
-		@PathVariable Long postId,
-		@PathVariable String userId,
-		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		return postComponentService.updatePost(postId, userId, updatePostRequest,
-			multipartFileList.orElseGet(ArrayList::new));
-	}
-
-	@DeleteMapping("/{postId}/{userId}")
-	public ResponseEntity<Void> deletePost(@PathVariable final Long postId, @PathVariable final String userId) {
-		return postComponentService.deletePost(userId, postId);
-	}
-
 	@DeleteMapping("/searchHistory/{searchHistoryId}/{userId}")
 	public ResponseEntity<Void> deleteSearchHistory(@PathVariable final Long searchHistoryId,
 		@PathVariable final String userId) {
 		return postComponentService.deleteSearchHistory(searchHistoryId, userId);
 	}
-
 }

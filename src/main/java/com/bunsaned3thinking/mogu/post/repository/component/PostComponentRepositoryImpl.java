@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.post.repository.component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,6 +89,16 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public void deleteSearchHistoryById(Long searchHistoryId) {
 		searchHistoryRepository.deleteById(searchHistoryId);
+	}
+
+	@Override
+	public List<Post> findAllPostsByPurchaseDate(LocalDate purchaseDate) {
+		return postJpaRepository.findByPurchaseDate(purchaseDate);
+	}
+
+	@Override
+	public void saveAllPosts(List<Post> posts) {
+		postJpaRepository.saveAll(posts);
 	}
 
 	@Override
