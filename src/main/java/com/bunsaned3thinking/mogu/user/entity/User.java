@@ -172,4 +172,8 @@ public class User {
 	public void updateProfileImage(String profileImage) {
 		this.profileImage = profileImage;
 	}
+
+	public void updatePassword(String password) {
+		this.password = password;
+	}
 }
