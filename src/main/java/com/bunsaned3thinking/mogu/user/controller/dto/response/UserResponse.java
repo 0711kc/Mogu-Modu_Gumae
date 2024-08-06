@@ -3,8 +3,6 @@ package com.bunsaned3thinking.mogu.user.controller.dto.response;
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 
-import com.bunsaned3thinking.mogu.user.entity.Manner;
-import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -44,12 +42,12 @@ public class UserResponse {
 			.nickname(user.getNickname())
 			.phone(user.getPhone())
 			.email(user.getEmail())
-			.role(Role.findByIndex(user.getRole()).getResponse())
+			.role(user.getRole().getResponse())
 			.isBlock(user.getIsBlock())
 			.blockDate(user.getBlockDate())
 			.profileImage(user.getProfileImage())
 			.level(user.getLevel())
-			.manner(Manner.findByScore(user.getManner()).getDescription())
+			.manner(user.getManner().getDescription())
 			.registerDate(user.getRegisterDate())
 			.activityAreas(user.getActivityArea().getReferencePoint())
 			.distanceMeters(user.getActivityArea().getDistanceMeters())

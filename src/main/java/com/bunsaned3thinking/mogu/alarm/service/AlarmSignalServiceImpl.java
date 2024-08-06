@@ -30,7 +30,7 @@ public class AlarmSignalServiceImpl implements AlarmSignalService {
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		Ask ask = alarmSignalComponentRepository.findAskByUserUidAndPostId(user.getUid(), postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 신청 정보를 찾을 수 없습니다."));
-		AskState askState = AskState.findByIndex(ask.getState());
+		AskState askState = ask.getState();
 		User toUser = switch (askState) {
 			case WAITING -> ask.getPost().getUser();
 			case REJECTED, APPROVED -> ask.getUser();

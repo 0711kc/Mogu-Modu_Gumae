@@ -32,4 +32,11 @@ public enum RecruitState {
 			.findFirst()
 			.orElseThrow(IllegalArgumentException::new);
 	}
+
+	public static RecruitState findByIndex(Short index) {
+		return Arrays.stream(RecruitState.values())
+			.filter(recruitState -> recruitState.getIndex() == index)
+			.findFirst()
+			.orElseThrow(IllegalArgumentException::new);
+	}
 }

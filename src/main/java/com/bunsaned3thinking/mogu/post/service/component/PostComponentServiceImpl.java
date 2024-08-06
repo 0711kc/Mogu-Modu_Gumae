@@ -1,6 +1,7 @@
 package com.bunsaned3thinking.mogu.post.service.component;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,13 @@ import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.location.entity.Location;
 import com.bunsaned3thinking.mogu.location.service.LocationService;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
-import com.bunsaned3thinking.mogu.post.controller.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
-import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.service.module.PostService;
+import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
+import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 		Location location = locationService.createLocation(postRequest.getLongitude(), postRequest.getLatitude());
 		ResponseEntity<PostWithDetailResponse> response = postService.createPost(userId, postRequest, location,
 			imageLinks);
-		chatService.createChat(response.getBody().getId());
+		chatService.createChat(Objects.requireNonNull(response.getBody()).getId());
 		return response;
 	}
 

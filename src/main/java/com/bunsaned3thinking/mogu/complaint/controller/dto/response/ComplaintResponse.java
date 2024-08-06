@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
-import com.bunsaned3thinking.mogu.complaint.entity.ComplaintState;
-import com.bunsaned3thinking.mogu.complaint.entity.ComplaintType;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +25,8 @@ public class ComplaintResponse {
 			.title(complaint.getTitle())
 			.content(complaint.getContent())
 			.answer(complaint.getAnswer())
-			.type(ComplaintType.findByIndex(complaint.getType()).getResponse())
-			.state(ComplaintState.findByIndex(complaint.getState()).getResponse())
+			.type(complaint.getType().getResponse())
+			.state(complaint.getState().getResponse())
 			.imageLinks(complaint.getComplaintImages().stream()
 				.map(ComplaintImage::getImage)
 				.toList())

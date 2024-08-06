@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import lombok.AccessLevel;
@@ -23,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> collection = new ArrayList<>();
-		collection.add((GrantedAuthority)() -> Role.findByIndex(user.getRole()).getJwt());
+		collection.add((GrantedAuthority)() -> user.getRole().getJwt());
 
 		return collection;
 	}

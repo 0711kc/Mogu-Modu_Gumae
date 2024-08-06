@@ -1,5 +1,6 @@
-package com.bunsaned3thinking.mogu.post.entity;
+package com.bunsaned3thinking.mogu.report.entity;
 
+import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -28,7 +29,7 @@ public class Report {
 	private Long id;
 
 	@Column
-	private Short type;
+	private ReportType type;
 
 	@Size(max = 500)
 	@Column(length = 500)

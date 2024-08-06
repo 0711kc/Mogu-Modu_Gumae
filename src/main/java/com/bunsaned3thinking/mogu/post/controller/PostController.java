@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
-import com.bunsaned3thinking.mogu.post.controller.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
-import com.bunsaned3thinking.mogu.post.controller.dto.response.ReportResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.service.component.PostComponentService;
+import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
+import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

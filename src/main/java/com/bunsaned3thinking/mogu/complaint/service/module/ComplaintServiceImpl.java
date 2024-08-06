@@ -75,7 +75,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 	private void update(Complaint complaint, UpdateComplaintRequest updateComplaintRequest) {
 		String answer = updateComplaintRequest.getAnswer();
 		ComplaintState complaintState = ComplaintState.COMPLETED;
-		complaint.update(answer, complaintState.getIndex());
+		complaint.update(answer, complaintState);
 	}
 
 	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks, Complaint complaint) {

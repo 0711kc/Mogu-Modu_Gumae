@@ -14,7 +14,7 @@ import com.bunsaned3thinking.mogu.config.S3Config;
 import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
-import com.bunsaned3thinking.mogu.post.entity.Report;
+import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 
 import jakarta.persistence.CascadeType;
@@ -72,7 +72,11 @@ public class User {
 	private String email;
 
 	@Column
-	private Short role;
+	private Role role;
+
+	@Column
+	@Builder.Default
+	private Manner manner = Manner.DEFAULT;
 
 	@Column
 	@Builder.Default
@@ -90,10 +94,6 @@ public class User {
 	@Column
 	@Builder.Default
 	private Integer level = 0;
-
-	@Column
-	@Builder.Default
-	private Short manner = Manner.DEFAULT.getScore();
 
 	@Column
 	@Builder.Default
@@ -143,7 +143,7 @@ public class User {
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
 	public static User of(String userId, String password, String registration, String name, String nickname,
-		String phone, String email, Short role, ActivityArea activityArea) {
+		String phone, String email, Role role, ActivityArea activityArea) {
 		return User.builder()
 			.userId(userId)
 			.password(password)

@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.post.entity;
+package com.bunsaned3thinking.mogu.report.entity;
 
 import java.util.Arrays;
 

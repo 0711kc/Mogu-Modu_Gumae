@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
-import com.bunsaned3thinking.mogu.post.entity.Report;
+import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
