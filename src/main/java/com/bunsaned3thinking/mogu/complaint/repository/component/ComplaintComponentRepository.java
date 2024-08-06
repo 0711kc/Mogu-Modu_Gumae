@@ -5,12 +5,15 @@ import java.util.Optional;
 
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
+import com.bunsaned3thinking.mogu.user.entity.User;
 
 public interface ComplaintComponentRepository {
 
-	void saveAllComplaintImages(List<ComplaintImage> complaintImages);
+	List<ComplaintImage> saveAllComplaintImages(List<ComplaintImage> complaintImages);
 
 	Complaint saveComplaint(Complaint complaint);
 
-	Optional<Complaint> findByIdComplaint(Long id);
+	Optional<Complaint> findComplaintById(Long id);
+
+	Optional<User> findUserByUserId(String userId);
 }

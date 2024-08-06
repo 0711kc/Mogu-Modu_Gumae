@@ -23,6 +23,7 @@ import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintState;
 import com.bunsaned3thinking.mogu.complaint.repository.component.ComplaintComponentRepository;
 import com.bunsaned3thinking.mogu.config.S3Config;
+import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +36,15 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
-		List<String> complaintImageLinks) {
-		List<ComplaintImage> complaintImages = createComplaintImages(complaintImageLinks);
-		complaintComponentRepository.saveAllComplaintImages(complaintImages);
-		Complaint complaint = complaintRequest.toEntity(complaintImages);
+		List<String> complaintImageLinks, String userId) {
+		User user = complaintComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		Complaint complaint = complaintRequest.toEntity(user);
 		Complaint savedComplaint = complaintComponentRepository.saveComplaint(complaint);
+		List<ComplaintImage> complaintImages = createComplaintImages(complaintImageLinks, savedComplaint);
+		List<ComplaintImage> savedComplaintImages = complaintComponentRepository.saveAllComplaintImages(
+			complaintImages);
+		savedComplaint.updateComplaintImages(savedComplaintImages);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(savedComplaint));
@@ -47,7 +52,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
-		Complaint complaint = complaintComponentRepository.findByIdComplaint(id)
+		Complaint complaint = complaintComponentRepository.findComplaintById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +61,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	@Override
 	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest) {
-		Complaint complaint = complaintComponentRepository.findByIdComplaint(id)
+		Complaint complaint = complaintComponentRepository.findComplaintById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
 		UpdateComplaintRequest originComplaint = UpdateComplaintRequest.from(complaint);
 		copyNonNullProperties(updateComplaintRequest, originComplaint);
@@ -73,12 +78,12 @@ public class ComplaintServiceImpl implements ComplaintService {
 		complaint.update(answer, complaintState.getIndex());
 	}
 
-	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks) {
+	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks, Complaint complaint) {
 		if (complaintImageLinks.isEmpty()) {
-			return List.of(ComplaintImage.from(S3Config.basicPostImage()));
+			return List.of(ComplaintImage.of(complaint, S3Config.basicPostImage()));
 		}
 		return complaintImageLinks.stream()
-			.map(ComplaintImage::from)
+			.map(complaintImageLink -> ComplaintImage.of(complaint, complaintImageLink))
 			.toList();
 	}
 
