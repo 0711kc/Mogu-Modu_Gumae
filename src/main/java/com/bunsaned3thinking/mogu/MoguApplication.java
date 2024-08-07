@@ -6,12 +6,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
 
 @SpringBootApplication
 @EnableJpaRepositories(excludeFilters = @ComponentScan.Filter(
 	type = FilterType.ASSIGNABLE_TYPE,
-	classes = PostDocsElasticRepository.class))
+	classes = PostDocElasticRepository.class))
 public class MoguApplication {
 
 	public static void main(String[] args) {

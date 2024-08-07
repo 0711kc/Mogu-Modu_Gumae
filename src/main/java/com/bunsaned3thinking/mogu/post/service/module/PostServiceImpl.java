@@ -96,6 +96,9 @@ public class PostServiceImpl implements PostService {
 	public ResponseEntity<PostResponse> findPost(Long id) {
 		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (post.getIsHidden()) {
+			throw new IllegalArgumentException("[Error] 숨겨진 게시글은 조회할 수 없습니다.");
+		}
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostResponse.from(post));
@@ -105,6 +108,9 @@ public class PostServiceImpl implements PostService {
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(Long id) {
 		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (post.getIsHidden()) {
+			throw new IllegalArgumentException("[Error] 숨겨진 게시글은 조회할 수 없습니다.");
+		}
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostWithDetailResponse.from(post));
@@ -204,6 +210,8 @@ public class PostServiceImpl implements PostService {
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
+		post.updateHidden(true);
+		postComponentRepository.savePost(post);
 		postComponentRepository.deletePostDetailByPostId(post.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -261,6 +269,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	private ResponseEntity<PostResponse> hideOtherPost(Post post, User user, boolean state) {
+		if (post.getIsHidden()) {
+			throw new IllegalArgumentException("[Error] 이미 작성자가 숨긴 게시글입니다.");
+		}
 		HiddenPostId hiddenPostId = HiddenPostId.of(user.getUid(), post.getId());
 		boolean isExistHiddenPost = postComponentRepository.existsHiddenPostById(hiddenPostId);
 		if (state == isExistHiddenPost) {
