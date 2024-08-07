@@ -75,6 +75,14 @@ public class PostController {
 		return postComponentService.closePost(postId, userId);
 	}
 
+	@PatchMapping("/{postId}/{userId}/hide")
+	public ResponseEntity<Void> hidePost(
+		@PathVariable final Long postId,
+		@PathVariable final String userId,
+		@RequestPart(name = "state") Boolean state) {
+		return postComponentService.hidePost(postId, userId, state);
+	}
+
 	@PatchMapping("/{postId}/{userId}/hide/my")
 	public ResponseEntity<PostResponse> hideMyPost(
 		@PathVariable final Long postId,

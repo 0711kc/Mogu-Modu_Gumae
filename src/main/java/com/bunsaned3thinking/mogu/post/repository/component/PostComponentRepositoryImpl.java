@@ -10,10 +10,12 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostDocs;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
+import com.bunsaned3thinking.mogu.post.repository.module.HiddenPostRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostDetailRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
@@ -38,6 +40,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	private final PostJpaRepository postJpaRepository;
 	private final ReportRepository reportRepository;
 	private final SearchHistoryRepository searchHistoryRepository;
+	private final HiddenPostRepository hiddenPostRepository;
 
 	@Override
 	public Optional<User> findUserByUserId(String userId) {
@@ -104,8 +107,13 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public Slice<Post> findNextPagePosts(Long cursor, PageRequest pageRequest) {
-		return postJpaRepository.findNextPage(cursor, pageRequest);
+	public Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findNextPage(userUid, cursor, pageRequest);
+	}
+
+	@Override
+	public void saveHiddenPost(HiddenPost hiddenPost) {
+		hiddenPostRepository.save(hiddenPost);
 	}
 
 	@Override
