@@ -4,6 +4,8 @@ import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class PostServiceImpl implements PostService {
+	private static final int DEFAULT_PAGE__SIZE = 10;
+
 	private final PostComponentRepository postComponentRepository;
 
 	@Override
@@ -231,7 +235,43 @@ public class PostServiceImpl implements PostService {
 			.body(PostResponse.from(savedPost));
 	}
 
-	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul")
+	@Override
+	public ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (!post.getUser().getUserId().equals(userId)) {
+			throw new IllegalArgumentException("[Error] 자신의 게시글만 숨기거나 해제할 수 있습니다.");
+		}
+		if (post.getIsHidden() == state) {
+			throw new IllegalArgumentException("[Error] 해당 상태의 게시글입니다.");
+		}
+		post.updateHidden(state);
+		Post savedPost = postComponentRepository.savePost(post);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(PostResponse.from(savedPost));
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor) {
+		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
+		Slice<Post> posts = getAllPosts(pageRequest, cursor);
+		List<PostResponse> responses = posts.stream()
+			.map(PostResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
+
+	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor) {
+		if (cursor == 0) {
+			cursor += DEFAULT_PAGE__SIZE;
+		}
+		return postComponentRepository.findNextPagePosts(cursor, pageRequest);
+	}
+
+	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul") // 매일 0시 3분에 실행
 	public void autoClosePost() {
 		LocalDate purchaseDate = LocalDate.now().minusDays(1);
 		List<Post> posts = postComponentRepository.findAllPostsByPurchaseDate(purchaseDate);

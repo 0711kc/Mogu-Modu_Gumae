@@ -53,6 +53,13 @@ public class PostController {
 		return postComponentService.findPostWithDetail(id);
 	}
 
+	@GetMapping("/all/{userId}")
+	public ResponseEntity<List<PostResponse>> findPostAll(
+		@PathVariable final String userId,
+		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
+		return postComponentService.findAllPosts(userId, cursor);
+	}
+
 	@PatchMapping("/{postId}/{userId}")
 	public ResponseEntity<PostWithDetailResponse> updatePost(
 		@PathVariable Long postId,
@@ -66,6 +73,14 @@ public class PostController {
 	@PatchMapping("/{postId}/{userId}/close")
 	public ResponseEntity<PostResponse> closePost(@PathVariable final Long postId, @PathVariable final String userId) {
 		return postComponentService.closePost(postId, userId);
+	}
+
+	@PatchMapping("/{postId}/{userId}/hide/my")
+	public ResponseEntity<PostResponse> hideMyPost(
+		@PathVariable final Long postId,
+		@PathVariable final String userId,
+		@RequestPart(name = "state") Boolean state) {
+		return postComponentService.hideMyPost(postId, userId, state);
 	}
 
 	@DeleteMapping("/{postId}/{userId}")

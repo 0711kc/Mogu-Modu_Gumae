@@ -87,6 +87,16 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
+	public ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state) {
+		return postService.hideMyPost(postId, userId, state);
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findAllPosts(String userId, Long cursor) {
+		return postService.findAllPost(userId, cursor);
+	}
+
+	@Override
 	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId) {
 		return postService.searchPostsByTitle(title, userId);
 	}
