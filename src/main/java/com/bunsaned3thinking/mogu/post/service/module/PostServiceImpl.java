@@ -23,6 +23,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailRes
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
+import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
@@ -237,12 +238,18 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state) {
+	public ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state) {
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
-		if (!post.getUser().getUserId().equals(userId)) {
-			throw new IllegalArgumentException("[Error] 자신의 게시글만 숨기거나 해제할 수 있습니다.");
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		if (post.getUser().equals(user)) {
+			return hideMyPost(post, state);
 		}
+		return hideOtherPost(post, user, state);
+	}
+
+	private ResponseEntity<PostResponse> hideMyPost(Post post, boolean state) {
 		if (post.getIsHidden() == state) {
 			throw new IllegalArgumentException("[Error] 해당 상태의 게시글입니다.");
 		}
@@ -251,6 +258,23 @@ public class PostServiceImpl implements PostService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(PostResponse.from(savedPost));
+	}
+
+	private ResponseEntity<PostResponse> hideOtherPost(Post post, User user, boolean state) {
+		HiddenPostId hiddenPostId = HiddenPostId.of(user.getUid(), post.getId());
+		boolean isExistHiddenPost = postComponentRepository.existsHiddenPostById(hiddenPostId);
+		if (state == isExistHiddenPost) {
+			throw new IllegalArgumentException("[Error] 해당 상태의 게시글입니다.");
+		}
+		if (state) {
+			HiddenPost hiddenPost = HiddenPost.of(user, post);
+			postComponentRepository.saveHiddenPost(hiddenPost);
+		} else {
+			postComponentRepository.deleteHiddenPostById(hiddenPostId);
+		}
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(PostResponse.from(post));
 	}
 
 	@Override
@@ -265,20 +289,6 @@ public class PostServiceImpl implements PostService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(responses);
-	}
-
-	@Override
-	public ResponseEntity<Void> hidePost(Long postId, String userId, Boolean state) {
-		Post post = postComponentRepository.findPostById(postId)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
-		User user = postComponentRepository.findUserByUserId(userId)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		if (post.getUser().getUid().equals(user.getUid())) {
-			throw new IllegalArgumentException("[Error] 자신의 게시글입니다.");
-		}
-		HiddenPost hiddenPost = HiddenPost.of(user, post);
-		postComponentRepository.saveHiddenPost(hiddenPost);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid) {

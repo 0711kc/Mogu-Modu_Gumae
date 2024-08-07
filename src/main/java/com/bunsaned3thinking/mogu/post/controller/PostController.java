@@ -76,19 +76,11 @@ public class PostController {
 	}
 
 	@PatchMapping("/{postId}/{userId}/hide")
-	public ResponseEntity<Void> hidePost(
+	public ResponseEntity<PostResponse> hidePost(
 		@PathVariable final Long postId,
 		@PathVariable final String userId,
-		@RequestPart(name = "state") Boolean state) {
+		@RequestPart(name = "state") boolean state) {
 		return postComponentService.hidePost(postId, userId, state);
-	}
-
-	@PatchMapping("/{postId}/{userId}/hide/my")
-	public ResponseEntity<PostResponse> hideMyPost(
-		@PathVariable final Long postId,
-		@PathVariable final String userId,
-		@RequestPart(name = "state") Boolean state) {
-		return postComponentService.hideMyPost(postId, userId, state);
 	}
 
 	@DeleteMapping("/{postId}/{userId}")

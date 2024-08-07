@@ -14,7 +14,7 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 	List<Post> findByPurchaseDate(LocalDate purchaseDate);
 
 	@Query("select p from Post p left join fetch p.hiddenPosts hp "
-		+ "where (hp is null or hp.user.uid != :userUid) and p.id <= :cursor "
+		+ "where (hp is null or hp.user.uid != :userUid) and p.id <= :cursor and p.isHidden != true "
 		+ "order by p.postDate DESC")
 	Slice<Post> findNextPage(Long userUid, Long cursor, PageRequest pageRequest);
 }
