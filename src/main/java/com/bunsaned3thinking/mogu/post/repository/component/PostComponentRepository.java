@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
+import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
@@ -47,5 +48,7 @@ public interface PostComponentRepository {
 
 	void saveAllPosts(List<Post> posts);
 
-	Slice<Post> findNextPagePosts(Long cursor, PageRequest pageRequest);
+	Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest);
+
+	void saveHiddenPost(HiddenPost hiddenPost);
 }

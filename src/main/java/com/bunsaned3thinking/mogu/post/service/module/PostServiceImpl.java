@@ -22,6 +22,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
 import com.bunsaned3thinking.mogu.post.entity.Category;
+import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
@@ -254,8 +255,10 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor) {
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		Slice<Post> posts = getAllPosts(pageRequest, cursor);
+		Slice<Post> posts = getAllPosts(pageRequest, cursor, user.getUid());
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)
 			.toList();
@@ -264,11 +267,25 @@ public class PostServiceImpl implements PostService {
 			.body(responses);
 	}
 
-	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor) {
+	@Override
+	public ResponseEntity<Void> hidePost(Long postId, String userId, Boolean state) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		User user = postComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		if (post.getUser().getUid().equals(user.getUid())) {
+			throw new IllegalArgumentException("[Error] 자신의 게시글입니다.");
+		}
+		HiddenPost hiddenPost = HiddenPost.of(user, post);
+		postComponentRepository.saveHiddenPost(hiddenPost);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid) {
 		if (cursor == 0) {
 			cursor += DEFAULT_PAGE__SIZE;
 		}
-		return postComponentRepository.findNextPagePosts(cursor, pageRequest);
+		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest);
 	}
 
 	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul") // 매일 0시 3분에 실행
