@@ -14,12 +14,12 @@ import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
-import com.bunsaned3thinking.mogu.post.entity.PostDocs;
+import com.bunsaned3thinking.mogu.post.entity.PostDoc;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.repository.module.HiddenPostRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostDetailRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
-import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
 import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.report.repository.ReportRepository;
@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class PostComponentRepositoryImpl implements PostComponentRepository {
-	private final PostDocsElasticRepository postDocsElasticRepository;
+	private final PostDocElasticRepository postDocElasticRepository;
 	private final UserRepository userRepository;
 	private final PostDetailRepository postDetailRepository;
 	private final PostImageRepository postImageRepository;
@@ -61,8 +61,8 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public Post savePost(Post post) {
 		Post savedPost = postJpaRepository.save(post);
-		postDocsElasticRepository.save(
-			PostDocs.of(post.getId(), post.getTitle(), post.getPostDetail().getContent(),
+		postDocElasticRepository.save(
+			PostDoc.of(post.getId(), post.getTitle(), post.getPostDetail().getContent(),
 				post.getUser().getNickname()));
 		return savedPost;
 	}
@@ -129,12 +129,12 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 
 	@Override
 	public List<Post> searchPostsByTitle(String keyword) {
-		List<PostDocs> postDocses = postDocsElasticRepository.findByTitleContaining(keyword);
-		if (postDocses.isEmpty()) {
+		List<PostDoc> postDocs = postDocElasticRepository.findByTitleContaining(keyword);
+		if (postDocs.isEmpty()) {
 			return List.of();
 		}
-		for (PostDocs postDocs : postDocses) {
-			System.out.println(postDocs.getTitle());
+		for (PostDoc postDoc : postDocs) {
+			System.out.println(postDoc.getTitle());
 		}
 
 		// String[] fields = {"title"};
@@ -173,8 +173,8 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 		// 	}
 		// }
 
-		return postDocses.stream()
-			.map(postDocs -> postJpaRepository.findById(postDocs.getId()))
+		return postDocs.stream()
+			.map(postDoc -> postJpaRepository.findById(postDoc.getId()))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(indexName = "posts")
-public class PostDocs {
+public class PostDoc {
 	@Id
 	private Long id;
 
@@ -29,8 +29,8 @@ public class PostDocs {
 	@Field(type = FieldType.Text)
 	private String name;
 
-	public static PostDocs of(Long id, String title, String content, String name) {
-		return PostDocs.builder()
+	public static PostDoc of(Long id, String title, String content, String name) {
+		return PostDoc.builder()
 			.id(id)
 			.title(title)
 			.content(content)

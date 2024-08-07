@@ -6,9 +6,12 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
-import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocsElasticRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
 
-@EnableElasticsearchRepositories(basePackageClasses = PostDocsElasticRepository.class)
+import io.micrometer.common.lang.NonNullApi;
+
+@NonNullApi
+@EnableElasticsearchRepositories(basePackageClasses = PostDocElasticRepository.class)
 @Configuration
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
 	@Value("${elasticsearch.rest.uris}")
