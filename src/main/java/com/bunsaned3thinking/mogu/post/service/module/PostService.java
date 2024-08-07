@@ -38,9 +38,7 @@ public interface PostService {
 
 	ResponseEntity<PostResponse> closePost(Long postId, String userId);
 
-	ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state);
-
 	ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor);
 
-	ResponseEntity<Void> hidePost(Long postId, String userId, Boolean state);
+	ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state);
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
+import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostDocs;
@@ -114,6 +115,16 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public void saveHiddenPost(HiddenPost hiddenPost) {
 		hiddenPostRepository.save(hiddenPost);
+	}
+
+	@Override
+	public void deleteHiddenPostById(HiddenPostId hiddenPostId) {
+		hiddenPostRepository.deleteById(hiddenPostId);
+	}
+
+	@Override
+	public boolean existsHiddenPostById(HiddenPostId hiddenPostId) {
+		return hiddenPostRepository.existsById(hiddenPostId);
 	}
 
 	@Override

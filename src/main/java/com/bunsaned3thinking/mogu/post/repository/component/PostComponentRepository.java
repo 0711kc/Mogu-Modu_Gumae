@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
+import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
@@ -51,4 +52,8 @@ public interface PostComponentRepository {
 	Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest);
 
 	void saveHiddenPost(HiddenPost hiddenPost);
+
+	void deleteHiddenPostById(HiddenPostId hiddenPostId);
+
+	boolean existsHiddenPostById(HiddenPostId hiddenPostId);
 }
