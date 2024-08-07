@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
@@ -43,4 +46,6 @@ public interface PostComponentRepository {
 	List<Post> findAllPostsByPurchaseDate(LocalDate purchaseDate);
 
 	void saveAllPosts(List<Post> posts);
+
+	Slice<Post> findNextPagePosts(Long cursor, PageRequest pageRequest);
 }

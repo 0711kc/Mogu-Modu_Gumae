@@ -37,4 +37,8 @@ public interface PostService {
 	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
 
 	ResponseEntity<PostResponse> closePost(Long postId, String userId);
+
+	ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state);
+
+	ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor);
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +101,11 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public void saveAllPosts(List<Post> posts) {
 		postJpaRepository.saveAll(posts);
+	}
+
+	@Override
+	public Slice<Post> findNextPagePosts(Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findNextPage(cursor, pageRequest);
 	}
 
 	@Override

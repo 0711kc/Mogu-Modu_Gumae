@@ -37,4 +37,8 @@ public interface PostComponentService {
 	ResponseEntity<Void> deletePost(String userId, Long postId);
 
 	ResponseEntity<PostResponse> closePost(Long postId, String userId);
+
+	ResponseEntity<PostResponse> hideMyPost(Long postId, String userId, boolean state);
+
+	ResponseEntity<List<PostResponse>> findAllPosts(String userId, Long cursor);
 }
