@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.common.exception.handler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,13 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<String> handleIllegalArgumentException(
 		IllegalArgumentException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+	public ResponseEntity<String> handleSqlIntegrityConstraintViolationException(
+		SQLIntegrityConstraintViolationException exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 
