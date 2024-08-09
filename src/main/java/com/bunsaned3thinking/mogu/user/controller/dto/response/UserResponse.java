@@ -1,6 +1,5 @@
 package com.bunsaned3thinking.mogu.user.controller.dto.response;
 
-import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 
 import com.bunsaned3thinking.mogu.common.util.S3Util;
@@ -28,7 +27,9 @@ public class UserResponse {
 	private String manner;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDateTime registerDate;
-	private Point2D.Double location;
+	// private Point location;
+	private Double longitude;
+	private Double latitude;
 	private Short distanceMeters;
 
 	public static UserResponse from(User user) {
@@ -45,7 +46,9 @@ public class UserResponse {
 			.level(user.getLevel())
 			.manner(user.getManner().getDescription())
 			.registerDate(user.getRegisterDate())
-			.location(user.getLocation())
+			// .location(user.getLocation())
+			.longitude(user.getLocation().getX())
+			.latitude(user.getLocation().getY())
 			.distanceMeters(user.getDistanceMeters())
 			.build();
 	}

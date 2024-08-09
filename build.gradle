@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
     implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.10.0'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.hibernate:hibernate-spatial:6.5.2.Final'
+    implementation 'org.locationtech.jts:jts-core'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     runtimeOnly 'com.mysql:mysql-connector-j'

@@ -1,9 +1,10 @@
 package com.bunsaned3thinking.mogu.user.entity;
 
-import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.locationtech.jts.geom.Point;
 
 import com.bunsaned3thinking.mogu.alarm.entity.AlarmSignal;
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
@@ -14,11 +15,13 @@ import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
+import com.bunsaned3thinking.mogu.post.entity.converter.PointConverter;
 import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -94,11 +97,8 @@ public class User {
 	@Builder.Default
 	private LocalDateTime registerDate = LocalDateTime.now();
 
-	// @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// private ActivityArea activityArea;
-
-	@Column
-	private Point2D.Double location;
+	@Convert(converter = PointConverter.class)
+	private Point location;
 
 	@Column
 	@Builder.Default
@@ -145,7 +145,7 @@ public class User {
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
 	public static User of(String userId, String password, String name, String nickname,
-		String phone, String email, Role role, Point2D.Double location) {
+		String phone, String email, Role role, Point location) {
 		return User.builder()
 			.userId(userId)
 			.password(password)

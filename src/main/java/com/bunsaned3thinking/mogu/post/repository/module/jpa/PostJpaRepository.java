@@ -13,8 +13,15 @@ import com.bunsaned3thinking.mogu.post.entity.Post;
 public interface PostJpaRepository extends JpaRepository<Post, Long> {
 	List<Post> findByPurchaseDate(LocalDate purchaseDate);
 
-	@Query("select p from Post p left join fetch p.hiddenPosts hp "
-		+ "where (hp is null or hp.user.uid != :userUid) and p.id <= :cursor and p.isHidden != true "
-		+ "order by p.postDate DESC")
-	Slice<Post> findNextPage(Long userUid, Long cursor, PageRequest pageRequest);
+	String findPageQuery =
+		"select p.* from post as p left join "
+			+ "(select post_id from hidden_post where user_uid = :userUid) as hp "
+			+ "on p.id = hp.post_id "
+			+ "where hp.post_id is null and p.is_hidden != true and p.id <= :cursor "
+			+ "and ST_CONTAINS((ST_Buffer(ST_SRID(POINT(:latitude, :longitude), 4326), :distanceMeters)), ST_POINTFROMTEXT(p.location, 4326)) "
+			+ "order by p.post_date desc;";
+
+	@Query(nativeQuery = true, value = findPageQuery)
+	Slice<Post> findNextPage(Long userUid, double longitude, double latitude, short distanceMeters, Long cursor,
+		PageRequest pageRequest);
 }

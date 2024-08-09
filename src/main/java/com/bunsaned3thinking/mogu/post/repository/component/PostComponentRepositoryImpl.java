@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
@@ -108,8 +109,10 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest) {
-		return postJpaRepository.findNextPage(userUid, cursor, pageRequest);
+	public Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest,
+		Point referencePoint, Short distanceMeters) {
+		return postJpaRepository.findNextPage(userUid, referencePoint.getX(),
+			referencePoint.getY(), distanceMeters, cursor, pageRequest);
 	}
 
 	@Override

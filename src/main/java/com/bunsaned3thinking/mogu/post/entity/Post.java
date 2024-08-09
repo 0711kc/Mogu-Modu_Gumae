@@ -1,18 +1,21 @@
 package com.bunsaned3thinking.mogu.post.entity;
 
-import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
+
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.chat.entity.Chat;
+import com.bunsaned3thinking.mogu.post.entity.converter.PointConverter;
 import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -90,9 +93,8 @@ public class Post {
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	private PostDetail postDetail;
 
-	// @OneToOne(fetch = FetchType.LAZY)
-	@Column
-	private Point2D.Double location;
+	@Convert(converter = PointConverter.class)
+	private Point location;
 
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
@@ -103,7 +105,7 @@ public class Post {
 	private User user;
 
 	public void update(Category category, LocalDate purchaseDate, int userCount, String title, int discountCost,
-		int originalCost, Point2D.Double location) {
+		int originalCost, Point location) {
 		this.category = category;
 		this.purchaseDate = purchaseDate;
 		this.userCount = userCount;

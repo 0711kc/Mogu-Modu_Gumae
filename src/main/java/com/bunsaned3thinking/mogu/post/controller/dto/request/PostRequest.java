@@ -1,10 +1,10 @@
 package com.bunsaned3thinking.mogu.post.controller.dto.request;
 
-import java.awt.geom.Point2D;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
@@ -68,7 +68,8 @@ public class PostRequest {
 			.originalCost(originalCost)
 			.purchaseDate(purchaseDate)
 			.recruitState(RecruitState.RECRUITING)
-			.location(new Point2D.Double(longitude, latitude))
+			// .location(new Point2D.Double(longitude, latitude))
+			.location(LocationUtil.getPoint(longitude, latitude))
 			.user(user)
 			.postDetail(postDetail)
 			.userCount(userCount)

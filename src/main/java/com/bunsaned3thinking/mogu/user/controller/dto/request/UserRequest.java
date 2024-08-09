@@ -1,7 +1,6 @@
 package com.bunsaned3thinking.mogu.user.controller.dto.request;
 
-import java.awt.geom.Point2D;
-
+import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -61,7 +60,7 @@ public class UserRequest {
 			.phone(phone)
 			.email(email)
 			.role(role)
-			.location(new Point2D.Double(longitude, latitude))
+			.location(LocationUtil.getPoint(longitude, latitude))
 			.build();
 	}
 }

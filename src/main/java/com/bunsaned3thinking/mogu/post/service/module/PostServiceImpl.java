@@ -1,9 +1,9 @@
 package com.bunsaned3thinking.mogu.post.service.module;
 
-import java.awt.geom.Point2D;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
+import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
@@ -194,7 +195,8 @@ public class PostServiceImpl implements PostService {
 		String title = updatePostRequest.getTitle();
 		int discountCost = updatePostRequest.getDiscountCost();
 		int originalCost = updatePostRequest.getOriginalCost();
-		Point2D.Double location = new Point2D.Double(updatePostRequest.getLongitude(), updatePostRequest.getLatitude());
+		Point location = LocationUtil.getPoint(updatePostRequest.getLongitude(),
+			updatePostRequest.getLatitude());
 		post.update(category, purchaseDate, userCount, title, discountCost, originalCost, location);
 
 		String content = updatePostRequest.getContent();
@@ -293,7 +295,8 @@ public class PostServiceImpl implements PostService {
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		Slice<Post> posts = getAllPosts(pageRequest, cursor, user.getUid());
+		Slice<Post> posts = getAllPosts(pageRequest, cursor, user.getUid(), user.getLocation(),
+			user.getDistanceMeters());
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)
 			.toList();
@@ -302,11 +305,12 @@ public class PostServiceImpl implements PostService {
 			.body(responses);
 	}
 
-	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid) {
+	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid, Point referencePoint,
+		Short distanceMeters) {
 		if (cursor == 0) {
 			cursor += DEFAULT_PAGE__SIZE;
 		}
-		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest);
+		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest, referencePoint, distanceMeters);
 	}
 
 	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul") // 매일 0시 3분에 실행

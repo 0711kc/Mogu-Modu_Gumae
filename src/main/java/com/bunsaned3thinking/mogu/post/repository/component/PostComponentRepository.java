@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
@@ -49,7 +50,9 @@ public interface PostComponentRepository {
 
 	void saveAllPosts(List<Post> posts);
 
-	Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest);
+	// Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest);
+	Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest, Point referencePoint,
+		Short distanceMeters);
 
 	void saveHiddenPost(HiddenPost hiddenPost);
 
