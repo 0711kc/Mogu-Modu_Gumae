@@ -18,9 +18,15 @@ public class UpdateUserRequest {
 	@Size(max = 12)
 	private String nickname;
 
+	private Double longitude;
+
+	private Double latitude;
+
 	public static UpdateUserRequest from(User user) {
 		return UpdateUserRequest.builder()
 			.nickname(user.getNickname())
+			.longitude(user.getLocation().getX())
+			.latitude(user.getLocation().getY())
 			.build();
 	}
 }

@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.chat.entity.ChatMessage;
 import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.entity.UnreadMessage;
 import com.bunsaned3thinking.mogu.common.config.S3Config;
+import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
@@ -166,8 +167,9 @@ public class User {
 		return user.getUid().equals(this.uid);
 	}
 
-	public void update(String nickname) {
+	public void update(String nickname, Double longitude, Double latitude) {
 		this.nickname = nickname;
+		this.location = LocationUtil.getPoint(longitude, latitude);
 	}
 
 	public void updateProfileImage(String profileImage) {
