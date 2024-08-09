@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
-import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
@@ -28,8 +27,8 @@ public class UserServiceImpl implements UserService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public ResponseEntity<UserResponse> createUser(UserRequest userRequest, ActivityArea activityArea) {
-		User user = userRequest.toEntity(activityArea);
+	public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
+		User user = userRequest.toEntity();
 		user.updatePassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED)

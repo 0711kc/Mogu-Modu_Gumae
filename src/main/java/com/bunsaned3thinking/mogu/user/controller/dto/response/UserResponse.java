@@ -28,13 +28,8 @@ public class UserResponse {
 	private String manner;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDateTime registerDate;
-	private Point2D.Double activityAreas;
+	private Point2D.Double location;
 	private Short distanceMeters;
-	// private List<Chat> chats;
-	// private List<Complaint> complaints;
-	// private List<HiddenPost> hiddenPosts;
-	// private List<Search> searches;
-	// private List<AlarmSignal> alarmSignals;
 
 	public static UserResponse from(User user) {
 		return UserResponse.builder()
@@ -50,13 +45,8 @@ public class UserResponse {
 			.level(user.getLevel())
 			.manner(user.getManner().getDescription())
 			.registerDate(user.getRegisterDate())
-			.activityAreas(user.getActivityArea().getReferencePoint())
-			.distanceMeters(user.getActivityArea().getDistanceMeters())
-			// .chats(user.getChats())
-			// .complaints(user.getComplaints())
-			// .hiddenPosts(user.getHiddenPosts())
-			// .searches(user.getSearches())
-			// .alarmSignals(user.getAlarmSignals())
+			.location(user.getLocation())
+			.distanceMeters(user.getDistanceMeters())
 			.build();
 	}
 }

@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.user.entity;
 
+import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,6 @@ import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.chat.entity.UnreadMessage;
 import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
-import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.report.entity.Report;
@@ -25,7 +25,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -95,8 +94,15 @@ public class User {
 	@Builder.Default
 	private LocalDateTime registerDate = LocalDateTime.now();
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private ActivityArea activityArea;
+	// @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	// private ActivityArea activityArea;
+
+	@Column
+	private Point2D.Double location;
+
+	@Column
+	@Builder.Default
+	private Short distanceMeters = 500;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@Builder.Default
@@ -139,7 +145,7 @@ public class User {
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
 	public static User of(String userId, String password, String name, String nickname,
-		String phone, String email, Role role, ActivityArea activityArea) {
+		String phone, String email, Role role, Point2D.Double location) {
 		return User.builder()
 			.userId(userId)
 			.password(password)
@@ -148,7 +154,7 @@ public class User {
 			.phone(phone)
 			.email(email)
 			.role(role)
-			.activityArea(activityArea)
+			.location(location)
 			.build();
 	}
 

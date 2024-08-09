@@ -1,6 +1,7 @@
 package com.bunsaned3thinking.mogu.user.controller.dto.request;
 
-import com.bunsaned3thinking.mogu.location.entity.ActivityArea;
+import java.awt.geom.Point2D;
+
 import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -45,13 +46,13 @@ public class UserRequest {
 	@NotNull(message = "권한을 입력해주세요.")
 	private Role role;
 
-	@NotNull(message = "위도를 입력해주세요.")
-	private Double latitude;
-
 	@NotNull(message = "경도를 입력해주세요.")
 	private Double longitude;
 
-	public User toEntity(ActivityArea activityArea) {
+	@NotNull(message = "위도를 입력해주세요.")
+	private Double latitude;
+
+	public User toEntity() {
 		return User.builder()
 			.userId(userId)
 			.password(password)
@@ -60,7 +61,7 @@ public class UserRequest {
 			.phone(phone)
 			.email(email)
 			.role(role)
-			.activityArea(activityArea)
+			.location(new Point2D.Double(longitude, latitude))
 			.build();
 	}
 }
