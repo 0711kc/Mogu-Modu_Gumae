@@ -48,13 +48,13 @@ public class UserRequest {
 	private Role role;
 
 	@NotNull(message = "경도를 입력해주세요.")
-	@DecimalMin("-90.0")
-	@DecimalMax("90.0")
+	@DecimalMin(value = "-90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
+	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double longitude;
 
 	@NotNull(message = "위도를 입력해주세요.")
-	@DecimalMin("-90.0")
-	@DecimalMax("90.0")
+	@DecimalMin(value = "-90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
+	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double latitude;
 
 	public User toEntity() {
