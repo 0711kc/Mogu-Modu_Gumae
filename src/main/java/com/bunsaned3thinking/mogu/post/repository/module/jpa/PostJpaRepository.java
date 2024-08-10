@@ -18,9 +18,9 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 		"select p.* from post as p left join "
 			+ "(select post_id from hidden_post where user_uid = :userUid) as hp "
 			+ "on p.id = hp.post_id "
-			+ "where hp.post_id is null and p.is_hidden != true and p.id <= :cursor "
+			+ "where hp.post_id is null and p.is_hidden != true and p.id >= :cursor "
 			+ "and ST_CONTAINS((ST_Buffer(:point, :distanceMeters)), p.location) "
-			+ "order by p.post_date desc;";
+			+ "order by p.post_date;";
 
 	@Query(nativeQuery = true, value = findPageQuery)
 	Slice<Post> findNextPage(Long userUid, Geometry point, short distanceMeters, Long cursor,

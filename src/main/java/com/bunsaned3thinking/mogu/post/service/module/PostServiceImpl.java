@@ -307,9 +307,6 @@ public class PostServiceImpl implements PostService {
 
 	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid, Point referencePoint,
 		Short distanceMeters) {
-		if (cursor == 0) {
-			cursor += DEFAULT_PAGE__SIZE;
-		}
 		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest, referencePoint, distanceMeters);
 	}
 
