@@ -90,7 +90,8 @@ public class UserServiceImpl implements UserService {
 		String nickname = updateUserRequest.getNickname();
 		Double longitude = updateUserRequest.getLongitude();
 		Double latitude = updateUserRequest.getLatitude();
-		user.update(nickname, longitude, latitude);
+		Short distanceMeters = updateUserRequest.getDistanceMeters();
+		user.update(nickname, longitude, latitude, distanceMeters);
 	}
 
 	@Override

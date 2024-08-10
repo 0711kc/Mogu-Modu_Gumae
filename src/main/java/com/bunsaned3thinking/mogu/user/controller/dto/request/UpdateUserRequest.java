@@ -28,11 +28,14 @@ public class UpdateUserRequest {
 	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double latitude;
 
+	private Short distanceMeters;
+
 	public static UpdateUserRequest from(User user) {
 		return UpdateUserRequest.builder()
 			.nickname(user.getNickname())
 			.longitude(user.getLocation().getX())
 			.latitude(user.getLocation().getY())
+			.distanceMeters(user.getDistanceMeters())
 			.build();
 	}
 }

@@ -167,9 +167,10 @@ public class User {
 		return user.getUid().equals(this.uid);
 	}
 
-	public void update(String nickname, Double longitude, Double latitude) {
+	public void update(String nickname, Double longitude, Double latitude, Short distanceMeters) {
 		this.nickname = nickname;
 		this.location = LocationUtil.getPoint(longitude, latitude);
+		this.distanceMeters = distanceMeters;
 	}
 
 	public void updateProfileImage(String profileImage) {
