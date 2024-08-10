@@ -111,8 +111,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest,
 		Point referencePoint, Short distanceMeters) {
-		return postJpaRepository.findNextPage(userUid, referencePoint.getX(),
-			referencePoint.getY(), distanceMeters, cursor, pageRequest);
+		return postJpaRepository.findNextPage(userUid, referencePoint, distanceMeters, cursor, pageRequest);
 	}
 
 	@Override

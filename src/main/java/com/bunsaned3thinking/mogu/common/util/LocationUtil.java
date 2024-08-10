@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class LocationUtil {
 	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-	public static Point getPoint(double longitude, double latitude) {
+	public static Point createPoint(double longitude, double latitude) {
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
 	}
 }

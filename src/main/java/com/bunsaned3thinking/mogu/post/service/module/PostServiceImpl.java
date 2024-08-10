@@ -195,7 +195,7 @@ public class PostServiceImpl implements PostService {
 		String title = updatePostRequest.getTitle();
 		int discountCost = updatePostRequest.getDiscountCost();
 		int originalCost = updatePostRequest.getOriginalCost();
-		Point location = LocationUtil.getPoint(updatePostRequest.getLongitude(),
+		Point location = LocationUtil.createPoint(updatePostRequest.getLongitude(),
 			updatePostRequest.getLatitude());
 		post.update(category, purchaseDate, userCount, title, discountCost, originalCost, location);
 

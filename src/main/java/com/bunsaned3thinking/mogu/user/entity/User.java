@@ -98,6 +98,7 @@ public class User {
 	@Builder.Default
 	private LocalDateTime registerDate = LocalDateTime.now();
 
+	@Column(columnDefinition = "POINT SRID 4326")
 	@Convert(converter = PointConverter.class)
 	private Point location;
 
@@ -169,7 +170,7 @@ public class User {
 
 	public void update(String nickname, Double longitude, Double latitude, Short distanceMeters) {
 		this.nickname = nickname;
-		this.location = LocationUtil.getPoint(longitude, latitude);
+		this.location = LocationUtil.createPoint(longitude, latitude);
 		this.distanceMeters = distanceMeters;
 	}
 

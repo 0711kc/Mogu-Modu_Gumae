@@ -27,7 +27,6 @@ public class UserResponse {
 	private String manner;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDateTime registerDate;
-	// private Point location;
 	private Double longitude;
 	private Double latitude;
 	private Short distanceMeters;
@@ -46,7 +45,6 @@ public class UserResponse {
 			.level(user.getLevel())
 			.manner(user.getManner().getDescription())
 			.registerDate(user.getRegisterDate())
-			// .location(user.getLocation())
 			.longitude(user.getLocation().getX())
 			.latitude(user.getLocation().getY())
 			.distanceMeters(user.getDistanceMeters())

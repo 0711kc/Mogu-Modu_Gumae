@@ -74,7 +74,7 @@ public class PostRequest {
 			.originalCost(originalCost)
 			.purchaseDate(purchaseDate)
 			.recruitState(RecruitState.RECRUITING)
-			.location(LocationUtil.getPoint(longitude, latitude))
+			.location(LocationUtil.createPoint(longitude, latitude))
 			.user(user)
 			.postDetail(postDetail)
 			.userCount(userCount)

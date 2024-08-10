@@ -93,6 +93,7 @@ public class Post {
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	private PostDetail postDetail;
 
+	@Column(columnDefinition = "POINT SRID 4326")
 	@Convert(converter = PointConverter.class)
 	private Point location;
 

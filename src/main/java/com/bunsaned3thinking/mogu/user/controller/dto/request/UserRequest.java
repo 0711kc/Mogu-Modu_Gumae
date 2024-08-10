@@ -66,7 +66,7 @@ public class UserRequest {
 			.phone(phone)
 			.email(email)
 			.role(role)
-			.location(LocationUtil.getPoint(longitude, latitude))
+			.location(LocationUtil.createPoint(longitude, latitude))
 			.build();
 	}
 }
