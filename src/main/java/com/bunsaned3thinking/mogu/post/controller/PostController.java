@@ -132,7 +132,9 @@ public class PostController {
 	}
 
 	@GetMapping("/all/like/{userId}")
-	public ResponseEntity<List<PostResponse>> findAllLikePost(@PathVariable final String userId) {
-		return postComponentService.findAllLikedPost(userId);
+	public ResponseEntity<List<PostResponse>> findAllLikePost(
+		@PathVariable final String userId,
+		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
+		return postComponentService.findAllLikedPost(userId, cursor);
 	}
 }

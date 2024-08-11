@@ -46,5 +46,5 @@ public interface PostComponentService {
 
 	ResponseEntity<Void> unlikePost(Long postId, String userId);
 
-	ResponseEntity<List<PostResponse>> findAllLikedPost(String userId);
+	ResponseEntity<List<PostResponse>> findAllLikedPost(String userId, Long cursor);
 }

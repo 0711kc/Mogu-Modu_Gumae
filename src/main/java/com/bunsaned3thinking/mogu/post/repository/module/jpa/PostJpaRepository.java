@@ -28,8 +28,8 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
 	Slice<Post> findByIdGreaterThanEqualAndReportsIsNotEmpty(Long id, PageRequest pageRequest);
 
-	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId")
-	List<Post> findLikedPostsByUserId(String userId);
+	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId and p.id >= :id")
+	List<Post> findLikedPostsByIdGreaterThanEqualAndUserId(Long id, String userId, PageRequest pageRequest);
 
 	Slice<Post> findByIdIn(List<Long> postIds);
 }

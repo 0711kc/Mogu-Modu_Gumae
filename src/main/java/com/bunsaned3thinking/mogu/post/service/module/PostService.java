@@ -42,5 +42,5 @@ public interface PostService {
 
 	ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state);
 
-	ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId);
+	ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId, Long cursor);
 }

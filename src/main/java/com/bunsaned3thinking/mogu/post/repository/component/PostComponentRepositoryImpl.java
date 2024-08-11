@@ -129,12 +129,12 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public List<Post> findLikedPostsByUserId(String userId) {
-		return postJpaRepository.findLikedPostsByUserId(userId);
+	public List<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findLikedPostsByIdGreaterThanEqualAndUserId(cursor, userId, pageRequest);
 	}
 
 	@Override
-	public Slice<Post> searchPostsByTitle(Long cursor, String keyword, PageRequest pageRequest) {
+	public Slice<Post> searchPostsByTitle(String keyword, Long cursor, PageRequest pageRequest) {
 		List<PostDoc> postDocs = postDocElasticRepository.findByIdGreaterThanEqualAndTitleContaining(cursor,
 			keyword,
 			pageRequest);

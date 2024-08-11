@@ -47,7 +47,7 @@ public interface PostComponentRepository {
 	boolean existsHiddenPostById(HiddenPostId hiddenPostId);
 
 	// LikedPost
-	List<Post> findLikedPostsByUserId(String userId);
+	List<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest);
 
 	// Report
 	Report saveReport(Report report);
@@ -59,7 +59,7 @@ public interface PostComponentRepository {
 	// Search
 	SearchHistory saveSearchHistory(String keyword, User user);
 
-	Slice<Post> searchPostsByTitle(Long cursor, String keyword, PageRequest pageRequest);
+	Slice<Post> searchPostsByTitle(String keyword, Long cursor, PageRequest pageRequest);
 
 	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
 

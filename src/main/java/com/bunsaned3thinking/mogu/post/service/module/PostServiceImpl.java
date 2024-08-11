@@ -178,7 +178,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor) {
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		Slice<Post> posts = postComponentRepository.searchPostsByTitle(cursor, keyword, pageRequest);
+		Slice<Post> posts = postComponentRepository.searchPostsByTitle(keyword, cursor, pageRequest);
 
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
@@ -264,8 +264,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId) {
-		List<Post> posts = postComponentRepository.findLikedPostsByUserId(userId);
+	public ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId, Long cursor) {
+		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
+		List<Post> posts = postComponentRepository.findLikedPostsByUserId(userId, cursor, pageRequest);
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)
 			.toList();

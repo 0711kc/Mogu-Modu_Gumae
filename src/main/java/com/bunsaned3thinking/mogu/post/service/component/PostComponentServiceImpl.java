@@ -109,8 +109,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findAllLikedPost(String userId) {
-		return postService.findLikedPostsByUserId(userId);
+	public ResponseEntity<List<PostResponse>> findAllLikedPost(String userId, Long cursor) {
+		return postService.findLikedPostsByUserId(userId, cursor);
 	}
 
 	@Override
