@@ -80,6 +80,9 @@ public class PostServiceImpl implements PostService {
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시물을 찾을 수 없습니다."));
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		if (post.getUser().equals(user)) {
+			throw new IllegalArgumentException("[Error] 자신의 게시글은 신고할 수 없습니다.");
+		}
 		boolean isReportExists = postComponentRepository.isReportExists(post.getId(), user.getUid());
 		if (isReportExists) {
 			throw new IllegalArgumentException("[Error] 게시물 신고는 한 번만 가능합니다.");
