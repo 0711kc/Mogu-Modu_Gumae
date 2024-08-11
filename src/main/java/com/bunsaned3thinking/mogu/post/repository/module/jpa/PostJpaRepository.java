@@ -38,10 +38,11 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
 	String findReportedPostsPageQuery =
 		"select post.*, count(*) as prc from post join report on post.id = report.post_id "
+			+ "join post_detail on post.id = post_detail.post_id "
 			+ "group by report.post_id "
 			+ "having (:reportsCount = prc and report.post_id > :cursor) "
 			+ "or (:reportsCount > prc) "
-			+ "order by prc desc, post_id asc;";
+			+ "order by prc desc, report.post_id asc;";
 
 	@Query(nativeQuery = true, value = findReportedPostsPageQuery)
 	Slice<Post> findReportedPostPage(Integer reportsCount, Long cursor,
@@ -49,8 +50,9 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
 	String findReportedPostsFirstPageQuery =
 		"select post.* from post join report on post.id = report.post_id "
+			+ "join post_detail on post.id = post_detail.post_id "
 			+ "group by report.post_id "
-			+ "order by count(*) desc, post_id asc;";
+			+ "order by count(*) desc, report.post_id asc;";
 
 	@Query(nativeQuery = true, value = findReportedPostsFirstPageQuery)
 	Slice<Post> findReportedPostFirstPage(PageRequest pageRequest);
