@@ -262,13 +262,20 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId, Long cursor) {
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		List<Post> posts = postComponentRepository.findLikedPostsByUserId(userId, cursor, pageRequest);
+		Slice<Post> posts = getAllLikedPosts(userId, cursor, pageRequest);
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)
 			.toList();
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(responses);
+	}
+
+	private Slice<Post> getAllLikedPosts(String userId, Long cursor, PageRequest pageRequest) {
+		if (cursor == 0) {
+			return postComponentRepository.findLikedPostsFirstPageByUserId(userId, pageRequest);
+		}
+		return postComponentRepository.findLikedPostsByUserId(userId, cursor, pageRequest);
 	}
 
 	private ResponseEntity<PostResponse> hideMyPost(Post post, boolean state) {
@@ -319,6 +326,9 @@ public class PostServiceImpl implements PostService {
 
 	private Slice<Post> getAllPosts(PageRequest pageRequest, Long cursor, Long userUid, Point referencePoint,
 		Short distanceMeters) {
+		if (cursor == 0) {
+			return postComponentRepository.findFirstPagePosts(userUid, pageRequest, referencePoint, distanceMeters);
+		}
 		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest, referencePoint, distanceMeters);
 	}
 

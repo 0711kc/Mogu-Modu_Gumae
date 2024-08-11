@@ -16,23 +16,36 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 		"select p.* from post as p left join "
 			+ "(select post_id from hidden_post where user_uid = :userUid) as hp "
 			+ "on p.id = hp.post_id "
-			+ "where hp.post_id is null and p.is_hidden != true and p.id >= :cursor "
+			+ "where hp.post_id is null and p.is_hidden != true and p.id < :cursor "
 			+ "and ST_CONTAINS((ST_Buffer(:point, :distanceMeters)), p.location) "
-			+ "order by p.post_date;";
+			+ "order by p.id desc;";
 
 	@Query(nativeQuery = true, value = findPageQuery)
 	Slice<Post> findNextPage(Long userUid, Geometry point, short distanceMeters, Long cursor,
 		PageRequest pageRequest);
 
+	String findFirstPageQuery =
+		"select p.* from post as p left join "
+			+ "(select post_id from hidden_post where user_uid = :userUid) as hp "
+			+ "on p.id = hp.post_id "
+			+ "where hp.post_id is null and p.is_hidden != true "
+			+ "and ST_CONTAINS((ST_Buffer(:point, :distanceMeters)), p.location) "
+			+ "order by p.id desc;";
+
+	@Query(nativeQuery = true, value = findFirstPageQuery)
+	Slice<Post> findFirstPage(Long userUid, Geometry point, short distanceMeters,
+		PageRequest pageRequest);
+
 	String findReportedPostsPageQuery =
 		"select post.*, count(*) as prc from post join report on post.id = report.post_id "
 			+ "group by report.post_id "
-			+ "having (:reportsCount = prc and report.post_id > :id) "
+			+ "having (:reportsCount = prc and report.post_id > :cursor) "
 			+ "or (:reportsCount > prc) "
-			+ "order by prc desc, report.post_id asc";
+			+ "order by prc desc, post_id asc";
 
 	@Query(nativeQuery = true, value = findReportedPostsPageQuery)
-	Slice<Post> findByIdGreaterThanEqualAndReportsIsNotEmpty(Integer reportsCount, Long id, PageRequest pageRequest);
+	Slice<Post> findReportedPostPage(Integer reportsCount, Long cursor,
+		PageRequest pageRequest);
 
 	String findReportedPostsFirstPageQuery =
 		"select post.* from post join report on post.id = report.post_id "
@@ -40,10 +53,15 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 			+ "order by count(*) desc, post_id asc";
 
 	@Query(nativeQuery = true, value = findReportedPostsFirstPageQuery)
-	Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest);
+	Slice<Post> findReportedPostFirstPage(PageRequest pageRequest);
 
-	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId and p.id >= :id")
-	List<Post> findLikedPostsByIdGreaterThanEqualAndUserId(Long id, String userId, PageRequest pageRequest);
+	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId and p.id < :cursor "
+		+ "order by p.id desc")
+	Slice<Post> findLikedPostPage(Long cursor, String userId, PageRequest pageRequest);
+
+	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId "
+		+ "order by p.id desc")
+	Slice<Post> findLikedPostFirstPage(String userId, PageRequest pageRequest);
 
 	Slice<Post> findByIdIn(List<Long> postIds);
 

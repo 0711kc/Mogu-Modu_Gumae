@@ -90,7 +90,13 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 
 	@Override
 	public Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest) {
-		return postJpaRepository.findAllFirstPageReportedPost(pageRequest);
+		return postJpaRepository.findReportedPostFirstPage(pageRequest);
+	}
+
+	@Override
+	public Slice<Post> findFirstPagePosts(Long userUid, PageRequest pageRequest, Point referencePoint,
+		Short distanceMeters) {
+		return postJpaRepository.findFirstPage(userUid, referencePoint, distanceMeters, pageRequest);
 	}
 
 	@Override
@@ -125,8 +131,13 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public List<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest) {
-		return postJpaRepository.findLikedPostsByIdGreaterThanEqualAndUserId(cursor, userId, pageRequest);
+	public Slice<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findLikedPostPage(cursor, userId, pageRequest);
+	}
+
+	@Override
+	public Slice<Post> findLikedPostsFirstPageByUserId(String userId, PageRequest pageRequest) {
+		return postJpaRepository.findLikedPostFirstPage(userId, pageRequest);
 	}
 
 	@Override
@@ -175,6 +186,6 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 
 	@Override
 	public Slice<Post> findAllReportedPost(Integer reportsCount, Long cursor, PageRequest pageRequest) {
-		return postJpaRepository.findByIdGreaterThanEqualAndReportsIsNotEmpty(reportsCount, cursor, pageRequest);
+		return postJpaRepository.findReportedPostPage(reportsCount, cursor, pageRequest);
 	}
 }

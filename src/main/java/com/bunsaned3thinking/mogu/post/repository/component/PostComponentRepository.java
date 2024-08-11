@@ -46,13 +46,15 @@ public interface PostComponentRepository {
 	boolean existsHiddenPostById(HiddenPostId hiddenPostId);
 
 	// LikedPost
-	List<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest);
+	Slice<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest);
 
 	// Report
 	Slice<Post> findAllReportedPost(Integer reportsCount, Long cursor, PageRequest pageRequest);
 
 	// Search
 	SearchHistory saveSearchHistory(String keyword, User user);
+
+	Slice<Post> findLikedPostsFirstPageByUserId(String userId, PageRequest pageRequest);
 
 	Slice<Post> searchPostsByTitle(String keyword, Long cursor, PageRequest pageRequest);
 
@@ -61,4 +63,6 @@ public interface PostComponentRepository {
 	void deleteSearchHistoryById(Long searchHistoryId);
 
 	Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest);
+
+	Slice<Post> findFirstPagePosts(Long userUid, PageRequest pageRequest, Point referencePoint, Short distanceMeters);
 }
