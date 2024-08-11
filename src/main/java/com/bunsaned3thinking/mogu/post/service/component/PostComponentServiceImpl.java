@@ -57,8 +57,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
-		return postService.findAllReportedPost();
+	public ResponseEntity<List<PostResponse>> findAllReportedPost(Long cursor) {
+		return postService.findAllReportedPost(cursor);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 
 	@Override
 	public ResponseEntity<List<PostResponse>> findAllLikedPost(String userId) {
-		return heartService.findLikedPostsByUserId(userId);
+		return postService.findLikedPostsByUserId(userId);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.bunsaned3thinking.mogu.post.repository.component;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +22,7 @@ import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
 import com.bunsaned3thinking.mogu.report.entity.Report;
+import com.bunsaned3thinking.mogu.report.entity.ReportId;
 import com.bunsaned3thinking.mogu.report.repository.ReportRepository;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.searchhistory.repository.SearchHistoryRepository;
@@ -130,6 +130,11 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
+	public List<Post> findLikedPostsByUserId(String userId) {
+		return postJpaRepository.findLikedPostsByUserId(userId);
+	}
+
+	@Override
 	public List<Post> searchPostsByTitle(String keyword) {
 		List<PostDoc> postDocs = postDocElasticRepository.findByTitleContaining(keyword);
 		if (postDocs.isEmpty()) {
@@ -183,20 +188,12 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public List<Report> findAllReport() {
-		return reportRepository.findAll();
+	public boolean isReportExists(Long postId, Long userUid) {
+		return reportRepository.existsById(ReportId.of(postId, userUid));
 	}
 
 	@Override
-	public boolean isReportExists(Post post, User user) {
-		return findAllReport().stream()
-			.anyMatch(report -> report.getPost().equals(post) && report.getUser().equals(user));
-	}
-
-	@Override
-	public List<Post> findAllReportedPost() {
-		return postJpaRepository.findAll().stream()
-			.filter(post -> !post.getReports().isEmpty())
-			.collect(Collectors.toList());
+	public Slice<Post> findAllReportedPost(Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findByIdGreaterThanEqualAndReportsIsNotEmpty(cursor, pageRequest);
 	}
 }

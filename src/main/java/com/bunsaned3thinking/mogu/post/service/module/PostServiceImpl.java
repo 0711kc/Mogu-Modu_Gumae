@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시물을 찾을 수 없습니다."));
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		boolean isReportExists = postComponentRepository.isReportExists(post, user);
+		boolean isReportExists = postComponentRepository.isReportExists(post.getId(), user.getUid());
 		if (isReportExists) {
 			throw new IllegalArgumentException("[Error] 게시물 신고는 한 번만 가능합니다.");
 		}
@@ -150,8 +150,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
-		List<Post> reportedPosts = postComponentRepository.findAllReportedPost();
+	public ResponseEntity<List<PostResponse>> findAllReportedPost(Long cursor) {
+		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
+		Slice<Post> reportedPosts = postComponentRepository.findAllReportedPost(cursor, pageRequest);
 		List<PostResponse> responses = reportedPosts.stream()
 			.map(PostResponse::from)
 			.toList();
@@ -259,6 +260,17 @@ public class PostServiceImpl implements PostService {
 			return hideMyPost(post, state);
 		}
 		return hideOtherPost(post, user, state);
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId) {
+		List<Post> posts = postComponentRepository.findLikedPostsByUserId(userId);
+		List<PostResponse> responses = posts.stream()
+			.map(PostResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
 	}
 
 	private ResponseEntity<PostResponse> hideMyPost(Post post, boolean state) {

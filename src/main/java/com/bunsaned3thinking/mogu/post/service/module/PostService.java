@@ -28,7 +28,7 @@ public interface PostService {
 	ResponseEntity<PostWithDetailResponse> updatePost(String userId, Long postId, UpdatePostRequest updatePostRequest,
 		List<String> postImageLinks);
 
-	ResponseEntity<List<PostResponse>> findAllReportedPost();
+	ResponseEntity<List<PostResponse>> findAllReportedPost(Long cursor);
 
 	ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistoryByUserId(String userId);
 
@@ -41,4 +41,6 @@ public interface PostService {
 	ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor);
 
 	ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state);
+
+	ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId);
 }

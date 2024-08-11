@@ -1,7 +1,5 @@
 package com.bunsaned3thinking.mogu.heart.service;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,16 +46,5 @@ public class HeartServiceImpl implements HeartService {
 		HeartId heartId = HeartId.of(post, user);
 		heartRepository.deleteById(heartId);
 		return null;
-	}
-
-	@Override
-	public ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId) {
-		List<Post> posts = heartRepository.findAllLikedPostsByUserId(userId);
-		List<PostResponse> responses = posts.stream()
-			.map(PostResponse::from)
-			.toList();
-		return ResponseEntity.status(HttpStatus.OK)
-			.contentType(MediaType.APPLICATION_JSON)
-			.body(responses);
 	}
 }

@@ -28,7 +28,7 @@ public interface PostComponentService {
 
 	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 
-	ResponseEntity<List<PostResponse>> findAllReportedPost();
+	ResponseEntity<List<PostResponse>> findAllReportedPost(Long cursor);
 
 	ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(String userId);
 
