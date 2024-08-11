@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.heart.repository;
+package com.bunsaned3thinking.mogu.heart.repository.module;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
