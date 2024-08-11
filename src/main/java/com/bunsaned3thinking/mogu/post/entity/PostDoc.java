@@ -18,9 +18,10 @@ import lombok.NoArgsConstructor;
 @Document(indexName = "posts")
 public class PostDoc {
 	@Id
+	@Field(type = FieldType.Long)
 	private Long id;
 
-	@Field(name = "title", type = FieldType.Text)
+	@Field(type = FieldType.Text)
 	private String title;
 
 	@Field(type = FieldType.Text)
@@ -29,12 +30,12 @@ public class PostDoc {
 	@Field(type = FieldType.Text)
 	private String name;
 
-	public static PostDoc of(Long id, String title, String content, String name) {
+	public static PostDoc from(Post post) {
 		return PostDoc.builder()
-			.id(id)
-			.title(title)
-			.content(content)
-			.name(name)
+			.id(post.getId())
+			.title(post.getTitle())
+			.content(post.getPostDetail().getContent())
+			.name(post.getUser().getNickname())
 			.build();
 	}
 }

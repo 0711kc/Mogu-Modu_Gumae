@@ -30,4 +30,6 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
 	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId")
 	List<Post> findLikedPostsByUserId(String userId);
+
+	Slice<Post> findByIdIn(List<Long> postIds);
 }

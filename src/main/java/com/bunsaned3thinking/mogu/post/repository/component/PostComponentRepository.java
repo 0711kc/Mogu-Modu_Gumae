@@ -59,7 +59,7 @@ public interface PostComponentRepository {
 	// Search
 	SearchHistory saveSearchHistory(String keyword, User user);
 
-	List<Post> searchPostsByTitle(String keyword);
+	Slice<Post> searchPostsByTitle(Long cursor, String keyword, PageRequest pageRequest);
 
 	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
 

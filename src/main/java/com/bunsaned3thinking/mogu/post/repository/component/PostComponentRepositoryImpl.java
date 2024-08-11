@@ -63,8 +63,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	public Post savePost(Post post) {
 		Post savedPost = postJpaRepository.save(post);
 		postDocElasticRepository.save(
-			PostDoc.of(post.getId(), post.getTitle(), post.getPostDetail().getContent(),
-				post.getUser().getNickname()));
+			PostDoc.from(savedPost));
 		return savedPost;
 	}
 
@@ -135,15 +134,12 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public List<Post> searchPostsByTitle(String keyword) {
-		List<PostDoc> postDocs = postDocElasticRepository.findByTitleContaining(keyword);
-		if (postDocs.isEmpty()) {
-			return List.of();
-		}
-		for (PostDoc postDoc : postDocs) {
-			System.out.println(postDoc.getTitle());
-		}
-
+	public Slice<Post> searchPostsByTitle(Long cursor, String keyword, PageRequest pageRequest) {
+		List<PostDoc> postDocs = postDocElasticRepository.findByIdGreaterThanEqualAndTitleContaining(cursor,
+			keyword,
+			pageRequest);
+		List<Long> postIds = postDocs.stream().map(PostDoc::getId).toList();
+		return postJpaRepository.findByIdIn(postIds);
 		// String[] fields = {"title"};
 		// Pageable aa = PageRequest.of(0, 10);
 		// Page<PostDocs> postDocsPage = postDocsElasticRepository.searchSimilar(referencePost, fields, pageable);
@@ -179,12 +175,6 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 		// 		System.out.println(hit.fields());
 		// 	}
 		// }
-
-		return postDocs.stream()
-			.map(postDoc -> postJpaRepository.findById(postDoc.getId()))
-			.filter(Optional::isPresent)
-			.map(Optional::get)
-			.toList();
 	}
 
 	@Override

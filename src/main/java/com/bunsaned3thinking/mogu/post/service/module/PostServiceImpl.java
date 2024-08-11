@@ -176,8 +176,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId) {
-		List<Post> posts = postComponentRepository.searchPostsByTitle(keyword);
+	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor) {
+		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
+		Slice<Post> posts = postComponentRepository.searchPostsByTitle(cursor, keyword, pageRequest);
 
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));

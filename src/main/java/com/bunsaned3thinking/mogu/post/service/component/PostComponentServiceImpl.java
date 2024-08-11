@@ -114,8 +114,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId) {
-		return postService.searchPostsByTitle(title, userId);
+	public ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId, Long cursor) {
+		return postService.searchPostsByTitle(title, userId, cursor);
 	}
 
 }

@@ -24,7 +24,7 @@ public interface PostComponentService {
 	ResponseEntity<PostWithDetailResponse> updatePost(Long postId, String userId,
 		UpdatePostRequest updatePostRequest, List<MultipartFile> multipartFileList);
 
-	ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId);
+	ResponseEntity<List<PostResponse>> searchPostByTitle(String title, String userId, Long cursor);
 
 	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 

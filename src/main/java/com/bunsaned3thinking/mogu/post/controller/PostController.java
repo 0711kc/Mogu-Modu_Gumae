@@ -98,14 +98,16 @@ public class PostController {
 
 	@GetMapping("/reports")
 	public ResponseEntity<List<PostResponse>> findAllReportedPost(
-		@RequestParam(name = "cursor", required = false) Long cursor) {
+		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
 		return postComponentService.findAllReportedPost(cursor);
 	}
 
 	@GetMapping("/search/{userId}")
-	public ResponseEntity<List<PostResponse>> searchPosts(@RequestParam(name = "title") String title,
-		@PathVariable final String userId) {
-		return postComponentService.searchPostByTitle(title, userId);
+	public ResponseEntity<List<PostResponse>> searchPosts(
+		@PathVariable final String userId,
+		@RequestParam(name = "title") String title,
+		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
+		return postComponentService.searchPostByTitle(title, userId, cursor);
 	}
 
 	@GetMapping("/searchHistories/{userId}")

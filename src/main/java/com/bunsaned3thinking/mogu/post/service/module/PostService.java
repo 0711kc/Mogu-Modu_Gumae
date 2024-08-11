@@ -14,7 +14,7 @@ import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
 
 public interface PostService {
 
-	ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId);
+	ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor);
 
 	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 
