@@ -9,14 +9,10 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
-import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
-import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
 
 public interface PostService {
 
 	ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor);
-
-	ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest);
 
 	ResponseEntity<PostWithDetailResponse> createPost(String memberId, PostRequest postRequest,
 		List<String> postImageLinks);

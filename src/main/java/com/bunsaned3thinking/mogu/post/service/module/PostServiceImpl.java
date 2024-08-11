@@ -30,9 +30,6 @@ import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
-import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
-import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
-import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -72,28 +69,6 @@ public class PostServiceImpl implements PostService {
 		return postImageLinks.stream()
 			.map(postImageLink -> PostImage.from(postImageLink, postDetail))
 			.toList();
-	}
-
-	@Override
-	public ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest) {
-		Post post = postComponentRepository.findPostById(postId)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시물을 찾을 수 없습니다."));
-		User user = postComponentRepository.findUserByUserId(userId)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		if (post.getUser().equals(user)) {
-			throw new IllegalArgumentException("[Error] 자신의 게시글은 신고할 수 없습니다.");
-		}
-		boolean isReportExists = postComponentRepository.isReportExists(post.getId(), user.getUid());
-		if (isReportExists) {
-			throw new IllegalArgumentException("[Error] 게시물 신고는 한 번만 가능합니다.");
-		}
-		Report report = reportRequest.toEntity(post, user);
-		Report savedReport = postComponentRepository.saveReport(report);
-		post.getReports().add(savedReport);
-		user.getReports().add(savedReport);
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.contentType(MediaType.APPLICATION_JSON)
-			.body(ReportResponse.from(savedReport));
 	}
 
 	@Override
@@ -155,7 +130,25 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ResponseEntity<List<PostResponse>> findAllReportedPost(Long cursor) {
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		Slice<Post> reportedPosts = postComponentRepository.findAllReportedPost(cursor, pageRequest);
+		if (cursor == 0) {
+			return findReportedPostFirstPage(pageRequest);
+		}
+		Post post = postComponentRepository.findPostById(cursor)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		System.out.println(cursor + " " + post.getReports().size());
+		Slice<Post> reportedPosts = postComponentRepository.findAllReportedPost(post.getReports().size(), cursor,
+			pageRequest);
+		List<PostResponse> responses = reportedPosts.stream()
+			.peek(post1 -> System.out.println(post1.getId()))
+			.map(PostResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
+
+	private ResponseEntity<List<PostResponse>> findReportedPostFirstPage(PageRequest pageRequest) {
+		Slice<Post> reportedPosts = postComponentRepository.findAllFirstPageReportedPost(pageRequest);
 		List<PostResponse> responses = reportedPosts.stream()
 			.map(PostResponse::from)
 			.toList();

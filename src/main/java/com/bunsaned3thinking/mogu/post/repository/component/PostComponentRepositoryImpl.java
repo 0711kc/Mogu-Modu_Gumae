@@ -21,9 +21,6 @@ import com.bunsaned3thinking.mogu.post.repository.module.PostDetailRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.jpa.PostJpaRepository;
-import com.bunsaned3thinking.mogu.report.entity.Report;
-import com.bunsaned3thinking.mogu.report.entity.ReportId;
-import com.bunsaned3thinking.mogu.report.repository.ReportRepository;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.searchhistory.repository.SearchHistoryRepository;
 import com.bunsaned3thinking.mogu.user.entity.User;
@@ -40,7 +37,6 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	private final PostDetailRepository postDetailRepository;
 	private final PostImageRepository postImageRepository;
 	private final PostJpaRepository postJpaRepository;
-	private final ReportRepository reportRepository;
 	private final SearchHistoryRepository searchHistoryRepository;
 	private final HiddenPostRepository hiddenPostRepository;
 
@@ -68,11 +64,6 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public Report saveReport(Report report) {
-		return reportRepository.save(report);
-	}
-
-	@Override
 	public SearchHistory saveSearchHistory(String keyword, User user) {
 		return searchHistoryRepository.save(SearchHistory.of(keyword, user));
 	}
@@ -95,6 +86,11 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	@Override
 	public void deleteSearchHistoryById(Long searchHistoryId) {
 		searchHistoryRepository.deleteById(searchHistoryId);
+	}
+
+	@Override
+	public Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest) {
+		return postJpaRepository.findAllFirstPageReportedPost(pageRequest);
 	}
 
 	@Override
@@ -178,12 +174,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public boolean isReportExists(Long postId, Long userUid) {
-		return reportRepository.existsById(ReportId.of(postId, userUid));
-	}
-
-	@Override
-	public Slice<Post> findAllReportedPost(Long cursor, PageRequest pageRequest) {
-		return postJpaRepository.findByIdGreaterThanEqualAndReportsIsNotEmpty(cursor, pageRequest);
+	public Slice<Post> findAllReportedPost(Integer reportsCount, Long cursor, PageRequest pageRequest) {
+		return postJpaRepository.findByIdGreaterThanEqualAndReportsIsNotEmpty(reportsCount, cursor, pageRequest);
 	}
 }

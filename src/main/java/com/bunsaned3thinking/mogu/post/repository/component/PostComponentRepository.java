@@ -13,7 +13,6 @@ import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
-import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -50,11 +49,7 @@ public interface PostComponentRepository {
 	List<Post> findLikedPostsByUserId(String userId, Long cursor, PageRequest pageRequest);
 
 	// Report
-	Report saveReport(Report report);
-
-	boolean isReportExists(Long postId, Long userUid);
-
-	Slice<Post> findAllReportedPost(Long cursor, PageRequest pageRequest);
+	Slice<Post> findAllReportedPost(Integer reportsCount, Long cursor, PageRequest pageRequest);
 
 	// Search
 	SearchHistory saveSearchHistory(String keyword, User user);
@@ -64,4 +59,6 @@ public interface PostComponentRepository {
 	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
 
 	void deleteSearchHistoryById(Long searchHistoryId);
+
+	Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest);
 }

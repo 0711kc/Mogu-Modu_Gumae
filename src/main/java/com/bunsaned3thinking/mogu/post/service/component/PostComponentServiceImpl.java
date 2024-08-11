@@ -19,6 +19,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResp
 import com.bunsaned3thinking.mogu.post.service.module.PostService;
 import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
+import com.bunsaned3thinking.mogu.report.service.module.ReportService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +31,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 	private final ImageService imageService;
 	private final ChatService chatService;
 	private final HeartService heartService;
+	private final ReportService reportService;
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> createPost(final String userId, final PostRequest postRequest,
@@ -43,7 +45,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 
 	@Override
 	public ResponseEntity<ReportResponse> createReport(Long postId, String userId, ReportRequest reportRequest) {
-		return postService.createReport(postId, userId, reportRequest);
+		// return postService.createReport(postId, userId, reportRequest);
+		return reportService.createReport(postId, userId, reportRequest);
 	}
 
 	@Override
