@@ -75,6 +75,10 @@ public class Post {
 	@Column
 	private Integer originalCost;
 
+	@Column
+	@Builder.Default
+	private Integer viewCount = 0;
+
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<HiddenPost> hiddenPosts = new ArrayList<>();
@@ -105,6 +109,10 @@ public class Post {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	public void addViewCount() {
+		this.viewCount++;
+	}
 
 	public void update(Category category, LocalDate purchaseDate, int userCount, String title, int discountCost,
 		int originalCost, Point location) {

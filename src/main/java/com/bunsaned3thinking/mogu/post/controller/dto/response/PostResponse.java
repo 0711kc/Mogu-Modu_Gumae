@@ -25,6 +25,7 @@ public class PostResponse {
 	private final Double longitude;
 	private final Double latitude;
 	private final Integer heartCount;
+	private final Integer viewCount;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime postDate;
@@ -49,6 +50,7 @@ public class PostResponse {
 			.longitude(post.getLocation().getX())
 			.latitude(post.getLocation().getY())
 			.heartCount(post.getHearts().size())
+			.viewCount(post.getViewCount())
 			.build();
 	}
 }

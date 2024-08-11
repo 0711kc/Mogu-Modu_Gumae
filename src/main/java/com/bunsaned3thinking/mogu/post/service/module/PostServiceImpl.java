@@ -112,9 +112,11 @@ public class PostServiceImpl implements PostService {
 		if (post.getIsHidden()) {
 			throw new IllegalArgumentException("[Error] 숨겨진 게시글은 조회할 수 없습니다.");
 		}
+		post.addViewCount();
+		Post savedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(PostWithDetailResponse.from(post));
+			.body(PostWithDetailResponse.from(savedPost));
 	}
 
 	@Override
