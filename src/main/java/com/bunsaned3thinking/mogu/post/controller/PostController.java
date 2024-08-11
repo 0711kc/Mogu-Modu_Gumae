@@ -1,6 +1,5 @@
 package com.bunsaned3thinking.mogu.post.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +39,7 @@ public class PostController {
 		@PathVariable String userId,
 		@RequestPart(name = "request") @Valid final PostRequest postRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
+		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(List::of));
 	}
 
 	@GetMapping("/{id}")
@@ -67,7 +66,7 @@ public class PostController {
 		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
 		return postComponentService.updatePost(postId, userId, updatePostRequest,
-			multipartFileList.orElseGet(ArrayList::new));
+			multipartFileList.orElseGet(List::of));
 	}
 
 	@PatchMapping("/{postId}/{userId}/close")

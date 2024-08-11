@@ -1,6 +1,5 @@
 package com.bunsaned3thinking.mogu.complaint.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class ComplaintController {
 		@PathVariable final String userId,
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
-		return complaintComponentService.createComplaint(complaintRequest, multipartFileList.orElseGet(ArrayList::new),
+		return complaintComponentService.createComplaint(complaintRequest, multipartFileList.orElseGet(List::of),
 			userId);
 	}
 
