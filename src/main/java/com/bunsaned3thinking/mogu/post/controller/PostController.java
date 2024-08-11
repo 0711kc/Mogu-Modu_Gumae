@@ -89,15 +89,17 @@ public class PostController {
 	}
 
 	@PostMapping("/report/{postId}/{userId}")
-	public ResponseEntity<ReportResponse> createReport(@PathVariable final Long postId,
+	public ResponseEntity<ReportResponse> createReport(
+		@PathVariable final Long postId,
 		@PathVariable final String userId,
 		@RequestBody @Valid final ReportRequest reportRequest) {
 		return postComponentService.createReport(postId, userId, reportRequest);
 	}
 
 	@GetMapping("/reports")
-	public ResponseEntity<List<PostResponse>> findAllReportedPost() {
-		return postComponentService.findAllReportedPost();
+	public ResponseEntity<List<PostResponse>> findAllReportedPost(
+		@RequestParam(name = "cursor", required = false) Long cursor) {
+		return postComponentService.findAllReportedPost(cursor);
 	}
 
 	@GetMapping("/search/{userId}")

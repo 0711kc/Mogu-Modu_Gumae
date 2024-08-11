@@ -18,7 +18,11 @@ import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 public interface PostComponentRepository {
+	// User
 	Optional<User> findUserByUserId(String userId);
+
+	// Post
+	Optional<Post> findPostById(Long id);
 
 	void saveAllPostImages(List<PostImage> postImages);
 
@@ -26,37 +30,38 @@ public interface PostComponentRepository {
 
 	Post savePost(Post post);
 
-	Report saveReport(Report report);
-
-	SearchHistory saveSearchHistory(String keyword, User user);
-
-	Optional<Post> findPostById(Long id);
-
-	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
-
-	List<Post> searchPostsByTitle(String keyword);
-
-	List<Report> findAllReport();
-
-	boolean isReportExists(Post post, User user);
-
-	List<Post> findAllReportedPost();
-
 	void deletePostDetailByPostId(Long id);
-
-	void deleteSearchHistoryById(Long searchHistoryId);
 
 	List<Post> findAllPostsByPurchaseDate(LocalDate purchaseDate);
 
 	void saveAllPosts(List<Post> posts);
 
-	// Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest);
 	Slice<Post> findNextPagePosts(Long userUid, Long cursor, PageRequest pageRequest, Point referencePoint,
 		Short distanceMeters);
 
+	// HiddenPost
 	void saveHiddenPost(HiddenPost hiddenPost);
 
 	void deleteHiddenPostById(HiddenPostId hiddenPostId);
 
 	boolean existsHiddenPostById(HiddenPostId hiddenPostId);
+
+	// LikedPost
+	List<Post> findLikedPostsByUserId(String userId);
+
+	// Report
+	Report saveReport(Report report);
+
+	boolean isReportExists(Long postId, Long userUid);
+
+	Slice<Post> findAllReportedPost(Long cursor, PageRequest pageRequest);
+
+	// Search
+	SearchHistory saveSearchHistory(String keyword, User user);
+
+	List<Post> searchPostsByTitle(String keyword);
+
+	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
+
+	void deleteSearchHistoryById(Long searchHistoryId);
 }

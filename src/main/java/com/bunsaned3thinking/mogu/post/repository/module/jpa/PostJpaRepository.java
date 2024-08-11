@@ -25,4 +25,9 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 	@Query(nativeQuery = true, value = findPageQuery)
 	Slice<Post> findNextPage(Long userUid, Geometry point, short distanceMeters, Long cursor,
 		PageRequest pageRequest);
+
+	Slice<Post> findByIdGreaterThanEqualAndReportsIsNotEmpty(Long id, PageRequest pageRequest);
+
+	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId")
+	List<Post> findLikedPostsByUserId(String userId);
 }
