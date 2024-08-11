@@ -23,11 +23,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (JwtException | IllegalArgumentException | NoSuchElementException e) {
-			setErrorResponse(request, response);
+			setErrorResponse(response);
 		}
 	}
 
-	private void setErrorResponse(HttpServletRequest request, HttpServletResponse response)
+	private void setErrorResponse(HttpServletResponse response)
 		throws IOException {
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		response.setContentType("text/plain; charset=UTF-8");
