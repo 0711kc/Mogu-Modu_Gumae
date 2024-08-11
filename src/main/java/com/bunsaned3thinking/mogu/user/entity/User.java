@@ -191,4 +191,13 @@ public class User {
 		this.email = email;
 		this.name = name;
 	}
+
+	public void block(boolean state) {
+		if (state) {
+			this.blockDate = LocalDateTime.now();
+		} else {
+			this.blockDate = null;
+		}
+		this.isBlock = state;
+	}
 }

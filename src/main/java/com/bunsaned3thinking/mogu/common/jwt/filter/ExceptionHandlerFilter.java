@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.common.jwt;
+package com.bunsaned3thinking.mogu.common.jwt.filter;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
@@ -31,8 +31,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		throws IOException {
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		response.setContentType("text/plain; charset=UTF-8");
-		response.getWriter().write(
-			"[Error] 유효하지 않은 토큰값입니다."
-		);
+		response.getWriter().write("[Error] 유효하지 않은 토큰값입니다.");
 	}
 }

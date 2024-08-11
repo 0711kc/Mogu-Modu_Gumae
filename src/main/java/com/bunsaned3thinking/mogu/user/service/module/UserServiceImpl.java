@@ -76,6 +76,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public ResponseEntity<UserResponse> setBlockUser(String userId, boolean state) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		if (user.getIsBlock() == state) {
+			throw new IllegalArgumentException("[Error] 이미 해당 상태의 사용자입니다.");
+		}
+		user.block(state);
+		User savedUser = userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(savedUser));
+	}
+
+	@Override
 	public ResponseEntity<UserResponse> updateProfileImage(String userId, @NonNull String profileImage) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));

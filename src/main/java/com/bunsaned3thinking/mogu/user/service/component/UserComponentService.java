@@ -19,4 +19,6 @@ public interface UserComponentService {
 		MultipartFile multipartFile);
 
 	ResponseEntity<UserResponse> updateUserPassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
+
+	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
 }

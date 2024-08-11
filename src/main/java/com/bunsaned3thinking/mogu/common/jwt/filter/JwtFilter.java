@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.common.jwt;
+package com.bunsaned3thinking.mogu.common.jwt.filter;
 
 import java.io.IOException;
 
@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetails;
+import com.bunsaned3thinking.mogu.common.util.JwtUtil;
 import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -18,8 +20,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JWTFilter extends OncePerRequestFilter {
-	private final JWTUtil jwtUtil;
+public class JwtFilter extends OncePerRequestFilter {
+	private final JwtUtil jwtUtil;
 
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,

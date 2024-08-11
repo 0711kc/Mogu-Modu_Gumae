@@ -58,4 +58,9 @@ public class UserComponentServiceImpl implements UserComponentService {
 		UpdateUserPasswordRequest updateUserPasswordRequest) {
 		return userService.updatePassword(userId, updateUserPasswordRequest);
 	}
+
+	@Override
+	public ResponseEntity<UserResponse> setBlockUser(String userId, boolean state) {
+		return userService.setBlockUser(userId, state);
+	}
 }

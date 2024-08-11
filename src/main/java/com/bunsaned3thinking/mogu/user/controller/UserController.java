@@ -55,4 +55,10 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(@PathVariable final String userId) {
 		return userComponentService.deleteUser(userId);
 	}
+
+	@PatchMapping("/block/{userId}")
+	public ResponseEntity<UserResponse> setBlockUser(@PathVariable final String userId,
+		@RequestPart(name = "isBlock") Boolean state) {
+		return userComponentService.setBlockUser(userId, state);
+	}
 }

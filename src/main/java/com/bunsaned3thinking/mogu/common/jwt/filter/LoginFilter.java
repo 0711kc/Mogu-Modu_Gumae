@@ -1,14 +1,19 @@
-package com.bunsaned3thinking.mogu.common.jwt;
+package com.bunsaned3thinking.mogu.common.jwt.filter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetails;
+import com.bunsaned3thinking.mogu.common.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +23,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	private static final Long TOKEN_PERIOD_MS = 60 * 1000L;
 
 	private final AuthenticationManager authenticationManager;
-	private final JWTUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 
-	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+	public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
 	}
@@ -57,7 +62,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException failed) {
+		AuthenticationException failed) throws IOException {
+		response.setContentType("text/plain; charset=UTF-8");
 		response.setStatus(401);
+		if (failed instanceof DisabledException) {
+			response.getWriter().write("[Error] 비활성화된 계정입니다.");
+		}
 	}
 }

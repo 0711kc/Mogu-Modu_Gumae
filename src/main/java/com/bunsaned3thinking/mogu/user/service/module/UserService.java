@@ -23,4 +23,6 @@ public interface UserService {
 	boolean checkUser(String userId);
 
 	ResponseEntity<UserResponse> updatePassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
+
+	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
 }

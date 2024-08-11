@@ -1,4 +1,4 @@
-package com.bunsaned3thinking.mogu.common.jwt;
+package com.bunsaned3thinking.mogu.common.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 
 @Component
-public class JWTUtil {
+public class JwtUtil {
 	private final SecretKey secretKey;
 
-	public JWTUtil(@Value("${jwt.secret}") String secret) {
+	public JwtUtil(@Value("${jwt.secret}") String secret) {
 		secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
 			Jwts.SIG.HS256.key().build().getAlgorithm());
 	}
