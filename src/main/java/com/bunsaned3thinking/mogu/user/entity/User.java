@@ -14,6 +14,7 @@ import com.bunsaned3thinking.mogu.chat.entity.UnreadMessage;
 import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
+import com.bunsaned3thinking.mogu.heart.entity.Heart;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.converter.PointConverter;
@@ -146,6 +147,10 @@ public class User {
 	@Builder.Default
 	private List<ChatMessage> chatMessages = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<Heart> hearts = new ArrayList<>();
+
 	public static User of(String userId, String password, String name, String nickname,
 		String phone, String email, Role role, Point location) {
 		return User.builder()
@@ -180,5 +185,10 @@ public class User {
 
 	public void updatePassword(String password) {
 		this.password = password;
+	}
+
+	public void updateLoginInfo(String email, String name) {
+		this.email = email;
+		this.name = name;
 	}
 }

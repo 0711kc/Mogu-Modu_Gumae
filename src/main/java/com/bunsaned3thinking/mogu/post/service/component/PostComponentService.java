@@ -41,4 +41,10 @@ public interface PostComponentService {
 	ResponseEntity<List<PostResponse>> findAllPosts(String userId, Long cursor);
 
 	ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state);
+
+	ResponseEntity<PostResponse> likePost(Long postId, String userId);
+
+	ResponseEntity<Void> unlikePost(Long postId, String userId);
+
+	ResponseEntity<List<PostResponse>> findAllLikedPost(String userId);
 }

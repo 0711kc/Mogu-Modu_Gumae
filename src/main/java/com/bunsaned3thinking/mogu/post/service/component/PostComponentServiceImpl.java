@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.chat.service.module.ChatService;
+import com.bunsaned3thinking.mogu.heart.service.HeartService;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
@@ -28,6 +29,7 @@ public class PostComponentServiceImpl implements PostComponentService {
 	private final PostService postService;
 	private final ImageService imageService;
 	private final ChatService chatService;
+	private final HeartService heartService;
 
 	@Override
 	public ResponseEntity<PostWithDetailResponse> createPost(final String userId, final PostRequest postRequest,
@@ -94,6 +96,21 @@ public class PostComponentServiceImpl implements PostComponentService {
 	@Override
 	public ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state) {
 		return postService.hidePost(postId, userId, state);
+	}
+
+	@Override
+	public ResponseEntity<PostResponse> likePost(Long postId, String userId) {
+		return heartService.likePost(postId, userId);
+	}
+
+	@Override
+	public ResponseEntity<Void> unlikePost(Long postId, String userId) {
+		return heartService.unlikePost(postId, userId);
+	}
+
+	@Override
+	public ResponseEntity<List<PostResponse>> findAllLikedPost(String userId) {
+		return heartService.findLikedPostsByUserId(userId);
 	}
 
 	@Override

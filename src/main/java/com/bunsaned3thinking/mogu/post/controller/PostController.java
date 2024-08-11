@@ -116,4 +116,19 @@ public class PostController {
 		@PathVariable final String userId) {
 		return postComponentService.deleteSearchHistory(searchHistoryId, userId);
 	}
+
+	@PostMapping("/{postId}/like/{userId}")
+	public ResponseEntity<PostResponse> likePost(@PathVariable final Long postId, @PathVariable final String userId) {
+		return postComponentService.likePost(postId, userId);
+	}
+
+	@DeleteMapping("/{postId}/like/{userId}")
+	public ResponseEntity<Void> unlikePost(@PathVariable final Long postId, @PathVariable final String userId) {
+		return postComponentService.unlikePost(postId, userId);
+	}
+
+	@GetMapping("/all/like/{userId}")
+	public ResponseEntity<List<PostResponse>> findAllLikePost(@PathVariable final String userId) {
+		return postComponentService.findAllLikedPost(userId);
+	}
 }
