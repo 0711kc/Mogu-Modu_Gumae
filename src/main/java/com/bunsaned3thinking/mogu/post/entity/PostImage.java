@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,9 @@ public class PostImage {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_detail_id")
 	private PostDetail postDetail;
+
+	@OneToOne(mappedBy = "thumbnail", fetch = FetchType.LAZY)
+	private Post post;
 
 	public static PostImage from(String imageLink, PostDetail postDetail) {
 		return PostImage.builder()

@@ -3,6 +3,7 @@ package com.bunsaned3thinking.mogu.post.controller.dto.response;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,6 +28,7 @@ public class PostResponse {
 	private final Integer heartCount;
 	private final Integer viewCount;
 	private final Integer reportCount;
+	private final String thumbnail;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	private final LocalDateTime postDate;
@@ -53,6 +55,7 @@ public class PostResponse {
 			.heartCount(post.getHearts().size())
 			.viewCount(post.getViewCount())
 			.reportCount(post.getReports().size())
+			.thumbnail(S3Util.toS3ImageUrl(post.getThumbnail().getImage()))
 			.build();
 	}
 }

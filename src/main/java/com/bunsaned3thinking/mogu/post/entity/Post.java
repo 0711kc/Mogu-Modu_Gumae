@@ -107,6 +107,10 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "thumbnail_id")
+	private PostImage thumbnail;
+
 	public void addViewCount() {
 		this.viewCount++;
 	}

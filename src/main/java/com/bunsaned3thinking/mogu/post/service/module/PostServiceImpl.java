@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
 		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
 		postComponentRepository.saveAllPostImages(postImages);
 		postDetail.updatePostImages(postImages);
-		Post post = postRequest.toEntity(user, postDetail);
+		Post post = postRequest.toEntity(user, postDetail, postImages.get(0));
 		postDetail.initialize(post);
 		postComponentRepository.savePostDetail(postDetail);
 		Post savedPost = postComponentRepository.savePost(post);
