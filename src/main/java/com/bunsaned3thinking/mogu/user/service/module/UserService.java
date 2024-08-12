@@ -1,7 +1,9 @@
 package com.bunsaned3thinking.mogu.user.service.module;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 
+import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
@@ -25,4 +27,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> updatePassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
 
 	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
+
+	ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews);
 }

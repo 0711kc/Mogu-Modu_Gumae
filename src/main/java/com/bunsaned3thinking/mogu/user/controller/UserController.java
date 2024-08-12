@@ -16,6 +16,7 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPassword
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
+import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.component.UserComponentService;
 
 import jakarta.validation.Valid;
@@ -60,5 +61,11 @@ public class UserController {
 	public ResponseEntity<UserResponse> setBlockUser(@PathVariable final String userId,
 		@RequestPart(name = "isBlock") Boolean state) {
 		return userComponentService.setBlockUser(userId, state);
+	}
+
+	@PatchMapping("/manner/{userId}")
+	public ResponseEntity<UserResponse> updateUserManner(@PathVariable final String userId,
+		@RequestPart(name = "manner") Manner manner) {
+		return userComponentService.updateUserManner(userId, manner);
 	}
 }

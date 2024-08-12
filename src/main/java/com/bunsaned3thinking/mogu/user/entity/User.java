@@ -17,13 +17,12 @@ import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.heart.entity.Heart;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.Post;
-import com.bunsaned3thinking.mogu.post.entity.converter.PointConverter;
 import com.bunsaned3thinking.mogu.report.entity.Report;
+import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -100,7 +99,6 @@ public class User {
 	private LocalDateTime registerDate = LocalDateTime.now();
 
 	@Column(columnDefinition = "POINT SRID 4326")
-	@Convert(converter = PointConverter.class)
 	private Point location;
 
 	@Column
@@ -151,6 +149,10 @@ public class User {
 	@Builder.Default
 	private List<Heart> hearts = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<Review> reviews = new ArrayList<>();
+
 	public static User of(String userId, String password, String name, String nickname,
 		String phone, String email, Role role, Point location) {
 		return User.builder()
@@ -199,5 +201,9 @@ public class User {
 			this.blockDate = null;
 		}
 		this.isBlock = state;
+	}
+
+	public void updateManner(Manner manner) {
+		this.manner = manner;
 	}
 }

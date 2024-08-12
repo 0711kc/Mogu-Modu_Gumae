@@ -7,6 +7,7 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPassword
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
+import com.bunsaned3thinking.mogu.user.entity.Manner;
 
 public interface UserComponentService {
 	ResponseEntity<UserResponse> createUser(UserRequest userRequest);
@@ -21,4 +22,6 @@ public interface UserComponentService {
 	ResponseEntity<UserResponse> updateUserPassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
 
 	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
+
+	ResponseEntity<UserResponse> updateUserManner(String userId, Manner manner);
 }

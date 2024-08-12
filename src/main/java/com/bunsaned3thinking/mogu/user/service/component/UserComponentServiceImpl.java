@@ -1,15 +1,19 @@
 package com.bunsaned3thinking.mogu.user.service.component;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.image.service.ImageService;
+import com.bunsaned3thinking.mogu.review.entity.Review;
+import com.bunsaned3thinking.mogu.review.service.ReviewService;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
+import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.module.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class UserComponentServiceImpl implements UserComponentService {
 	private final UserService userService;
 	private final ImageService imageService;
+	private final ReviewService reviewService;
 
 	@Override
 	public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
@@ -62,5 +67,12 @@ public class UserComponentServiceImpl implements UserComponentService {
 	@Override
 	public ResponseEntity<UserResponse> setBlockUser(String userId, boolean state) {
 		return userService.setBlockUser(userId, state);
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> updateUserManner(String userId, Manner manner) {
+		reviewService.createReview(userId, manner);
+		Slice<Review> reviews = reviewService.findByUserId(userId);
+		return userService.updateUserManner(userId, reviews);
 	}
 }

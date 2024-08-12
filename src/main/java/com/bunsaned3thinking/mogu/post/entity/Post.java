@@ -10,13 +10,11 @@ import org.locationtech.jts.geom.Point;
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.chat.entity.Chat;
 import com.bunsaned3thinking.mogu.heart.entity.Heart;
-import com.bunsaned3thinking.mogu.post.entity.converter.PointConverter;
 import com.bunsaned3thinking.mogu.report.entity.Report;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -99,7 +97,6 @@ public class Post {
 	private PostDetail postDetail;
 
 	@Column(columnDefinition = "POINT SRID 4326")
-	@Convert(converter = PointConverter.class)
 	private Point location;
 
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)

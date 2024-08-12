@@ -2,6 +2,9 @@ package com.bunsaned3thinking.mogu.user.entity;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +22,12 @@ public enum Manner {
 	private final short score;
 	private final String description;
 
+	@JsonValue
+	public short getScore() {
+		return score;
+	}
+
+	@JsonCreator
 	public static Manner findByScore(short score) {
 		return Arrays.stream(Manner.values())
 			.filter(manner -> manner.getScore() == score)

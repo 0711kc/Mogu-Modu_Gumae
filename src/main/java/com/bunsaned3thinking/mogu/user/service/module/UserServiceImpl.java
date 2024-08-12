@@ -1,5 +1,10 @@
 package com.bunsaned3thinking.mogu.user.service.module;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
+import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
+import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
 
@@ -83,6 +90,30 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException("[Error] 이미 해당 상태의 사용자입니다.");
 		}
 		user.block(state);
+		User savedUser = userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(savedUser));
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		BigDecimal reviewCount = BigDecimal.valueOf(reviews.getSize());
+		AtomicInteger totalScore = new AtomicInteger();
+		reviews.stream()
+			.map(Review::getManner)
+			.map(Manner::getScore)
+			.forEach(totalScore::addAndGet);
+		BigDecimal mannerScore = BigDecimal.valueOf(totalScore.get()).divide(reviewCount, RoundingMode.HALF_UP);
+		if (mannerScore.compareTo(BigDecimal.valueOf(4)) > 0) {
+			mannerScore = mannerScore.setScale(0, RoundingMode.HALF_UP);
+		} else {
+			mannerScore = mannerScore.setScale(0, RoundingMode.FLOOR);
+		}
+		Manner manner = Manner.findByScore(mannerScore.shortValue());
+		user.updateManner(manner);
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
