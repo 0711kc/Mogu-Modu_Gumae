@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetailsService;
 import com.bunsaned3thinking.mogu.common.jwt.filter.ExceptionHandlerFilter;
 import com.bunsaned3thinking.mogu.common.jwt.filter.JwtFilter;
 import com.bunsaned3thinking.mogu.common.jwt.filter.LoginFilter;
@@ -27,6 +28,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 	// private final CustomOAuth2UserService oAuth2UserService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JwtUtil jwtUtil;
+	private final CustomUserDetailsService customUserDetailsService;
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -56,13 +58,14 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 		http
 			.authorizeHttpRequests((auth) -> auth
+				.requestMatchers("/user/{userId}").authenticated()
 				.anyRequest().permitAll());
 
 		http
 			.addFilterAfter(new ExceptionHandlerFilter(), OAuth2LoginAuthenticationFilter.class);
 
 		http
-			.addFilterAfter(new JwtFilter(jwtUtil), ExceptionHandlerFilter.class);
+			.addFilterAfter(new JwtFilter(jwtUtil, customUserDetailsService), ExceptionHandlerFilter.class);
 
 		http
 			.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),

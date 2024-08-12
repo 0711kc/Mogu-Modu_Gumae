@@ -8,9 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetails;
+import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetailsService;
 import com.bunsaned3thinking.mogu.common.util.JwtUtil;
-import com.bunsaned3thinking.mogu.user.entity.Role;
-import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 	private final JwtUtil jwtUtil;
+	private final CustomUserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -39,9 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		String username = jwtUtil.getUsername(token);
-		String role = jwtUtil.getRole(token);
-		User userEntity = User.builder().userId(username).role(Role.findByJwt(role)).build();
-		CustomUserDetails customUserDetails = CustomUserDetails.from(userEntity);
+		CustomUserDetails customUserDetails = (CustomUserDetails)userDetailsService.loadUserByUsername(username);
 		Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null,
 			customUserDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authToken);

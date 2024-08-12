@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.amazonaws.services.kms.model.DisabledException;
+
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,14 +25,16 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (JwtException | IllegalArgumentException | NoSuchElementException e) {
-			setErrorResponse(response);
+			setErrorResponse(response, "[Error] 유효하지 않은 토큰값입니다.");
+		} catch (DisabledException e) {
+			setErrorResponse(response, "[Error] 비활성화된 계정입니다.");
 		}
 	}
 
-	private void setErrorResponse(HttpServletResponse response)
+	private void setErrorResponse(HttpServletResponse response, String message)
 		throws IOException {
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		response.setContentType("text/plain; charset=UTF-8");
-		response.getWriter().write("[Error] 유효하지 않은 토큰값입니다.");
+		response.getWriter().write(message);
 	}
 }
