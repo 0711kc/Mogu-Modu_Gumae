@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -62,11 +62,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException failed) throws IOException {
+		AuthenticationException failed) throws IOException, AuthenticationException {
 		response.setContentType("text/plain; charset=UTF-8");
 		response.setStatus(401);
-		if (failed instanceof DisabledException) {
-			response.getWriter().write("[Error] 비활성화된 계정입니다.");
+		if (failed instanceof InternalAuthenticationServiceException) {
+			response.getWriter().write("[Error] 로그인에 실패했습니다.");
 		}
 	}
 }

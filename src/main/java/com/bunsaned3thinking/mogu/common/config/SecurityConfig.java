@@ -57,8 +57,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 		// 			.userService(oAuth2UserService)));
 
 		http
-			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/user/{userId}").authenticated()
+			.authorizeHttpRequests(auth -> auth
 				.anyRequest().permitAll());
 
 		http

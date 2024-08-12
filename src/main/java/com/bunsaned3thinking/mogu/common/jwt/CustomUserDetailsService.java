@@ -1,15 +1,14 @@
 package com.bunsaned3thinking.mogu.common.jwt;
 
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.kms.model.DisabledException;
 import com.bunsaned3thinking.mogu.user.entity.User;
 import com.bunsaned3thinking.mogu.user.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUserId(username)
-			.orElseThrow(EntityNotFoundException::new);
+			.orElseThrow(() -> new UsernameNotFoundException("[Error] 로그인에 실패했습니다."));
 
 		if (user.getIsBlock()) {
 			throw new DisabledException("[Error] 비활성화된 계정입니다.");

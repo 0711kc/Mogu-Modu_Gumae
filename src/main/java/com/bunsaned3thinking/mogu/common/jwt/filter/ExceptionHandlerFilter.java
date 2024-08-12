@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.amazonaws.services.kms.model.DisabledException;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -28,6 +28,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 			setErrorResponse(response, "[Error] 유효하지 않은 토큰값입니다.");
 		} catch (DisabledException e) {
 			setErrorResponse(response, "[Error] 비활성화된 계정입니다.");
+		} catch (UsernameNotFoundException e) {
+			setErrorResponse(response, "[Error] 로그인에 실패했습니다.");
 		}
 	}
 
