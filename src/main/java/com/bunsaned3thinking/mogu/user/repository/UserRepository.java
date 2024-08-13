@@ -17,4 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("select p from Post p join fetch p.user u where u.uid = :uid and p.recruitState = :recruitState")
 	List<Post> findPostsByUserUidAndRecruitState(Long uid, RecruitState recruitState);
+
+	@Query("select u from User u join fetch u.posts p where p.id = :postId")
+	List<User> findUserByPostId(Long postId);
 }

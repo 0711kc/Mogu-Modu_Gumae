@@ -2,7 +2,9 @@ package com.bunsaned3thinking.mogu.user.service.module;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.data.domain.Slice;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bunsaned3thinking.mogu.common.util.LevelUtil;
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.RecruitState;
@@ -136,6 +139,23 @@ public class UserServiceImpl implements UserService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(SavingCostResponse.of(user.getUid(), savingCost.get(), posts.size()));
+	}
+
+	@Override
+	public void updateUserLevel(Long postId, RecruitState recruitState) {
+		if (!recruitState.equals(RecruitState.PURCHASED)) {
+			return;
+		}
+		List<User> users = userRepository.findUserByPostId(postId);
+		Map<Long, Integer> purchasedCounts = new HashMap<>();
+		users.forEach(user -> purchasedCounts.put(user.getUid(),
+			userRepository.findPostsByUserUidAndRecruitState(user.getUid(), RecruitState.RECRUITING).size()));
+		users.stream()
+			.filter(user -> LevelUtil.calculateLevel(user.getLevel(), purchasedCounts.get(user.getUid()))
+				!= user.getLevel())
+			.forEach(user -> user.updateLevel(
+				LevelUtil.calculateLevel(user.getLevel(), purchasedCounts.get(user.getUid()))));
+		userRepository.saveAll(users);
 	}
 
 	@Override

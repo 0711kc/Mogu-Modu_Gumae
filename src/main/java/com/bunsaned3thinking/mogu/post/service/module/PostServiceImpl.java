@@ -260,7 +260,6 @@ public class PostServiceImpl implements PostService {
 			throw new IllegalArgumentException("[Error] 이미 종료된 게시글입니다.");
 		}
 		post.updateRecruitState(recruitState);
-		// TODO 거래에 참여한 사용자의 레벨 추가
 		Post savedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)

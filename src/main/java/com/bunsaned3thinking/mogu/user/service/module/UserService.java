@@ -3,6 +3,7 @@ package com.bunsaned3thinking.mogu.user.service.module;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
@@ -32,4 +33,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews);
 
 	ResponseEntity<SavingCostResponse> findUserSavingCost(String userId);
+
+	void updateUserLevel(Long postId, RecruitState recruitState);
 }

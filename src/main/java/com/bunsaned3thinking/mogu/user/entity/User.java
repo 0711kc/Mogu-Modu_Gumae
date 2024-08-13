@@ -92,7 +92,7 @@ public class User {
 
 	@Column
 	@Builder.Default
-	private Integer level = 0;
+	private Integer level = LevelRange.DEFAULT.getMin();
 
 	@Column(updatable = false)
 	@Builder.Default
@@ -205,5 +205,9 @@ public class User {
 
 	public void updateManner(Manner manner) {
 		this.manner = manner;
+	}
+
+	public void updateLevel(int level) {
+		this.level = level;
 	}
 }
