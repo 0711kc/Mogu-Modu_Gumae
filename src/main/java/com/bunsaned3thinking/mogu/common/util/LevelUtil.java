@@ -15,7 +15,7 @@ public class LevelUtil {
 
 	public static int calculatePurchaseCountToLevelUp(int level) {
 		LevelRange levelRange = LevelRange.getLevelRange(level);
-		int needPurchaseCount = levelRange.getPurchaseCount() * (level - levelRange.getMin());
+		int needPurchaseCount = levelRange.getPurchaseCount() * (level - levelRange.getMin() + 1);
 		return switch (levelRange) {
 			case LEVEL_RANGE_1 -> needPurchaseCount;
 			case LEVEL_RANGE_10 -> LEVEL_RANGE_1.getMax() * LEVEL_RANGE_1.getPurchaseCount()

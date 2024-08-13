@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.review.service.ReviewService;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
@@ -81,5 +82,10 @@ public class UserComponentServiceImpl implements UserComponentService {
 	@Override
 	public ResponseEntity<SavingCostResponse> findUserSavingCost(String userId) {
 		return userService.findUserSavingCost(userId);
+	}
+
+	@Override
+	public ResponseEntity<LevelResponse> findUserLevel(String userId) {
+		return userService.findUserLevel(userId);
 	}
 }
