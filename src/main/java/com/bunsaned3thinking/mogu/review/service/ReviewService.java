@@ -6,7 +6,7 @@ import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 
 public interface ReviewService {
-	void createReview(String userId, Manner manner);
+	void createReview(String senderId, String receiverId, Manner manner, Long postId);
 
-	Slice<Review> findByUserId(String userId);
+	Slice<Review> findByReceiverId(String userId);
 }

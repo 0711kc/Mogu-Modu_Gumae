@@ -11,6 +11,7 @@ import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.chat.entity.Chat;
 import com.bunsaned3thinking.mogu.heart.entity.Heart;
 import com.bunsaned3thinking.mogu.report.entity.Report;
+import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.CascadeType;
@@ -98,6 +99,10 @@ public class Post {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<Heart> hearts = new ArrayList<>();
+
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@Builder.Default
+	private List<Review> reviews = new ArrayList<>();
 
 	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
 	private PostDetail postDetail;

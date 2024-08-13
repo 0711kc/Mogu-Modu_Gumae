@@ -71,10 +71,11 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUserManner(String userId, Manner manner) {
-		reviewService.createReview(userId, manner);
-		Slice<Review> reviews = reviewService.findByUserId(userId);
-		return userService.updateUserManner(userId, reviews);
+	public ResponseEntity<UserResponse> updateUserManner(String senderId, String receiverId, Manner manner,
+		Long postId) {
+		reviewService.createReview(senderId, receiverId, manner, postId);
+		Slice<Review> reviews = reviewService.findByReceiverId(receiverId);
+		return userService.updateUserManner(receiverId, reviews);
 	}
 
 	@Override

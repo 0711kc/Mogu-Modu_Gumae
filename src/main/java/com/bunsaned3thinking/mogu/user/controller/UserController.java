@@ -68,9 +68,12 @@ public class UserController {
 		return userComponentService.setBlockUser(userId, state);
 	}
 
-	@PatchMapping("/manner/{userId}")
-	public ResponseEntity<UserResponse> updateUserManner(@PathVariable final String userId,
+	@PatchMapping("/manner/sender/{senderId}/receiver/{receiverId}/{postId}")
+	public ResponseEntity<UserResponse> updateUserManner(
+		@PathVariable final String senderId,
+		@PathVariable final String receiverId,
+		@PathVariable final Long postId,
 		@RequestPart(name = "manner") Manner manner) {
-		return userComponentService.updateUserManner(userId, manner);
+		return userComponentService.updateUserManner(senderId, receiverId, manner, postId);
 	}
 }

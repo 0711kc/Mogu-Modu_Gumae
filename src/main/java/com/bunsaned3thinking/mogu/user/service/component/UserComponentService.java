@@ -24,7 +24,7 @@ public interface UserComponentService {
 
 	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
 
-	ResponseEntity<UserResponse> updateUserManner(String userId, Manner manner);
+	ResponseEntity<UserResponse> updateUserManner(String senderId, String receiverId, Manner manner, Long postId);
 
 	ResponseEntity<SavingCostResponse> findUserSavingCost(String userId);
 }
