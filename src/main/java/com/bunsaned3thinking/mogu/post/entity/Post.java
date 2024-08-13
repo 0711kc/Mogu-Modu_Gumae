@@ -68,10 +68,16 @@ public class Post {
 	private String title;
 
 	@Column
-	private Integer discountCost;
+	private Integer discountPrice;
 
 	@Column
-	private Integer originalCost;
+	private Integer originalPrice;
+
+	@Column
+	private Boolean shareCondition;
+
+	@Column
+	private Integer pricePerCount;
 
 	@Column
 	@Builder.Default
@@ -115,14 +121,16 @@ public class Post {
 		this.viewCount++;
 	}
 
-	public void update(Category category, LocalDate purchaseDate, int userCount, String title, int discountCost,
-		int originalCost, Point location) {
+	public void update(Category category, LocalDate purchaseDate, int userCount, String title, int discountPrice,
+		int originalPrice, boolean shareCondition, int pricePerCount, Point location) {
 		this.category = category;
 		this.purchaseDate = purchaseDate;
 		this.userCount = userCount;
 		this.title = title;
-		this.discountCost = discountCost;
-		this.originalCost = originalCost;
+		this.discountPrice = discountPrice;
+		this.originalPrice = originalPrice;
+		this.shareCondition = shareCondition;
+		this.pricePerCount = pricePerCount;
 		this.location = location;
 	}
 

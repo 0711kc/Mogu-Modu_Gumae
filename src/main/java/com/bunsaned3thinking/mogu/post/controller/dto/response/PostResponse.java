@@ -20,8 +20,10 @@ public class PostResponse {
 	private final String title;
 	private final String userNickname;
 	private final Long userId;
-	private final Integer discountCost;
-	private final Integer originalCost;
+	private final Integer discountPrice;
+	private final Integer originalPrice;
+	private final Boolean shareCondition;
+	private final Integer pricePerCount;
 	private final Integer userCount;
 	private final Double longitude;
 	private final Double latitude;
@@ -45,8 +47,10 @@ public class PostResponse {
 			.title(post.getTitle())
 			.userNickname(post.getUser().getNickname())
 			.userId(post.getUser().getUid())
-			.discountCost(post.getDiscountCost())
-			.originalCost(post.getOriginalCost())
+			.discountPrice(post.getDiscountPrice())
+			.originalPrice(post.getOriginalPrice())
+			.shareCondition(post.getShareCondition())
+			.pricePerCount(post.getPricePerCount())
 			.postDate(post.getPostDate())
 			.purchaseDate(post.getPurchaseDate())
 			.userCount(post.getUserCount())

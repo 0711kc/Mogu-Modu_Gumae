@@ -30,14 +30,16 @@ public class UpdatePostRequest {
 	@Size(max = 500)
 	private String content;
 
-	private Integer discountCost;
+	private Integer discountPrice;
 
-	private Integer originalCost;
+	private Integer originalPrice;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate purchaseDate;
 
 	private Boolean shareCondition;
+
+	private Integer pricePerCount;
 
 	private Integer userCount;
 
@@ -54,10 +56,11 @@ public class UpdatePostRequest {
 			.title(post.getTitle())
 			.category(post.getCategory())
 			.content(postDetail.getContent())
-			.discountCost(post.getDiscountCost())
-			.originalCost(post.getOriginalCost())
+			.discountPrice(post.getDiscountPrice())
+			.originalPrice(post.getOriginalPrice())
+			.shareCondition(post.getShareCondition())
+			.pricePerCount(post.getPricePerCount())
 			.purchaseDate(post.getPurchaseDate())
-			.shareCondition(postDetail.getShareCondition())
 			.userCount(post.getUserCount())
 			.longitude(post.getLocation().getX())
 			.latitude(post.getLocation().getY())

@@ -47,13 +47,20 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public ResponseEntity<PostWithDetailResponse> createPost(String userId, PostRequest postRequest,
 		List<String> postImageLinks) {
+		validatePostRequest(postRequest);
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		PostDetail postDetail = postRequest.toDetailEntity();
 		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
 		postComponentRepository.saveAllPostImages(postImages);
 		postDetail.updatePostImages(postImages);
-		Post post = postRequest.toEntity(user, postDetail, postImages.get(0));
+		int pricePerCount;
+		if (postRequest.getShareCondition()) {
+			pricePerCount = (int)Math.ceil((double)postRequest.getDiscountPrice() / postRequest.getUserCount());
+		} else {
+			pricePerCount = postRequest.getPricePerCount();
+		}
+		Post post = postRequest.toEntity(user, postDetail, postImages.get(0), pricePerCount);
 		postDetail.initialize(post);
 		postComponentRepository.savePostDetail(postDetail);
 		Post savedPost = postComponentRepository.savePost(post);
@@ -118,6 +125,7 @@ public class PostServiceImpl implements PostService {
 		if (!postImageLinks.isEmpty()) {
 			postImages = createPostImages(postImageLinks, post.getPostDetail());
 		}
+		validatePostRequest(post, updatePostRequest);
 		UpdateUtil.copyNonNullProperties(updatePostRequest, originPost);
 		update(post, originPost, postImages);
 		postComponentRepository.savePostDetail(post.getPostDetail());
@@ -193,15 +201,23 @@ public class PostServiceImpl implements PostService {
 		LocalDate purchaseDate = updatePostRequest.getPurchaseDate();
 		int userCount = updatePostRequest.getUserCount();
 		String title = updatePostRequest.getTitle();
-		int discountCost = updatePostRequest.getDiscountCost();
-		int originalCost = updatePostRequest.getOriginalCost();
+		int discountCost = updatePostRequest.getDiscountPrice();
+		int originalCost = updatePostRequest.getOriginalPrice();
+		boolean shareCondition = updatePostRequest.getShareCondition();
+		int pricePerCount;
+		if (updatePostRequest.getShareCondition()) {
+			pricePerCount = (int)Math.ceil(
+				(double)updatePostRequest.getDiscountPrice() / updatePostRequest.getUserCount());
+		} else {
+			pricePerCount = updatePostRequest.getPricePerCount();
+		}
 		Point location = LocationUtil.createPoint(updatePostRequest.getLongitude(),
 			updatePostRequest.getLatitude());
-		post.update(category, purchaseDate, userCount, title, discountCost, originalCost, location);
+		post.update(category, purchaseDate, userCount, title, discountCost, originalCost, shareCondition,
+			pricePerCount, location);
 
 		String content = updatePostRequest.getContent();
-		boolean shareCondition = updatePostRequest.getShareCondition();
-		post.getPostDetail().update(content, shareCondition);
+		post.getPostDetail().update(content);
 		post.getPostDetail().updatePostImages(postImages);
 	}
 
@@ -330,6 +346,33 @@ public class PostServiceImpl implements PostService {
 			return postComponentRepository.findFirstPagePosts(userUid, pageRequest, referencePoint, distanceMeters);
 		}
 		return postComponentRepository.findNextPagePosts(userUid, cursor, pageRequest, referencePoint, distanceMeters);
+	}
+
+	private void validatePostRequest(Post post, UpdatePostRequest postRequest) {
+		int originalPrice =
+			postRequest.getOriginalPrice() != null ? postRequest.getOriginalPrice() : post.getOriginalPrice();
+		int discountPrice =
+			postRequest.getDiscountPrice() != null ? postRequest.getDiscountPrice() : post.getDiscountPrice();
+		if (originalPrice <= discountPrice) {
+			throw new IllegalArgumentException("할인 가격은 기존 가격보다 낮아야됩니다.");
+		}
+		if (Boolean.FALSE.equals(postRequest.getShareCondition()) & postRequest.getPricePerCount() == null) {
+			throw new IllegalArgumentException("개수 당 가격을 입력해주세요.");
+		}
+		boolean shareCondition =
+			postRequest.getShareCondition() != null ? postRequest.getShareCondition() : post.getShareCondition();
+		if (shareCondition & postRequest.getPricePerCount() != null) {
+			throw new IllegalArgumentException("균등 분배 상태에서는 개수 당 가격을 지정할 수 없습니다.");
+		}
+	}
+
+	private void validatePostRequest(PostRequest postRequest) {
+		if (!postRequest.getShareCondition() & postRequest.getPricePerCount() == null) {
+			throw new IllegalArgumentException("개수 당 가격을 입력해주세요.");
+		}
+		if (postRequest.getOriginalPrice() <= postRequest.getDiscountPrice()) {
+			throw new IllegalArgumentException("할인 가격은 기존 가격보다 낮아야됩니다.");
+		}
 	}
 
 	@Scheduled(cron = "0 3 0 * * *", zone = "Asia/Seoul") // 매일 0시 3분에 실행
