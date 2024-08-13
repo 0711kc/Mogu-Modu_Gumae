@@ -16,6 +16,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.service.module.PostService;
 import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
@@ -87,8 +88,8 @@ public class PostComponentServiceImpl implements PostComponentService {
 	}
 
 	@Override
-	public ResponseEntity<PostResponse> closePost(Long postId, String userId) {
-		return postService.closePost(postId, userId);
+	public ResponseEntity<PostResponse> closePost(Long postId, String userId, RecruitState recruitState) {
+		return postService.closePost(postId, userId, recruitState);
 	}
 
 	@Override

@@ -12,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RecruitState {
 	RECRUITING((short)0, "모집중", "recruiting"),
-	CLOSING((short)1, "마감 완료", "closing");
+	CLOSING((short)1, "마감 완료", "closing"),
+	PURCHASED((short)2, "구매 완료", "purchased");
 
 	public static final RecruitState DEFAULT = RECRUITING;
 

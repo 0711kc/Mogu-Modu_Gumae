@@ -7,6 +7,7 @@ import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 
 import lombok.NonNull;
@@ -29,4 +30,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
 
 	ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews);
+
+	ResponseEntity<SavingCostResponse> findUserSavingCost(String userId);
 }

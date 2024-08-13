@@ -246,16 +246,20 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<PostResponse> closePost(Long postId, String userId) {
+	public ResponseEntity<PostResponse> closePost(Long postId, String userId, RecruitState recruitState) {
+		if (recruitState.equals(RecruitState.RECRUITING)) {
+			throw new IllegalArgumentException("[Error] 모집 중 상태로는 변경할 수 없습니다.");
+		}
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
-			throw new IllegalArgumentException("[Error] 자신의 게시글만 마감할 수 있습니다.");
+			throw new IllegalArgumentException("[Error] 자신의 게시글만 종료할 수 있습니다.");
 		}
-		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
-			throw new IllegalArgumentException("[Error] 이미 마감된 게시글입니다.");
+		if (post.getRecruitState().equals(RecruitState.CLOSING) | post.getRecruitState()
+			.equals(RecruitState.PURCHASED)) {
+			throw new IllegalArgumentException("[Error] 이미 종료된 게시글입니다.");
 		}
-		post.updateRecruitState(RecruitState.CLOSING);
+		post.updateRecruitState(recruitState);
 		// TODO 거래에 참여한 사용자의 레벨 추가
 		Post savedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)

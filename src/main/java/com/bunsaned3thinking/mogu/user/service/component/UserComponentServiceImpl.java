@@ -12,6 +12,7 @@ import com.bunsaned3thinking.mogu.review.service.ReviewService;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.module.UserService;
@@ -74,5 +75,10 @@ public class UserComponentServiceImpl implements UserComponentService {
 		reviewService.createReview(userId, manner);
 		Slice<Review> reviews = reviewService.findByUserId(userId);
 		return userService.updateUserManner(userId, reviews);
+	}
+
+	@Override
+	public ResponseEntity<SavingCostResponse> findUserSavingCost(String userId) {
+		return userService.findUserSavingCost(userId);
 	}
 }

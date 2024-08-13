@@ -21,6 +21,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.service.component.PostComponentService;
 import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
@@ -70,8 +71,9 @@ public class PostController {
 	}
 
 	@PatchMapping("/{postId}/{userId}/close")
-	public ResponseEntity<PostResponse> closePost(@PathVariable final Long postId, @PathVariable final String userId) {
-		return postComponentService.closePost(postId, userId);
+	public ResponseEntity<PostResponse> closePost(@PathVariable final Long postId, @PathVariable final String userId,
+		@RequestPart(name = "state") RecruitState recruitState) {
+		return postComponentService.closePost(postId, userId, recruitState);
 	}
 
 	@PatchMapping("/{postId}/{userId}/hide")

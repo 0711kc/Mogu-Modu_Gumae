@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.component.UserComponentService;
@@ -38,6 +39,11 @@ public class UserController {
 		return userComponentService.findUser(userId);
 	}
 
+	@GetMapping("/{userId}/saving")
+	public ResponseEntity<SavingCostResponse> findUserSavingCost(@PathVariable final String userId) {
+		return userComponentService.findUserSavingCost(userId);
+	}
+
 	@PatchMapping("/{userId}")
 	public ResponseEntity<UserResponse> updateUser(@PathVariable final String userId,
 		@RequestPart(name = "request", required = false) @Valid UpdateUserRequest updateUserRequest,
@@ -49,7 +55,6 @@ public class UserController {
 	public ResponseEntity<UserResponse> updateUserPassword(@PathVariable final String userId,
 		@RequestBody @Valid final UpdateUserPasswordRequest updateUserPasswordRequest) {
 		return userComponentService.updateUserPassword(userId, updateUserPasswordRequest);
-
 	}
 
 	@DeleteMapping("/{userId}")
