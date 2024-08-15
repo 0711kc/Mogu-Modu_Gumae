@@ -39,10 +39,10 @@ public class PostRequest {
 	private String content;
 
 	@NotNull(message = "할인 가격을 입력해주세요")
-	private Integer discountCost;
+	private Integer discountPrice;
 
 	@NotNull(message = "기존 가격을 입력해주세요")
-	private Integer originalCost;
+	private Integer originalPrice;
 
 	@NotNull(message = "구매 예정 날짜를 입력해주세요")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -53,6 +53,8 @@ public class PostRequest {
 
 	@NotNull(message = "균등 배분 여부를 입력해주세요")
 	private Boolean shareCondition;
+
+	private Integer pricePerCount;
 
 	@NotNull(message = "구매 인원을 입력해주세요")
 	private Integer userCount;
@@ -67,12 +69,14 @@ public class PostRequest {
 	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double latitude;
 
-	public Post toEntity(User user, PostDetail postDetail, PostImage thumbnail) {
+	public Post toEntity(User user, PostDetail postDetail, PostImage thumbnail, int pricePerCount) {
 		return Post.builder()
 			.title(title)
 			.category(category)
-			.discountCost(discountCost)
-			.originalCost(originalCost)
+			.discountPrice(discountPrice)
+			.originalPrice(originalPrice)
+			.shareCondition(shareCondition)
+			.pricePerCount(pricePerCount)
 			.purchaseDate(purchaseDate)
 			.recruitState(RecruitState.RECRUITING)
 			.location(LocationUtil.createPoint(longitude, latitude))
@@ -86,7 +90,6 @@ public class PostRequest {
 	public PostDetail toDetailEntity() {
 		return PostDetail.builder()
 			.content(content)
-			.shareCondition(shareCondition)
 			.purchaseState(purchaseState)
 			.build();
 	}

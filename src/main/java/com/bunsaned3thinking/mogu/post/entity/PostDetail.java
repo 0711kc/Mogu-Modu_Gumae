@@ -37,9 +37,6 @@ public class PostDetail {
 	@Column
 	private Boolean purchaseState;
 
-	@Column
-	private Boolean shareCondition;
-
 	@OneToMany(mappedBy = "postDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<PostImage> postImages = new ArrayList<>();
@@ -52,9 +49,8 @@ public class PostDetail {
 		this.post = post;
 	}
 
-	public void update(String content, boolean shareCondition) {
+	public void update(String content) {
 		this.content = content;
-		this.shareCondition = shareCondition;
 	}
 
 	public void updatePostImages(List<PostImage> postImages) {

@@ -31,10 +31,6 @@ public class ChatUser {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_uid")
 	private User user;
-	//
-	// @OneToMany(mappedBy = "senderChatUser", fetch = FetchType.LAZY)
-	// @Builder.Default
-	// private List<ChatMessage> chatMessage = new ArrayList<>();
 
 	@Column
 	@Builder.Default

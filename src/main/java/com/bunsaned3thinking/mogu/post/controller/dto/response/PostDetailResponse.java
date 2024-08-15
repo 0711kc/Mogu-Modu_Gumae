@@ -16,8 +16,6 @@ public class PostDetailResponse {
 
 	private final Boolean purchaseState;
 
-	private final Boolean shareCondition;
-
 	private final List<String> postImages;
 
 	public static PostDetailResponse from(final PostDetail postDetail) {
@@ -27,7 +25,6 @@ public class PostDetailResponse {
 		return PostDetailResponse.builder()
 			.content(postDetail.getContent())
 			.purchaseState(postDetail.getPurchaseState())
-			.shareCondition(postDetail.getShareCondition())
 			.postImages(postDetail.getPostImages().stream()
 				.map(PostImage::getImage)
 				.map(S3Util::toS3ImageUrl)

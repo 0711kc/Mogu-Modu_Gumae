@@ -9,6 +9,7 @@ import com.bunsaned3thinking.mogu.post.controller.dto.request.UpdatePostRequest;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.PostWithDetailResponse;
 import com.bunsaned3thinking.mogu.post.controller.dto.response.SearchHistoryResponse;
+import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 
 public interface PostService {
 
@@ -32,7 +33,7 @@ public interface PostService {
 
 	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
 
-	ResponseEntity<PostResponse> closePost(Long postId, String userId);
+	ResponseEntity<PostResponse> closePost(Long postId, String userId, RecruitState recruitState);
 
 	ResponseEntity<List<PostResponse>> findAllPost(String userId, Long cursor);
 

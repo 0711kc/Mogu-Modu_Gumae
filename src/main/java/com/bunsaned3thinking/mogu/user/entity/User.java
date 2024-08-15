@@ -88,7 +88,7 @@ public class User {
 
 	@Column
 	@Builder.Default
-	private Integer level = 0;
+	private Integer level = LevelRange.DEFAULT.getMin();
 
 	@Column(updatable = false)
 	@Builder.Default
@@ -145,9 +145,13 @@ public class User {
 	@Builder.Default
 	private List<Heart> hearts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
 	@Builder.Default
-	private List<Review> reviews = new ArrayList<>();
+	private List<Review> sendReviews = new ArrayList<>();
+
+	@OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+	@Builder.Default
+	private List<Review> receiveReviews = new ArrayList<>();
 
 	public static User of(String userId, String password, String name, String nickname,
 		String phone, Role role, Point location) {
@@ -199,5 +203,9 @@ public class User {
 
 	public void updateManner(Manner manner) {
 		this.manner = manner;
+	}
+
+	public void updateLevel(int level) {
+		this.level = level;
 	}
 }

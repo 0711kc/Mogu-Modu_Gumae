@@ -12,6 +12,8 @@ import com.bunsaned3thinking.mogu.review.service.ReviewService;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserPasswordRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.module.UserService;
@@ -70,9 +72,20 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUserManner(String userId, Manner manner) {
-		reviewService.createReview(userId, manner);
-		Slice<Review> reviews = reviewService.findByUserId(userId);
-		return userService.updateUserManner(userId, reviews);
+	public ResponseEntity<UserResponse> updateUserManner(String senderId, String receiverId, Manner manner,
+		Long postId) {
+		reviewService.createReview(senderId, receiverId, manner, postId);
+		Slice<Review> reviews = reviewService.findByReceiverId(receiverId);
+		return userService.updateUserManner(receiverId, reviews);
+	}
+
+	@Override
+	public ResponseEntity<SavingCostResponse> findUserSavingCost(String userId) {
+		return userService.findUserSavingCost(userId);
+	}
+
+	@Override
+	public ResponseEntity<LevelResponse> findUserLevel(String userId) {
+		return userService.findUserLevel(userId);
 	}
 }
