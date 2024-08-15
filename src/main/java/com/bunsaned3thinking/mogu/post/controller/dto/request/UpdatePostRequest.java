@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
@@ -47,9 +46,9 @@ public class UpdatePostRequest {
 
 	private Double latitude;
 
-	public static UpdatePostRequest from(Post post) throws DeletedPostException {
+	public static UpdatePostRequest from(Post post) {
 		if (post.getPostDetail() == null) {
-			throw new DeletedPostException();
+			throw new IllegalArgumentException("[Error] 삭제된 게시글은 수정할 수 없습니다.");
 		}
 		PostDetail postDetail = post.getPostDetail();
 		return UpdatePostRequest.builder()

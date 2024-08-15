@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bunsaned3thinking.mogu.common.config.S3Config;
-import com.bunsaned3thinking.mogu.common.exception.DeletedPostException;
 import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.post.controller.dto.request.PostRequest;
@@ -112,12 +111,10 @@ public class PostServiceImpl implements PostService {
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 수정할 수 있습니다.");
 		}
-		UpdatePostRequest originPost;
-		try {
-			originPost = UpdatePostRequest.from(post);
-		} catch (DeletedPostException e) {
+		if (post.getPostDetail() == null) {
 			throw new IllegalArgumentException("[Error] 삭제된 게시글은 수정할 수 없습니다.");
 		}
+		UpdatePostRequest originPost = UpdatePostRequest.from(post);
 		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
 			throw new IllegalArgumentException("[Error] 마감된 게시글은 수정할 수 없습니다.");
 		}
