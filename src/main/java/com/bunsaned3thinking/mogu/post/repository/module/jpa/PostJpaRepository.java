@@ -57,6 +57,19 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 	@Query(nativeQuery = true, value = findReportedPostsFirstPageQuery)
 	Slice<Post> findReportedPostFirstPage(PageRequest pageRequest);
 
+	String findPageByIdIn =
+		"select p.* from post as p left join "
+			+ "(select post_id from hidden_post where user_uid = :userUid) as hp "
+			+ "on p.id = hp.post_id "
+			+ "where hp.post_id is null and p.is_hidden != true "
+			+ "and p.id in :postIds "
+			+ "and ST_CONTAINS((ST_Buffer(:point, :distanceMeters)), p.location) "
+			+ "order by p.id desc;";
+
+	@Query(nativeQuery = true, value = findPageByIdIn)
+	Slice<Post> findAllByIdIn(Long userUid, Geometry point, short distanceMeters, List<Long> postIds,
+		PageRequest pageRequest);
+
 	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId and p.id < :cursor "
 		+ "order by p.id desc")
 	Slice<Post> findLikedPostPage(Long cursor, String userId, PageRequest pageRequest);
@@ -64,8 +77,6 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 	@Query("select p from Post p join fetch p.hearts pl where pl.user.userId = :userId "
 		+ "order by p.id desc")
 	Slice<Post> findLikedPostFirstPage(String userId, PageRequest pageRequest);
-
-	Slice<Post> findByIdIn(List<Long> postIds);
 
 	List<Post> findByPurchaseDate(LocalDate purchaseDate);
 }

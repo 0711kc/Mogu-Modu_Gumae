@@ -13,7 +13,7 @@ import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 
 public interface PostService {
 
-	ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor);
+	ResponseEntity<List<PostResponse>> searchPostsByKeyword(String keyword, String userId, Long cursor);
 
 	ResponseEntity<PostWithDetailResponse> createPost(String memberId, PostRequest postRequest,
 		List<String> postImageLinks);

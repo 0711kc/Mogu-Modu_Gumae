@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -56,7 +57,11 @@ public interface PostComponentRepository {
 
 	Slice<Post> findLikedPostsFirstPageByUserId(String userId, PageRequest pageRequest);
 
-	Slice<Post> searchPostsByTitle(String keyword, Long cursor, PageRequest pageRequest);
+	Slice<Post> searchFirstPostsByKeyword(Long userUid, Geometry point, short distanceMeters, String keyword,
+		PageRequest pageRequest);
+
+	Slice<Post> searchPostsByKeyword(Long userUid, Geometry point, short distanceMeters, String keyword, Long cursor,
+		PageRequest pageRequest);
 
 	Optional<SearchHistory> findSearchHistoryById(Long searchHistoryId);
 

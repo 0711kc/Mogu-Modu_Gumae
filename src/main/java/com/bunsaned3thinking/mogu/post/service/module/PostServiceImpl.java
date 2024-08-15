@@ -177,13 +177,20 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public ResponseEntity<List<PostResponse>> searchPostsByTitle(String keyword, String userId, Long cursor) {
+	public ResponseEntity<List<PostResponse>> searchPostsByKeyword(String keyword, String userId, Long cursor) {
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
-		Slice<Post> posts = postComponentRepository.searchPostsByTitle(keyword, cursor, pageRequest);
-
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		user.getSearchHistories().add(postComponentRepository.saveSearchHistory(keyword, user));
+
+		Slice<Post> posts;
+		if (cursor == 0) {
+			posts = postComponentRepository.searchFirstPostsByKeyword(user.getUid(), user.getLocation(),
+				user.getDistanceMeters(), keyword, pageRequest);
+		} else {
+			posts = postComponentRepository.searchPostsByKeyword(user.getUid(), user.getLocation(),
+				user.getDistanceMeters(), keyword, cursor, pageRequest);
+		}
 
 		List<PostResponse> responses = posts.stream()
 			.map(PostResponse::from)

@@ -106,9 +106,9 @@ public class PostController {
 	@GetMapping("/search/{userId}")
 	public ResponseEntity<List<PostResponse>> searchPosts(
 		@PathVariable final String userId,
-		@RequestParam(name = "title") String title,
+		@RequestParam(name = "keyword") String keyword,
 		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
-		return postComponentService.searchPostByTitle(title, userId, cursor);
+		return postComponentService.searchPostByKeyword(keyword, userId, cursor);
 	}
 
 	@GetMapping("/searchHistories/{userId}")

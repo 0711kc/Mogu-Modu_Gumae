@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -141,47 +142,19 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public Slice<Post> searchPostsByTitle(String keyword, Long cursor, PageRequest pageRequest) {
-		List<PostDoc> postDocs = postDocElasticRepository.findByIdGreaterThanEqualAndTitleContaining(cursor,
-			keyword,
-			pageRequest);
+	public Slice<Post> searchFirstPostsByKeyword(Long userUid, Geometry point, short distanceMeters, String keyword,
+		PageRequest pageRequest) {
+		List<PostDoc> postDocs = postDocElasticRepository.searchPostDocBy(keyword);
 		List<Long> postIds = postDocs.stream().map(PostDoc::getId).toList();
-		return postJpaRepository.findByIdIn(postIds);
-		// String[] fields = {"title"};
-		// Pageable aa = PageRequest.of(0, 10);
-		// Page<PostDocs> postDocsPage = postDocsElasticRepository.searchSimilar(referencePost, fields, pageable);
-		// Like like = Like.of(l -> l
-		// 	.text(referencePost.getTitle())  // title 필드를 기반으로 유사 문서를 찾기 위해 추가
-		// );
-		// MoreLikeThisQuery moreLikeThisQuery = QueryBuilders.moreLikeThis()
-		// 	.fields("title").like(like).minTermFreq(1).maxQueryTerms(12).build();
-		// SearchRequest searchRequest = SearchRequest.of(s -> s
-		// 	.index("posts")  // 검색할 인덱스 이름
-		// 	.query(q -> q
-		// 		.moreLikeThis(moreLikeThisQuery)
-		// 	)
-		// );
-		// RestClientBuilder builder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
-		// RestClientTransport transport = new RestClientTransport(builder.build(), new JacksonJsonpMapper());
-		// ElasticsearchClient client = new ElasticsearchClient(transport);
-		// SearchResponse<JsonData> searchResponse = null;
-		// try {
-		// 	searchResponse = client.search(searchRequest, JsonData.class);
-		// } catch (IOException e) {
-		// 	throw new RuntimeException(e);
-		// }
-		// // 5. 결과 처리
-		// List<Hit<JsonData>> hits = searchResponse.hits().hits();
-		// if (hits.isEmpty()) {
-		// 	System.out.println("hits isEmpty");
-		// } else {
-		// 	for (Hit<JsonData> hit : hits) {
-		// 		System.out.println(hit.source());  // 문서의 소스 데이터를 출력
-		// 		System.out.println(hit.index());
-		// 		System.out.println(hit.id());
-		// 		System.out.println(hit.fields());
-		// 	}
-		// }
+		return postJpaRepository.findAllByIdIn(userUid, point, distanceMeters, postIds, pageRequest);
+	}
+
+	@Override
+	public Slice<Post> searchPostsByKeyword(Long userUid, Geometry point, short distanceMeters, String keyword,
+		Long cursor, PageRequest pageRequest) {
+		List<PostDoc> postDocs = postDocElasticRepository.searchPostDocBy(cursor, keyword);
+		List<Long> postIds = postDocs.stream().map(PostDoc::getId).toList();
+		return postJpaRepository.findAllByIdIn(userUid, point, distanceMeters, postIds, pageRequest);
 	}
 
 	@Override

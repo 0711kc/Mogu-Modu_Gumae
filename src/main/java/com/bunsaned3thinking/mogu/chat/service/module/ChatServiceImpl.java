@@ -33,17 +33,17 @@ public class ChatServiceImpl implements ChatService {
 	public ResponseEntity<ChatResponse> createChat(Long postId) {
 		Post post = chatComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
-		boolean isExistChat = chatComponentRepository.existsChatByPostId(postId);
+		boolean isExistChat = chatComponentRepository.existsChatByPostId(post.getId());
 		if (isExistChat) {
 			throw new IllegalArgumentException("[Error] 이미 채팅방이 생성된 게시글입니다.");
 		}
 		Chat chat = Chat.from(post);
-		Chat savedChat = chatComponentRepository.saveChat(chat);
-		ChatUser chatUser = ChatUser.of(savedChat, post.getUser());
+		chatComponentRepository.saveChat(chat);
+		ChatUser chatUser = ChatUser.of(chat, post.getUser());
 		chatComponentRepository.saveChatUser(chatUser);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(ChatResponse.from(savedChat));
+			.body(ChatResponse.from(chat));
 	}
 
 	@Override

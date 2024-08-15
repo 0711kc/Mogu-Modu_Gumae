@@ -21,15 +21,10 @@ public class ElasticsearchIndexManager implements ApplicationListener<ContextRef
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		IndexOperations indexOperations = elasticsearchOperations.indexOps(PostDoc.class);
-
-		// 인덱스 삭제
 		if (indexOperations.exists()) {
 			indexOperations.delete();
 		}
-
-		// 인덱스 생성
 		indexOperations.create();
-		indexOperations.putMapping(indexOperations.createMapping());
 	}
 
 	@Override
