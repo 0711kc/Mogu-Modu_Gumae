@@ -46,8 +46,8 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long uid;
 
-	@Size(max = 12)
-	@Column(length = 12, unique = true, updatable = false)
+	@Size(max = 30)
+	@Column(length = 30, unique = true, updatable = false)
 	private String userId;
 
 	@Size(max = 80)
@@ -65,10 +65,6 @@ public class User {
 	@Size(max = 11)
 	@Column(length = 11, unique = true)
 	private String phone;
-
-	@Size(max = 30)
-	@Column(length = 30, unique = true)
-	private String email;
 
 	@Column(updatable = false)
 	private Role role;
@@ -158,14 +154,13 @@ public class User {
 	private List<Review> receiveReviews = new ArrayList<>();
 
 	public static User of(String userId, String password, String name, String nickname,
-		String phone, String email, Role role, Point location) {
+		String phone, Role role, Point location) {
 		return User.builder()
 			.userId(userId)
 			.password(password)
 			.name(name)
 			.nickname(nickname)
 			.phone(phone)
-			.email(email)
 			.role(role)
 			.location(location)
 			.build();
@@ -194,7 +189,6 @@ public class User {
 	}
 
 	public void updateLoginInfo(String email, String name) {
-		this.email = email;
 		this.name = name;
 	}
 

@@ -16,7 +16,6 @@ public class UserResponse {
 	private final String name;
 	private String nickname;
 	private String phone;
-	private String email;
 	private String role;
 	private Boolean isBlock;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
@@ -37,7 +36,6 @@ public class UserResponse {
 			.name(user.getName())
 			.nickname(user.getNickname())
 			.phone(user.getPhone())
-			.email(user.getEmail())
 			.role(user.getRole().getResponse())
 			.isBlock(user.getIsBlock())
 			.blockDate(user.getBlockDate())

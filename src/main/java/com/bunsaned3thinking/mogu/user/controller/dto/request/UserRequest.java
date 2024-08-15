@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class UserRequest {
 
 	@NotBlank(message = "아이디를 입력해주세요.")
-	@Size(max = 12)
+	@Size(max = 30)
 	private String userId;
 
 	@NotBlank(message = "비밀번호를 입력해주세요.")
@@ -40,16 +40,12 @@ public class UserRequest {
 	@Size(max = 11)
 	private String phone;
 
-	@NotBlank(message = "이메일을 입력해주세요.")
-	@Size(max = 30)
-	private String email;
-
 	@NotNull(message = "권한을 입력해주세요.")
 	private Role role;
 
 	@NotNull(message = "경도를 입력해주세요.")
-	@DecimalMin(value = "-90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
-	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
+	@DecimalMin(value = "-180.0", message = "-180.0 ~ 180.0 사이의 숫자를 입력해주세요")
+	@DecimalMax(value = "180.0", message = "-180.0 ~ 180.0 사이의 숫자를 입력해주세요")
 	private Double longitude;
 
 	@NotNull(message = "위도를 입력해주세요.")
@@ -64,7 +60,6 @@ public class UserRequest {
 			.name(name)
 			.nickname(nickname)
 			.phone(phone)
-			.email(email)
 			.role(role)
 			.location(LocationUtil.createPoint(longitude, latitude))
 			.build();
