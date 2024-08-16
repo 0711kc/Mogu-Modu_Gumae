@@ -38,4 +38,6 @@ public interface UserService {
 	void updateUserLevel(Long postId, RecruitState recruitState);
 
 	ResponseEntity<LevelResponse> findUserLevel(String userId);
+
+	String findImageName(String userId);
 }

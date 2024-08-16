@@ -29,7 +29,7 @@ public interface PostService {
 
 	ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistoryByUserId(String userId);
 
-	List<String> deletePost(String userId, Long postId);
+	ResponseEntity<Void> deletePost(String userId, Long postId);
 
 	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
 
@@ -40,4 +40,6 @@ public interface PostService {
 	ResponseEntity<PostResponse> hidePost(Long postId, String userId, boolean state);
 
 	ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId, Long cursor);
+
+	List<String> findImageNames(Long postId);
 }

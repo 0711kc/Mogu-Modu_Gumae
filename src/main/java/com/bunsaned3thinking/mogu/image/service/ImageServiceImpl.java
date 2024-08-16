@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.bunsaned3thinking.mogu.common.config.S3Config;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,9 +49,16 @@ public class ImageServiceImpl implements ImageService {
 			.toList();
 	}
 
-	private String createFileName() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
-		return UUID.randomUUID() + "_" + LocalDateTime.now().format(formatter);
+	@Override
+	public void delete(String fileName) {
+		if (fileName.equals(S3Config.PostImage) | fileName.equals(S3Config.UserImage)) {
+			return;
+		}
+		try {
+			s3Client.deleteObject(bucket, fileName);
+		} catch (SdkClientException e) {
+			throw new IllegalStateException("[Error] AWS S3 서비스 접근에 실패했습니다.");
+		}
 	}
 
 	@Override
@@ -57,10 +66,18 @@ public class ImageServiceImpl implements ImageService {
 		if (fileNames.isEmpty()) {
 			return;
 		}
+		if (fileNames.contains(S3Config.PostImage) | fileNames.contains(S3Config.UserImage)) {
+			return;
+		}
 		DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket)
 			.withKeys(fileNames.stream()
 				.map(DeleteObjectsRequest.KeyVersion::new)
 				.toList());
 		s3Client.deleteObjects(deleteObjectsRequest);
+	}
+
+	private String createFileName() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+		return UUID.randomUUID() + "_" + LocalDateTime.now().format(formatter);
 	}
 }

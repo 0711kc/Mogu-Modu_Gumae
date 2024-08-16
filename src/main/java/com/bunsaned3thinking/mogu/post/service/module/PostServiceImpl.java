@@ -260,7 +260,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<String> deletePost(String userId, Long postId) {
+	public ResponseEntity<Void> deletePost(String userId, Long postId) {
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
@@ -273,9 +273,6 @@ public class PostServiceImpl implements PostService {
 		List<PostImage> postImages = postDetailImages.stream()
 			.map(PostDetailImage::getPostImage)
 			.collect(Collectors.toList());
-		List<String> imageNames = postImages.stream()
-			.map(PostImage::getImage)
-			.collect(Collectors.toList());
 		if (post.getThumbnail().getId() != S3Config.PostImageId) {
 			post.updateThumbnail(postComponentRepository.findPostImageByPostImageId(1)
 				.orElseThrow(() -> new EntityNotFoundException("[Error] 기본 게시글 이미지 접근에 실패했습니다.")));
@@ -284,11 +281,10 @@ public class PostServiceImpl implements PostService {
 		postComponentRepository.deletePostDetailImages(postDetailImages);
 		postComponentRepository.deletePostDetailByPostId(postId);
 		postComponentRepository.savePost(post);
-		if (postImages.get(0).getId() == S3Config.PostImageId) {
-			return new ArrayList<>();
+		if (postImages.get(0).getId() != S3Config.PostImageId) {
+			postComponentRepository.deletePostImages(postImages);
 		}
-		postComponentRepository.deletePostImages(postImages);
-		return imageNames;
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@Override
@@ -345,6 +341,16 @@ public class PostServiceImpl implements PostService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(responses);
+	}
+
+	@Override
+	public List<String> findImageNames(Long postId) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다"));
+		return post.getPostDetail().getPostImages().stream()
+			.map(PostDetailImage::getPostImage)
+			.map(PostImage::getImage)
+			.toList();
 	}
 
 	private Slice<Post> getAllLikedPosts(String userId, Long cursor, PageRequest pageRequest) {

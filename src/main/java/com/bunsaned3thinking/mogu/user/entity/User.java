@@ -109,7 +109,7 @@ public class User {
 	@Builder.Default
 	private List<Ask> asks = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<ChatUser> chats = new ArrayList<>();
 

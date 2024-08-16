@@ -3,7 +3,6 @@ package com.bunsaned3thinking.mogu.post.service.component;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,15 +79,17 @@ public class PostComponentServiceImpl implements PostComponentService {
 	@Override
 	public ResponseEntity<PostWithDetailResponse> updatePost(final Long postId, final String userId,
 		final UpdatePostRequest updatePostRequest, final List<MultipartFile> multipartFileList) {
+		List<String> imageNames = postService.findImageNames(postId);
+		imageService.deleteAll(imageNames);
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
 		return postService.updatePost(userId, postId, updatePostRequest, imageLinks);
 	}
 
 	@Override
 	public ResponseEntity<Void> deletePost(final String userId, final Long postId) {
-		List<String> imageNames = postService.deletePost(userId, postId);
+		List<String> imageNames = postService.findImageNames(postId);
 		imageService.deleteAll(imageNames);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return postService.deletePost(userId, postId);
 	}
 
 	@Override

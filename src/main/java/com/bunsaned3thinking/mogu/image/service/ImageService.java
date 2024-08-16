@@ -9,5 +9,7 @@ public interface ImageService {
 
 	List<String> uploadAll(List<MultipartFile> multipartFileList);
 
+	void delete(String fileName);
+
 	void deleteAll(List<String> fileNames);
 }

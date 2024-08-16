@@ -155,6 +155,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public String findImageName(String userId) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		return user.getProfileImage();
+	}
+
+	@Override
 	public void updateUserLevel(Long postId, RecruitState recruitState) {
 		if (!recruitState.equals(RecruitState.PURCHASED)) {
 			return;
@@ -194,7 +201,7 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<Void> deleteUser(String userId) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		userRepository.deleteById(user.getUid());
+		userRepository.delete(user);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

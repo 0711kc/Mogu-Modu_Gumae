@@ -40,6 +40,8 @@ public class UserComponentServiceImpl implements UserComponentService {
 
 	@Override
 	public ResponseEntity<Void> deleteUser(String userId) {
+		String imageName = userService.findImageName(userId);
+		imageService.delete(imageName);
 		return userService.deleteUser(userId);
 	}
 
@@ -48,8 +50,10 @@ public class UserComponentServiceImpl implements UserComponentService {
 		MultipartFile multipartFile) {
 		ResponseEntity<UserResponse> response = null;
 		if (multipartFile != null) {
-			String imageLink = imageService.upload(multipartFile);
-			response = userService.updateProfileImage(userId, imageLink);
+			String imageName = userService.findImageName(userId);
+			imageService.delete(imageName);
+			imageName = imageService.upload(multipartFile);
+			response = userService.updateProfileImage(userId, imageName);
 		}
 		if (updateUserRequest != null) {
 			response = userService.updateUser(userId, updateUserRequest);
