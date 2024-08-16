@@ -8,7 +8,6 @@ import com.bunsaned3thinking.mogu.common.util.LocationUtil;
 import com.bunsaned3thinking.mogu.post.entity.Category;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
-import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -69,28 +68,26 @@ public class PostRequest {
 	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double latitude;
 
-	public Post toEntity(User user, PostDetail postDetail, PostImage thumbnail, int pricePerCount) {
+	public Post toEntity(User user) {
 		return Post.builder()
 			.title(title)
 			.category(category)
 			.discountPrice(discountPrice)
 			.originalPrice(originalPrice)
 			.shareCondition(shareCondition)
-			.pricePerCount(pricePerCount)
 			.purchaseDate(purchaseDate)
 			.recruitState(RecruitState.RECRUITING)
 			.location(LocationUtil.createPoint(longitude, latitude))
 			.user(user)
-			.postDetail(postDetail)
 			.userCount(userCount)
-			.thumbnail(thumbnail)
 			.build();
 	}
 
-	public PostDetail toDetailEntity() {
+	public PostDetail toDetailEntity(Post post) {
 		return PostDetail.builder()
 			.content(content)
 			.purchaseState(purchaseState)
+			.post(post)
 			.build();
 	}
 }

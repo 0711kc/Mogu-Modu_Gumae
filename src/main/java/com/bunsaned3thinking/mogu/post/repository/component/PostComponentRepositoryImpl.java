@@ -15,9 +15,11 @@ import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
+import com.bunsaned3thinking.mogu.post.entity.PostDetailImage;
 import com.bunsaned3thinking.mogu.post.entity.PostDoc;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.repository.module.HiddenPostRepository;
+import com.bunsaned3thinking.mogu.post.repository.module.PostDetailImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostDetailRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.PostImageRepository;
 import com.bunsaned3thinking.mogu.post.repository.module.elasticsearch.PostDocElasticRepository;
@@ -40,6 +42,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	private final PostJpaRepository postJpaRepository;
 	private final SearchHistoryRepository searchHistoryRepository;
 	private final HiddenPostRepository hiddenPostRepository;
+	private final PostDetailImageRepository postDetailImageRepository;
 
 	@Override
 	public Optional<User> findUserByUserId(String userId) {
@@ -58,10 +61,7 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 
 	@Override
 	public Post savePost(Post post) {
-		Post savedPost = postJpaRepository.save(post);
-		postDocElasticRepository.save(
-			PostDoc.from(savedPost));
-		return savedPost;
+		return postJpaRepository.saveAndFlush(post);
 	}
 
 	@Override
@@ -80,8 +80,8 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	}
 
 	@Override
-	public void deletePostDetailByPostId(Long id) {
-		postDetailRepository.deleteByPostId(id);
+	public void deletePostDetailByPostId(Long postId) {
+		postDetailRepository.deleteById(postId);
 	}
 
 	@Override
@@ -98,6 +98,26 @@ public class PostComponentRepositoryImpl implements PostComponentRepository {
 	public Slice<Post> findFirstPagePosts(Long userUid, PageRequest pageRequest, Point referencePoint,
 		Short distanceMeters) {
 		return postJpaRepository.findFirstPage(userUid, referencePoint, distanceMeters, pageRequest);
+	}
+
+	@Override
+	public void savePostDoc(PostDoc postDoc) {
+		postDocElasticRepository.save(postDoc);
+	}
+
+	@Override
+	public void deletePostDetailImages(List<PostDetailImage> postDetailImages) {
+		postDetailImageRepository.deleteAll(postDetailImages);
+	}
+
+	@Override
+	public void deletePostImages(List<PostImage> postImages) {
+		postImageRepository.deleteAll(postImages);
+	}
+
+	@Override
+	public Optional<PostImage> findPostImageByPostImageId(long postImageId) {
+		return postImageRepository.findById(postImageId);
 	}
 
 	@Override

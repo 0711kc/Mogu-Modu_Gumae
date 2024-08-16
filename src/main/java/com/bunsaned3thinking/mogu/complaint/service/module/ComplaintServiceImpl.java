@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.complaint.service.module;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,9 @@ public class ComplaintServiceImpl implements ComplaintService {
 
 	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks, Complaint complaint) {
 		if (complaintImageLinks.isEmpty()) {
-			return List.of(ComplaintImage.of(complaint, S3Config.PostImage));
+			ArrayList<ComplaintImage> complaintImages = new ArrayList<>();
+			complaintImages.add(ComplaintImage.of(complaint, S3Config.PostImage));
+			return complaintImages;
 		}
 		return complaintImageLinks.stream()
 			.map(complaintImageLink -> ComplaintImage.of(complaint, complaintImageLink))

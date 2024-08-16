@@ -23,6 +23,7 @@ public class S3Config {
 	public static String ImageURL;
 	public static String UserImage;
 	public static String PostImage;
+	public static final long PostImageId = 1L;
 
 	@Value("${s3.basic.user}")
 	private void setBasicUserImage(String userImage) {

@@ -8,4 +8,6 @@ public interface ImageService {
 	String upload(MultipartFile file);
 
 	List<String> uploadAll(List<MultipartFile> multipartFileList);
+
+	void deleteAll(List<String> fileNames);
 }

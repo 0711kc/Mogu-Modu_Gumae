@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
+import com.bunsaned3thinking.mogu.post.entity.PostDetailImage;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 
 import lombok.Builder;
@@ -26,6 +27,21 @@ public class PostDetailResponse {
 			.content(postDetail.getContent())
 			.purchaseState(postDetail.getPurchaseState())
 			.postImages(postDetail.getPostImages().stream()
+				.map(PostDetailImage::getPostImage)
+				.map(PostImage::getImage)
+				.map(S3Util::toS3ImageUrl)
+				.toList())
+			.build();
+	}
+
+	public static PostDetailResponse of(final PostDetail postDetail, final List<PostImage> postImages) {
+		if (postDetail == null) {
+			return null;
+		}
+		return PostDetailResponse.builder()
+			.content(postDetail.getContent())
+			.purchaseState(postDetail.getPurchaseState())
+			.postImages(postImages.stream()
 				.map(PostImage::getImage)
 				.map(S3Util::toS3ImageUrl)
 				.toList())

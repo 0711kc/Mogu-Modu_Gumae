@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
 			s3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
 			return fileName;
 		} catch (IOException e) {
-			throw new IllegalArgumentException();
+			throw new IllegalStateException("[Error] AWS S3 서비스 접근에 실패했습니다.");
 		}
 	}
 
@@ -49,5 +50,17 @@ public class ImageServiceImpl implements ImageService {
 	private String createFileName() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 		return UUID.randomUUID() + "_" + LocalDateTime.now().format(formatter);
+	}
+
+	@Override
+	public void deleteAll(List<String> fileNames) {
+		if (fileNames.isEmpty()) {
+			return;
+		}
+		DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucket)
+			.withKeys(fileNames.stream()
+				.map(DeleteObjectsRequest.KeyVersion::new)
+				.toList());
+		s3Client.deleteObjects(deleteObjectsRequest);
 	}
 }

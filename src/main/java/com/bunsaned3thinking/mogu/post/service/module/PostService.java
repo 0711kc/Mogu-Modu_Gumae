@@ -29,7 +29,7 @@ public interface PostService {
 
 	ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistoryByUserId(String userId);
 
-	ResponseEntity<Void> deletePost(String userId, Long postId);
+	List<String> deletePost(String userId, Long postId);
 
 	ResponseEntity<Void> deleteSearchHistory(Long searchHistoryId, String userId);
 

@@ -104,7 +104,7 @@ public class Post {
 	@Builder.Default
 	private List<Review> reviews = new ArrayList<>();
 
-	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private PostDetail postDetail;
 
 	@Column(columnDefinition = "POINT SRID 4326")
@@ -118,7 +118,7 @@ public class Post {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "thumbnail_id")
 	private PostImage thumbnail;
 
@@ -145,5 +145,20 @@ public class Post {
 
 	public void updateHidden(boolean isHidden) {
 		this.isHidden = isHidden;
+	}
+
+	public void initialize(PostDetail postDetail, PostImage thumbnail, int pricePerCount) {
+		this.postDetail = postDetail;
+		this.thumbnail = thumbnail;
+		this.pricePerCount = pricePerCount;
+	}
+
+	public void updateThumbnail(PostImage thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public void deleteDetail() {
+		this.isHidden = true;
+		this.postDetail = null;
 	}
 }

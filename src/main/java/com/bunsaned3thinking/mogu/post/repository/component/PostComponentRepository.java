@@ -13,6 +13,8 @@ import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
+import com.bunsaned3thinking.mogu.post.entity.PostDetailImage;
+import com.bunsaned3thinking.mogu.post.entity.PostDoc;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
 import com.bunsaned3thinking.mogu.user.entity.User;
@@ -30,7 +32,7 @@ public interface PostComponentRepository {
 
 	Post savePost(Post post);
 
-	void deletePostDetailByPostId(Long id);
+	void deletePostDetailByPostId(Long postId);
 
 	List<Post> findAllPostsByPurchaseDate(LocalDate purchaseDate);
 
@@ -70,4 +72,12 @@ public interface PostComponentRepository {
 	Slice<Post> findAllFirstPageReportedPost(PageRequest pageRequest);
 
 	Slice<Post> findFirstPagePosts(Long userUid, PageRequest pageRequest, Point referencePoint, Short distanceMeters);
+
+	void savePostDoc(PostDoc postDoc);
+
+	void deletePostDetailImages(List<PostDetailImage> postDetailImages);
+
+	void deletePostImages(List<PostImage> postImages);
+
+	Optional<PostImage> findPostImageByPostImageId(long postImageId);
 }

@@ -1,7 +1,9 @@
 package com.bunsaned3thinking.mogu.post.service.module;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,8 @@ import com.bunsaned3thinking.mogu.post.entity.HiddenPost;
 import com.bunsaned3thinking.mogu.post.entity.HiddenPostId;
 import com.bunsaned3thinking.mogu.post.entity.Post;
 import com.bunsaned3thinking.mogu.post.entity.PostDetail;
+import com.bunsaned3thinking.mogu.post.entity.PostDetailImage;
+import com.bunsaned3thinking.mogu.post.entity.PostDoc;
 import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
@@ -49,38 +53,52 @@ public class PostServiceImpl implements PostService {
 		validatePostRequest(postRequest);
 		User user = postComponentRepository.findUserByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		PostDetail postDetail = postRequest.toDetailEntity();
-		List<PostImage> postImages = createPostImages(postImageLinks, postDetail);
+		Post post = postRequest.toEntity(user);
+		postComponentRepository.savePost(post);
+		PostDetail postDetail = postRequest.toDetailEntity(post);
+		postComponentRepository.savePostDetail(postDetail);
+		List<PostImage> postImages = createPostImages(postImageLinks);
 		postComponentRepository.saveAllPostImages(postImages);
-		postDetail.updatePostImages(postImages);
+		List<PostDetailImage> postDetailImages = postImages.stream()
+			.map(postImage -> PostDetailImage.of(postDetail, postImage))
+			.collect(Collectors.toList());
+		postDetail.updatePostImages(postDetailImages);
+
 		int pricePerCount;
 		if (postRequest.getShareCondition()) {
 			pricePerCount = (int)Math.ceil((double)postRequest.getDiscountPrice() / postRequest.getUserCount());
 		} else {
 			pricePerCount = postRequest.getPricePerCount();
 		}
-		Post post = postRequest.toEntity(user, postDetail, postImages.get(0), pricePerCount);
-		postDetail.initialize(post);
-		postComponentRepository.savePostDetail(postDetail);
-		Post savedPost = postComponentRepository.savePost(post);
+
+		post.initialize(postDetail, postImages.get(0), pricePerCount);
+		postComponentRepository.savePostDoc(PostDoc.from(post));
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(PostWithDetailResponse.from(savedPost));
+			.body(PostWithDetailResponse.from(post));
 	}
 
-	private List<PostImage> createPostImages(List<String> postImageLinks, PostDetail postDetail) {
-		if (postImageLinks.isEmpty()) {
-			return List.of(PostImage.from(S3Config.PostImage, postDetail));
+	private List<PostImage> createPostImages(List<String> postImageLinks) {
+		if (!postImageLinks.isEmpty()) {
+			return postImageLinks.stream()
+				.map(PostImage::from)
+				.collect(Collectors.toList());
 		}
-		return postImageLinks.stream()
-			.map(postImageLink -> PostImage.from(postImageLink, postDetail))
-			.toList();
+		List<PostImage> postImages = new ArrayList<>();
+		postComponentRepository.findPostImageByPostImageId(S3Config.PostImageId)
+			.ifPresentOrElse(postImages::add, () -> {
+				throw new EntityNotFoundException("[Error] 기본 프로필 이미지를 가져오는데 실패했습니다.");
+			});
+		return postImages;
 	}
 
 	@Override
 	public ResponseEntity<PostResponse> findPost(Long id) {
 		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (post.getPostDetail() == null) {
+			throw new IllegalArgumentException("[Error] 삭제된 게시글은 조회할 수 없습니다");
+		}
 		if (post.getIsHidden()) {
 			throw new IllegalArgumentException("[Error] 숨겨진 게시글은 조회할 수 없습니다.");
 		}
@@ -93,6 +111,9 @@ public class PostServiceImpl implements PostService {
 	public ResponseEntity<PostWithDetailResponse> findPostWithDetail(Long id) {
 		Post post = postComponentRepository.findPostById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		if (post.getPostDetail() == null) {
+			throw new IllegalArgumentException("[Error] 삭제된 게시글은 조회할 수 없습니다");
+		}
 		if (post.getIsHidden()) {
 			throw new IllegalArgumentException("[Error] 숨겨진 게시글은 조회할 수 없습니다.");
 		}
@@ -114,18 +135,32 @@ public class PostServiceImpl implements PostService {
 		if (post.getPostDetail() == null) {
 			throw new IllegalArgumentException("[Error] 삭제된 게시글은 수정할 수 없습니다.");
 		}
-		UpdatePostRequest originPost = UpdatePostRequest.from(post);
 		if (post.getRecruitState().equals(RecruitState.CLOSING)) {
 			throw new IllegalArgumentException("[Error] 마감된 게시글은 수정할 수 없습니다.");
 		}
-		List<PostImage> postImages = post.getPostDetail().getPostImages();
-		if (!postImageLinks.isEmpty()) {
-			postImages = createPostImages(postImageLinks, post.getPostDetail());
-		}
 		validatePostRequest(post, updatePostRequest);
+		UpdatePostRequest originPost = UpdatePostRequest.from(post);
+		List<PostDetailImage> postDetailImages = post.getPostDetail().getPostImages();
+		List<PostImage> postImages = postDetailImages.stream()
+			.map(PostDetailImage::getPostImage)
+			.collect(Collectors.toList());
+		postComponentRepository.deletePostDetailImages(postDetailImages);
+		if (postImages.get(0).getId() != S3Config.PostImageId) {
+			postComponentRepository.deletePostImages(postImages);
+		}
+		postImages = createPostImages(postImageLinks);
+		if (!postImageLinks.isEmpty()) {
+			postComponentRepository.saveAllPostImages(postImages);
+		}
+		post.updateThumbnail(postImages.get(0));
+		PostDetail postDetail = post.getPostDetail();
+		postDetailImages = postImages.stream()
+			.map(postImage -> PostDetailImage.of(postDetail, postImage))
+			.collect(Collectors.toList());
+		postDetail.updatePostImages(postDetailImages);
+		postComponentRepository.savePostDetail(postDetail);
 		UpdateUtil.copyNonNullProperties(updatePostRequest, originPost);
-		update(post, originPost, postImages);
-		postComponentRepository.savePostDetail(post.getPostDetail());
+		update(post, originPost);
 		Post updatedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -200,7 +235,7 @@ public class PostServiceImpl implements PostService {
 			.body(responses);
 	}
 
-	private void update(Post post, UpdatePostRequest updatePostRequest, List<PostImage> postImages) {
+	private void update(Post post, UpdatePostRequest updatePostRequest) {
 		Category category = post.getCategory();
 		LocalDate purchaseDate = updatePostRequest.getPurchaseDate();
 		int userCount = updatePostRequest.getUserCount();
@@ -222,20 +257,38 @@ public class PostServiceImpl implements PostService {
 
 		String content = updatePostRequest.getContent();
 		post.getPostDetail().update(content);
-		post.getPostDetail().updatePostImages(postImages);
 	}
 
 	@Override
-	public ResponseEntity<Void> deletePost(String userId, Long postId) {
+	public List<String> deletePost(String userId, Long postId) {
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
 		if (!post.getUser().getUserId().equals(userId)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
-		post.updateHidden(true);
+		if (post.getPostDetail() == null) {
+			throw new IllegalArgumentException("[Error] 이미 삭제된 게시글입니다.");
+		}
+		List<PostDetailImage> postDetailImages = post.getPostDetail().getPostImages();
+		List<PostImage> postImages = postDetailImages.stream()
+			.map(PostDetailImage::getPostImage)
+			.collect(Collectors.toList());
+		List<String> imageNames = postImages.stream()
+			.map(PostImage::getImage)
+			.collect(Collectors.toList());
+		if (post.getThumbnail().getId() != S3Config.PostImageId) {
+			post.updateThumbnail(postComponentRepository.findPostImageByPostImageId(1)
+				.orElseThrow(() -> new EntityNotFoundException("[Error] 기본 게시글 이미지 접근에 실패했습니다.")));
+		}
+		post.deleteDetail();
+		postComponentRepository.deletePostDetailImages(postDetailImages);
+		postComponentRepository.deletePostDetailByPostId(postId);
 		postComponentRepository.savePost(post);
-		postComponentRepository.deletePostDetailByPostId(post.getId());
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		if (postImages.get(0).getId() == S3Config.PostImageId) {
+			return new ArrayList<>();
+		}
+		postComponentRepository.deletePostImages(postImages);
+		return imageNames;
 	}
 
 	@Override
