@@ -37,14 +37,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 	private final PostComponentService postComponentService;
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper;
 
 	@PostMapping("/{userId}")
 	public ResponseEntity<PostWithDetailResponse> createPost(
 		@PathVariable String userId,
 		@RequestPart(name = "request") final String postRequestJson,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) throws
-		JsonProcessingException {
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList)
+		throws JsonProcessingException {
 		@Valid final PostRequest postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
 		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
 	}
@@ -71,8 +71,8 @@ public class PostController {
 		@PathVariable Long postId,
 		@PathVariable String userId,
 		@RequestPart(name = "request") final String updatePostRequestJson,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) throws
-		JsonProcessingException {
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList)
+		throws JsonProcessingException {
 		@Valid final UpdatePostRequest updatePostRequest = objectMapper.readValue(updatePostRequestJson,
 			UpdatePostRequest.class);
 		return postComponentService.updatePost(postId, userId, updatePostRequest,

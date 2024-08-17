@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.user.controller;
 
+import java.util.Optional;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserComponentService userComponentService;
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper;
 
 	@PostMapping
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
@@ -56,9 +58,12 @@ public class UserController {
 
 	@PatchMapping(value = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<UserResponse> updateUser(@PathVariable final String userId,
-		@RequestPart(name = "request", required = false) final String updateUserRequestJson,
+		@RequestPart(name = "request", required = false) final Optional<String> updateUserRequestJson,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) throws JsonProcessingException {
-		@Valid final UpdateUserRequest updateUserRequest = objectMapper.readValue(updateUserRequestJson, UpdateUserRequest.class);
+		@Valid UpdateUserRequest updateUserRequest = null;
+		if (updateUserRequestJson.isPresent()) {
+			updateUserRequest = objectMapper.readValue(updateUserRequestJson.get(), UpdateUserRequest.class);
+		}
 		return userComponentService.updateUser(userId, updateUserRequest, multipartFile);
 	}
 
