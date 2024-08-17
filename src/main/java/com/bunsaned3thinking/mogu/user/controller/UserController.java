@@ -60,10 +60,9 @@ public class UserController {
 	public ResponseEntity<UserResponse> updateUser(@PathVariable final String userId,
 		@RequestPart(name = "request", required = false) final Optional<String> updateUserRequestJson,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) throws JsonProcessingException {
-		@Valid UpdateUserRequest updateUserRequest = null;
-		if (updateUserRequestJson.isPresent()) {
-			updateUserRequest = objectMapper.readValue(updateUserRequestJson.get(), UpdateUserRequest.class);
-		}
+		@Valid UpdateUserRequest updateUserRequest = updateUserRequestJson.isPresent()
+			? objectMapper.readValue(updateUserRequestJson.get(), UpdateUserRequest.class)
+			: null;
 		return userComponentService.updateUser(userId, updateUserRequest, multipartFile);
 	}
 

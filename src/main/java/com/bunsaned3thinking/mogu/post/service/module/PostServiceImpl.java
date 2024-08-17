@@ -64,14 +64,11 @@ public class PostServiceImpl implements PostService {
 			.collect(Collectors.toList());
 		postDetail.updatePostImages(postDetailImages);
 
-		int pricePerCount;
-		if (postRequest.getShareCondition()) {
-			pricePerCount = (int)Math.ceil((double)postRequest.getDiscountPrice() / postRequest.getUserCount());
-		} else {
-			pricePerCount = postRequest.getPricePerCount();
-		}
+		int perPrice = postRequest.getShareCondition()
+			? (int)Math.ceil((double)postRequest.getOriginalPrice() / postRequest.getUserCount())
+			: postRequest.getPerPrice();
 
-		post.initialize(postDetail, postImages.get(0), pricePerCount);
+		post.initialize(postDetail, postImages.get(0), perPrice);
 		postComponentRepository.savePostDoc(PostDoc.from(post));
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -418,7 +415,7 @@ public class PostServiceImpl implements PostService {
 		int originalPrice =
 			postRequest.getOriginalPrice() != null ? postRequest.getOriginalPrice() : post.getOriginalPrice();
 		int discountPrice =
-			postRequest.getDiscountPrice() != null ? postRequest.getDiscountPrice() : post.getDiscountPrice();
+			postRequest.getDiscountPrice() != null ? postRequest.getDiscountPrice() : post.getChiefPrice();
 		if (originalPrice <= discountPrice) {
 			throw new IllegalArgumentException("할인 가격은 기존 가격보다 낮아야됩니다.");
 		}
@@ -433,10 +430,10 @@ public class PostServiceImpl implements PostService {
 	}
 
 	private void validatePostRequest(PostRequest postRequest) {
-		if (!postRequest.getShareCondition() & postRequest.getPricePerCount() == null) {
+		if (!postRequest.getShareCondition() & postRequest.getPerPrice() == null) {
 			throw new IllegalArgumentException("개수 당 가격을 입력해주세요.");
 		}
-		if (postRequest.getOriginalPrice() <= postRequest.getDiscountPrice()) {
+		if (postRequest.getOriginalPrice() <= postRequest.getChiefPrice()) {
 			throw new IllegalArgumentException("할인 가격은 기존 가격보다 낮아야됩니다.");
 		}
 	}

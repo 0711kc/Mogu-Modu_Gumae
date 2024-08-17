@@ -70,11 +70,12 @@ public class PostController {
 	public ResponseEntity<PostWithDetailResponse> updatePost(
 		@PathVariable Long postId,
 		@PathVariable String userId,
-		@RequestPart(name = "request") final String updatePostRequestJson,
+		@RequestPart(name = "request") final Optional<String> updatePostRequestJson,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList)
 		throws JsonProcessingException {
-		@Valid final UpdatePostRequest updatePostRequest = objectMapper.readValue(updatePostRequestJson,
-			UpdatePostRequest.class);
+		@Valid final UpdatePostRequest updatePostRequest = updatePostRequestJson.isPresent()
+			? objectMapper.readValue(updatePostRequestJson.get(), UpdatePostRequest.class)
+			: null;
 		return postComponentService.updatePost(postId, userId, updatePostRequest,
 			multipartFileList.orElseGet(ArrayList::new));
 	}

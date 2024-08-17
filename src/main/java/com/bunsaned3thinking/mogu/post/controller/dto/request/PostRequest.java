@@ -37,8 +37,8 @@ public class PostRequest {
 	@Size(max = 500)
 	private String content;
 
-	@NotNull(message = "할인 가격을 입력해주세요")
-	private Integer discountPrice;
+	@NotNull(message = "방장이 지불할 가격을 입력해주세요")
+	private Integer chiefPrice;
 
 	@NotNull(message = "기존 가격을 입력해주세요")
 	private Integer originalPrice;
@@ -53,7 +53,7 @@ public class PostRequest {
 	@NotNull(message = "균등 배분 여부를 입력해주세요")
 	private Boolean shareCondition;
 
-	private Integer pricePerCount;
+	private Integer perPrice;
 
 	@NotNull(message = "구매 인원을 입력해주세요")
 	private Integer userCount;
@@ -72,7 +72,7 @@ public class PostRequest {
 		return Post.builder()
 			.title(title)
 			.category(category)
-			.discountPrice(discountPrice)
+			.chiefPrice(chiefPrice)
 			.originalPrice(originalPrice)
 			.shareCondition(shareCondition)
 			.purchaseDate(purchaseDate)

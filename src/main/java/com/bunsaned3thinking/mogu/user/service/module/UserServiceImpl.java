@@ -146,8 +146,13 @@ public class UserServiceImpl implements UserService {
 		List<Post> posts = userRepository.findPostsByUserIdAndRecruitState(userId,
 			RecruitState.PURCHASED);
 		AtomicInteger savingCost = new AtomicInteger();
-		posts
-			.forEach(post -> savingCost.addAndGet(post.getOriginalPrice() - post.getDiscountPrice()));
+		posts.forEach(post -> {
+			if (post.getUser().getUserId().equals(userId)) {
+				savingCost.addAndGet(post.getOriginalPrice() - post.getChiefPrice());
+			} else {
+				savingCost.addAndGet(post.getOriginalPrice() - post.getPerPrice());
+			}
+		});
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(SavingCostResponse.of(userId, savingCost.get(), posts.size()));

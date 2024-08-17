@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @ControllerAdvice
@@ -27,8 +29,7 @@ public class ControllerExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<String> handleIllegalArgumentException(
-		IllegalArgumentException exception) {
+	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 
@@ -46,6 +47,13 @@ public class ControllerExceptionHandler {
 			message = "[Error] 기타 무결성 제약 조건 위반이 발생했습니다.";
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UnrecognizedPropertyException.class)
+	public ResponseEntity<String> handleUnrecognizedPropertyException(UnrecognizedPropertyException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body("[Error] 잘못된 Key 값이 들어왔습니다. : " + exception.getPropertyName());
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
