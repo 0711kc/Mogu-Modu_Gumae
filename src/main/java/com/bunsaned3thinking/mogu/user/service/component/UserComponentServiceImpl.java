@@ -48,20 +48,18 @@ public class UserComponentServiceImpl implements UserComponentService {
 	@Override
 	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
 		MultipartFile multipartFile) {
-		ResponseEntity<UserResponse> response = null;
-		if (multipartFile != null) {
-			String imageName = userService.findImageName(userId);
-			imageService.delete(imageName);
-			imageName = imageService.upload(multipartFile);
-			response = userService.updateProfileImage(userId, imageName);
+		if (multipartFile != null & updateUserRequest != null) {
+			imageService.delete(userService.findImageName(userId));
+			String imageName = imageService.upload(multipartFile);
+			return userService.updateUser(userId, imageName, updateUserRequest);
+		} else if (multipartFile != null) {
+			imageService.delete(userService.findImageName(userId));
+			String imageName = imageService.upload(multipartFile);
+			return userService.updateProfileImage(userId, imageName);
+		} else if (updateUserRequest != null) {
+			return userService.updateUser(userId, updateUserRequest);
 		}
-		if (updateUserRequest != null) {
-			response = userService.updateUser(userId, updateUserRequest);
-		}
-		if (response == null) {
-			throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
-		}
-		return response;
+		throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
 	}
 
 	@Override

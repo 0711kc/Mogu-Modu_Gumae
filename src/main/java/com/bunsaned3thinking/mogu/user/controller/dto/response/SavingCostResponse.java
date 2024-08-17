@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SavingCostResponse {
-	private final Long userUid;
+	private final String userId;
 	private final Integer savingCost;
 	private final Integer purchaseCount;
 
-	public static SavingCostResponse of(Long userUid, Integer savingCost, Integer purchaseCount) {
+	public static SavingCostResponse of(String userId, Integer savingCost, Integer purchaseCount) {
 		return SavingCostResponse.builder()
-			.userUid(userUid)
+			.userId(userId)
 			.savingCost(savingCost)
 			.purchaseCount(purchaseCount)
 			.build();

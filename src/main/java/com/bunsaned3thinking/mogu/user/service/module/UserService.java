@@ -25,6 +25,9 @@ public interface UserService {
 
 	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
 
+	ResponseEntity<UserResponse> updateUser(String userId, String profileImageName,
+		UpdateUserRequest updateUserRequest);
+
 	boolean checkUser(String userId);
 
 	ResponseEntity<UserResponse> updatePassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);

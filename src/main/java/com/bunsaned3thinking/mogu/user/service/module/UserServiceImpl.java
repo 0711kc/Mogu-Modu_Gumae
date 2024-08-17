@@ -72,10 +72,23 @@ public class UserServiceImpl implements UserService {
 		UpdateUserRequest originUser = UpdateUserRequest.from(user);
 		UpdateUtil.copyNonNullProperties(updateUserRequest, originUser);
 		update(user, originUser);
-		User updatedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(updatedUser));
+			.body(UserResponse.from(user));
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> updateUser(String userId, String profileImageName,
+		UpdateUserRequest updateUserRequest) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		UpdateUserRequest originUser = UpdateUserRequest.from(user);
+		UpdateUtil.copyNonNullProperties(updateUserRequest, originUser);
+		update(user, originUser);
+		user.updateProfileImage(profileImageName);
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(user));
 	}
 
 	@Override
@@ -130,16 +143,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<SavingCostResponse> findUserSavingCost(String userId) {
-		User user = userRepository.findByUserId(userId)
-			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		List<Post> posts = userRepository.findPostsByUserUidAndRecruitState(user.getUid(),
+		List<Post> posts = userRepository.findPostsByUserIdAndRecruitState(userId,
 			RecruitState.PURCHASED);
 		AtomicInteger savingCost = new AtomicInteger();
 		posts
 			.forEach(post -> savingCost.addAndGet(post.getOriginalPrice() - post.getDiscountPrice()));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(SavingCostResponse.of(user.getUid(), savingCost.get(), posts.size()));
+			.body(SavingCostResponse.of(userId, savingCost.get(), posts.size()));
 	}
 
 	@Override
@@ -147,8 +158,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		int needPurchaseCount = LevelUtil.calculatePurchaseCountToLevelUp(user.getLevel());
-		int currentPurchaseCount = userRepository.findPostsByUserUidAndRecruitState(user.getUid(),
-			RecruitState.PURCHASED).size();
+		int currentPurchaseCount = userRepository.countByUserUidAndRecruitState(user.getUid(), RecruitState.PURCHASED);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(LevelResponse.of(user.getUid(), user.getLevel(), currentPurchaseCount, needPurchaseCount));
@@ -169,7 +179,7 @@ public class UserServiceImpl implements UserService {
 		List<User> users = userRepository.findUserByPostId(postId);
 		Map<Long, Integer> purchasedCounts = new HashMap<>();
 		users.forEach(user -> purchasedCounts.put(user.getUid(),
-			userRepository.findPostsByUserUidAndRecruitState(user.getUid(), RecruitState.RECRUITING).size()));
+			userRepository.countByUserUidAndRecruitState(user.getUid(), RecruitState.RECRUITING)));
 		users.stream()
 			.filter(user -> LevelUtil.calculateLevel(user.getLevel(), purchasedCounts.get(user.getUid()))
 				!= user.getLevel())
@@ -183,10 +193,9 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		user.updateProfileImage(profileImage);
-		User updatedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(updatedUser));
+			.body(UserResponse.from(user));
 	}
 
 	private void update(User user, UpdateUserRequest updateUserRequest) {
