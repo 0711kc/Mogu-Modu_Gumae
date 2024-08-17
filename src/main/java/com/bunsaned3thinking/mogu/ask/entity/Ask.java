@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ask {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -49,6 +48,14 @@ public class Ask {
 	@OneToMany(mappedBy = "ask", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<AlarmSignal> alarmSignals = new ArrayList<>();
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Ask ask)) {
+			return false;
+		}
+		return ask.getId().equals(this.id);
+	}
 
 	public static Ask from(Post post, User user) {
 		return Ask.builder()

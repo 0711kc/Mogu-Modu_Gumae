@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Complaint {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -63,6 +62,14 @@ public class Complaint {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "admin_uid")
 	private User admin;
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Complaint complaint)) {
+			return false;
+		}
+		return complaint.getId().equals(this.id);
+	}
 
 	public void update(String answer, ComplaintState state, User admin) {
 		this.answer = answer;

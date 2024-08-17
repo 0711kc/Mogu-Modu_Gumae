@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SearchHistory {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,6 +39,14 @@ public class SearchHistory {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_uid")
 	private User user;
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof SearchHistory searchHistory)) {
+			return false;
+		}
+		return searchHistory.getId().equals(this.id);
+	}
 
 	public static SearchHistory of(String content, User user) {
 		return SearchHistory.builder().content(content).date(LocalDateTime.now()).user(user).build();

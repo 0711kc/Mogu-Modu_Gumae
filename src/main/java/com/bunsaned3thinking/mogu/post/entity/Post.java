@@ -122,6 +122,14 @@ public class Post {
 	@JoinColumn(name = "thumbnail_id")
 	private PostImage thumbnail;
 
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Post post)) {
+			return false;
+		}
+		return post.getId().equals(this.id);
+	}
+
 	public void addViewCount() {
 		this.viewCount++;
 	}
