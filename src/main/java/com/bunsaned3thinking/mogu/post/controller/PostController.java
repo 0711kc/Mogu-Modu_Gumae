@@ -112,12 +112,12 @@ public class PostController {
 		return postComponentService.searchPostByKeyword(keyword, userId, cursor);
 	}
 
-	@GetMapping("/searchHistories/{userId}")
+	@GetMapping("/search/histories/{userId}")
 	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(@PathVariable final String userId) {
 		return postComponentService.findAllSearchHistory(userId);
 	}
 
-	@DeleteMapping("/searchHistory/{searchHistoryId}/{userId}")
+	@DeleteMapping("/search/history/{searchHistoryId}/{userId}")
 	public ResponseEntity<Void> deleteSearchHistory(@PathVariable final Long searchHistoryId,
 		@PathVariable final String userId) {
 		return postComponentService.deleteSearchHistory(searchHistoryId, userId);
@@ -128,7 +128,7 @@ public class PostController {
 		return postComponentService.likePost(postId, userId);
 	}
 
-	@DeleteMapping("/{postId}/like/{userId}")
+	@DeleteMapping("/{postId}/unlike/{userId}")
 	public ResponseEntity<Void> unlikePost(@PathVariable final Long postId, @PathVariable final String userId) {
 		return postComponentService.unlikePost(postId, userId);
 	}
