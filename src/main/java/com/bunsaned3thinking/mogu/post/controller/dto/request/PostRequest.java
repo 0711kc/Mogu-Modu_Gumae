@@ -59,8 +59,8 @@ public class PostRequest {
 	private Integer userCount;
 
 	@NotNull(message = "경도를 입력해주세요")
-	@DecimalMin(value = "-90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
-	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
+	@DecimalMin(value = "-180.0", message = "-180.0 ~ 180.0 사이의 숫자를 입력해주세요")
+	@DecimalMax(value = "180.0", message = "-180.0 ~ 180.0 사이의 숫자를 입력해주세요")
 	private Double longitude;
 
 	@NotNull(message = "위도를 입력해주세요")
