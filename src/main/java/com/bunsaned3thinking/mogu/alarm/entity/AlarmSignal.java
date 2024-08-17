@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.alarm.entity;
 
+import java.time.LocalDateTime;
+
 import com.bunsaned3thinking.mogu.ask.entity.Ask;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
@@ -24,10 +26,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AlarmSignal {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column
+	@Builder.Default
+	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ask_id")
@@ -39,6 +44,14 @@ public class AlarmSignal {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof AlarmSignal alarmSignal)) {
+			return false;
+		}
+		return alarmSignal.getId().equals(this.id);
+	}
 
 	public static AlarmSignal of(Ask ask, String content, User user) {
 		return AlarmSignal.builder()

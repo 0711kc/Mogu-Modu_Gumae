@@ -29,5 +29,4 @@ public class AlarmSignalController {
 	public ResponseEntity<Void> deleteAlarmSignal(@PathVariable Long id) {
 		return alarmSignalService.deleteAlarmSignal(id);
 	}
-
 }
