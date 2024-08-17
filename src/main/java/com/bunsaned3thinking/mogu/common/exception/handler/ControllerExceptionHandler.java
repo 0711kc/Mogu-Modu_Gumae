@@ -36,7 +36,16 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
 	public ResponseEntity<String> handleSqlIntegrityConstraintViolationException(
 		SQLIntegrityConstraintViolationException exception) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+		int errorCode = exception.getErrorCode();
+		String message;
+		if (errorCode == 1062) { // MySQL의 중복 키 에러 코드
+			message = "[Error] 중복 키로 인한 예외가 발생했습니다.";
+		} else if (errorCode == 1452) { // MySQL의 외래 키 위반 에러 코드
+			message = "[Error] 외래 키 제약 조건 위반이 발생했습니다.";
+		} else {
+			message = "[Error] 기타 무결성 제약 조건 위반이 발생했습니다.";
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
