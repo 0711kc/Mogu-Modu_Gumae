@@ -60,9 +60,14 @@ public class Complaint {
 	@JoinColumn(name = "user_uid")
 	private User user;
 
-	public void update(String answer, ComplaintState state) {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "admin_uid")
+	private User admin;
+
+	public void update(String answer, ComplaintState state, User admin) {
 		this.answer = answer;
 		this.state = state;
+		this.admin = admin;
 	}
 
 	public void updateComplaintImages(List<ComplaintImage> complaintImages) {

@@ -35,7 +35,8 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 	}
 
 	@Override
-	public ResponseEntity<ComplaintResponse> updateComlaint(Long id, UpdateComplaintRequest updateComplaintRequest) {
-		return complaintService.updateComplaint(id, updateComplaintRequest);
+	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
+		String userId) {
+		return complaintService.updateComplaint(id, updateComplaintRequest, userId);
 	}
 }

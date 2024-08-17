@@ -43,10 +43,11 @@ public class ComplaintController {
 		return complaintComponentService.findComplaint(id);
 	}
 
-	@PatchMapping("/{id}")
+	@PatchMapping("/{id}/{userId}")
 	public ResponseEntity<ComplaintResponse> updateComplaint(@PathVariable final Long id,
+		@PathVariable final String userId,
 		@RequestBody @Valid UpdateComplaintRequest updateComplaintRequest) {
-		return complaintComponentService.updateComlaint(id, updateComplaintRequest);
+		return complaintComponentService.updateComplaint(id, updateComplaintRequest, userId);
 	}
 
 }

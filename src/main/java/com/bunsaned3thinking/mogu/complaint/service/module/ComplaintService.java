@@ -15,6 +15,7 @@ public interface ComplaintService {
 
 	ResponseEntity<ComplaintResponse> findComplaint(Long id);
 
-	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest);
+	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
+		String userId);
 
 }

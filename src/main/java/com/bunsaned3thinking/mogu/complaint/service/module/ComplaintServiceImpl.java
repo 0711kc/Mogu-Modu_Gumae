@@ -55,22 +55,25 @@ public class ComplaintServiceImpl implements ComplaintService {
 	}
 
 	@Override
-	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest) {
+	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
+		String userId) {
 		Complaint complaint = complaintComponentRepository.findComplaintById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
+		User admin = complaintComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		UpdateComplaintRequest originComplaint = UpdateComplaintRequest.from(complaint);
 		UpdateUtil.copyNonNullProperties(updateComplaintRequest, originComplaint);
-		update(complaint, originComplaint);
+		update(complaint, originComplaint, admin);
 		Complaint updatedComplaint = complaintComponentRepository.saveComplaint(complaint);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(updatedComplaint));
 	}
 
-	private void update(Complaint complaint, UpdateComplaintRequest updateComplaintRequest) {
+	private void update(Complaint complaint, UpdateComplaintRequest updateComplaintRequest, User admin) {
 		String answer = updateComplaintRequest.getAnswer();
 		ComplaintState complaintState = ComplaintState.COMPLETED;
-		complaint.update(answer, complaintState);
+		complaint.update(answer, complaintState, admin);
 	}
 
 	private List<ComplaintImage> createComplaintImages(List<String> complaintImageLinks, Complaint complaint) {
