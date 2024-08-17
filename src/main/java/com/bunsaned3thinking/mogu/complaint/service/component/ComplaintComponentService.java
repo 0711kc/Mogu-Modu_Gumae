@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
+import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintHeadResponse;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 
 public interface ComplaintComponentService {
@@ -18,4 +19,6 @@ public interface ComplaintComponentService {
 
 	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId);
+
+	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint();
 }

@@ -40,4 +40,9 @@ public class ComplaintComponentRepositoryImpl implements ComplaintComponentRepos
 	public Optional<User> findUserByUserId(String userId) {
 		return userRepository.findByUserId(userId);
 	}
+
+	@Override
+	public List<Complaint> findAllComplaint() {
+		return complaintRepository.findAll();
+	}
 }

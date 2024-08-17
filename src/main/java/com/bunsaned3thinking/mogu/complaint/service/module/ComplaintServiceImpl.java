@@ -13,6 +13,7 @@ import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
+import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintHeadResponse;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
@@ -52,6 +53,17 @@ public class ComplaintServiceImpl implements ComplaintService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(complaint));
+	}
+
+	@Override
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint() {
+		List<Complaint> complaints = complaintComponentRepository.findAllComplaint();
+		List<ComplaintHeadResponse> responses = complaints.stream()
+			.map(ComplaintHeadResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
 	}
 
 	@Override

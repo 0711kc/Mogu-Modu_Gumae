@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
+import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintHeadResponse;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 
 public interface ComplaintService {
@@ -18,4 +19,5 @@ public interface ComplaintService {
 	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId);
 
+	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint();
 }

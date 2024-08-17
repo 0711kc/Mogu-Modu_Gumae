@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
+import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintHeadResponse;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 import com.bunsaned3thinking.mogu.complaint.service.component.ComplaintComponentService;
 
@@ -41,6 +42,11 @@ public class ComplaintController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ComplaintResponse> findComplaint(@PathVariable final Long id) {
 		return complaintComponentService.findComplaint(id);
+	}
+
+	@GetMapping("/all")
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint() {
+		return complaintComponentService.findAllComplaint();
 	}
 
 	@PatchMapping("/{id}/{userId}")

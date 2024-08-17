@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.ComplaintRequest;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.request.UpdateComplaintRequest;
+import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintHeadResponse;
 import com.bunsaned3thinking.mogu.complaint.controller.dto.response.ComplaintResponse;
 import com.bunsaned3thinking.mogu.complaint.service.module.ComplaintService;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
@@ -32,6 +33,11 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 	@Override
 	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
 		return complaintService.findComplaint(id);
+	}
+
+	@Override
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint() {
+		return complaintService.findAllComplaint();
 	}
 
 	@Override
