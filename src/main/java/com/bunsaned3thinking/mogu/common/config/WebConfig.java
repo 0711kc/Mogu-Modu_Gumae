@@ -16,7 +16,7 @@ public class WebConfig {
 			public void addCorsMappings(@NonNull CorsRegistry registry) {
 				registry.addMapping("/**")
 					.allowedOrigins("*")
-					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+					.allowedMethods("*")  // 모든 HTTP 메서드 허용
 					.allowedHeaders("*")
 					.allowCredentials(false);
 			}

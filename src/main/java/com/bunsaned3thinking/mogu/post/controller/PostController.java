@@ -26,6 +26,8 @@ import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.service.component.PostComponentService;
 import com.bunsaned3thinking.mogu.report.dto.request.ReportRequest;
 import com.bunsaned3thinking.mogu.report.dto.response.ReportResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +37,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 	private final PostComponentService postComponentService;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping("/{userId}")
 	public ResponseEntity<PostWithDetailResponse> createPost(
 		@PathVariable String userId,
-		@RequestPart(name = "request") @Valid final PostRequest postRequest,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
+		@RequestPart(name = "request") final String postRequestJson,
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) throws
+		JsonProcessingException {
+		@Valid final PostRequest postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
 		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
 	}
 
@@ -65,8 +70,11 @@ public class PostController {
 	public ResponseEntity<PostWithDetailResponse> updatePost(
 		@PathVariable Long postId,
 		@PathVariable String userId,
-		@RequestPart(name = "request") @Valid final UpdatePostRequest updatePostRequest,
-		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
+		@RequestPart(name = "request") final String updatePostRequestJson,
+		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) throws
+		JsonProcessingException {
+		@Valid final UpdatePostRequest updatePostRequest = objectMapper.readValue(updatePostRequestJson,
+			UpdatePostRequest.class);
 		return postComponentService.updatePost(postId, userId, updatePostRequest,
 			multipartFileList.orElseGet(ArrayList::new));
 	}
