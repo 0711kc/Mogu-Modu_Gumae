@@ -4,17 +4,19 @@ import com.bunsaned3thinking.mogu.notice.entity.Notice;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @Builder
-public class NoticeResponse {
+@RequiredArgsConstructor
+public class NoticeHeadResponse {
+	private final Long id;
 	private final String title;
-	private final String content;
 
-	public static NoticeResponse from(Notice notice) {
-		return NoticeResponse.builder()
+	public static NoticeHeadResponse from(Notice notice) {
+		return NoticeHeadResponse.builder()
+			.id(notice.getId())
 			.title(notice.getTitle())
-			.content(notice.getContent())
 			.build();
 	}
 }

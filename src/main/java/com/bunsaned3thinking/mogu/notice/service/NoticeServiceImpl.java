@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.notice.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bunsaned3thinking.mogu.common.util.UpdateUtil;
 import com.bunsaned3thinking.mogu.notice.controller.dto.request.NoticeRequest;
 import com.bunsaned3thinking.mogu.notice.controller.dto.request.UpdateNoticeRequest;
+import com.bunsaned3thinking.mogu.notice.controller.dto.response.NoticeHeadResponse;
 import com.bunsaned3thinking.mogu.notice.controller.dto.response.NoticeResponse;
 import com.bunsaned3thinking.mogu.notice.entity.Notice;
 import com.bunsaned3thinking.mogu.notice.repository.NoticeRepository;
@@ -36,6 +39,17 @@ public class NoticeServiceImpl implements NoticeService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(NoticeResponse.from(notice));
+	}
+
+	@Override
+	public ResponseEntity<List<NoticeHeadResponse>> findAllNotice() {
+		List<Notice> notices = noticeRepository.findAll();
+		List<NoticeHeadResponse> responses = notices.stream()
+			.map(NoticeHeadResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
 	}
 
 	@Override

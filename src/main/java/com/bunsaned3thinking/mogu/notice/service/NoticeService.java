@@ -1,9 +1,12 @@
 package com.bunsaned3thinking.mogu.notice.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.bunsaned3thinking.mogu.notice.controller.dto.request.NoticeRequest;
 import com.bunsaned3thinking.mogu.notice.controller.dto.request.UpdateNoticeRequest;
+import com.bunsaned3thinking.mogu.notice.controller.dto.response.NoticeHeadResponse;
 import com.bunsaned3thinking.mogu.notice.controller.dto.response.NoticeResponse;
 
 public interface NoticeService {
@@ -15,4 +18,5 @@ public interface NoticeService {
 
 	ResponseEntity<NoticeResponse> updateNotice(Long id, UpdateNoticeRequest updateNoticeRequest);
 
+	ResponseEntity<List<NoticeHeadResponse>> findAllNotice();
 }
