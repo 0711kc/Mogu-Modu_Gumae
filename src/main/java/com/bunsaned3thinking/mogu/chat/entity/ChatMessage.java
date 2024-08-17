@@ -50,6 +50,14 @@ public class ChatMessage {
 	@JoinColumn(name = "chat_id")
 	private Chat chat;
 
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof ChatMessage chatMessage)) {
+			return false;
+		}
+		return chatMessage.getId().equals(this.id);
+	}
+
 	public static ChatMessage of(String content, ChatUser senderChatUser) {
 		return ChatMessage.builder()
 			.content(content)
