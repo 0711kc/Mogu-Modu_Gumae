@@ -39,7 +39,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
 	// 소켓 연결 확인
 	@Override
-	public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
+	public void afterConnectionEstablished(@NonNull WebSocketSession session) {
 		sessions.add(session);
 	}
 
@@ -49,31 +49,31 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 		String payload = message.getPayload();
 
 		ChatMessageRequest chatMessageRequest = mapper.readValue(payload, ChatMessageRequest.class);
-		Long chatRoomId = chatMessageRequest.getChatRoomId();
-		String senderId = chatMessageRequest.getSenderId();
-		if (!userService.checkUser(senderId)) {
+		Long chatId = chatMessageRequest.getChatId();
+		String userId = chatMessageRequest.getUserId();
+		if (!userService.checkUser(userId)) {
 			session.sendMessage(new TextMessage(mapper.writeValueAsString("[Error] 사용자를 찾을 수 없습니다.")));
 			closeSession(session);
 			return;
 		}
-		if (!chatService.checkChatUser(chatRoomId, senderId)) {
+		if (!chatService.checkChatUser(chatId, userId)) {
 			session.sendMessage(new TextMessage(mapper.writeValueAsString("[Error] 사용자가 들어간 채팅방이 아닙니다.")));
 			closeSession(session);
 			return;
 		}
 
 		// 메모리 상에 채팅방에 대한 세션 없으면 만들어줌
-		if (!chatRoomSessionMap.containsKey(chatRoomId)) {
-			chatRoomSessionMap.put(chatRoomId, new HashSet<>());
+		if (!chatRoomSessionMap.containsKey(chatId)) {
+			chatRoomSessionMap.put(chatId, new HashSet<>());
 		}
 
-		Set<WebSocketSession> chatRoomSessions = chatRoomSessionMap.get(chatRoomId);
+		Set<WebSocketSession> chatRoomSessions = chatRoomSessionMap.get(chatId);
 
 		if (chatMessageRequest.getMessageType().equals(ChatMessageRequest.MessageType.ENTER)) {
 			chatRoomSessions.add(session);
-			session.getAttributes().put("senderId", senderId);
-			session.getAttributes().put("chatRoomId", chatRoomId);
-			chatService.readMessage(chatRoomId, senderId);
+			session.getAttributes().put("userId", userId);
+			session.getAttributes().put("chatId", chatId);
+			chatService.readMessage(chatId, userId);
 			return;
 		}
 
@@ -83,21 +83,21 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 		}
 
 		List<String> readUserIds = chatRoomSessions.stream().map(WebSocketSession::getAttributes)
-			.map(map -> map.get("senderId"))
+			.map(map -> map.get("userId"))
 			.map(Object::toString)
 			.toList();
-		ChatMessageResponse chatMessageResponse = chatService.createChatMessage(chatRoomId, senderId,
+		ChatMessageResponse chatMessageResponse = chatService.createChatMessage(chatId, userId,
 			chatMessageRequest.getMessage(), readUserIds);
 		sendMessageToChatRoom(chatMessageResponse, chatRoomSessions);
 	}
 
 	// 소켓 종료 확인
 	@Override
-	public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
+	public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
 		sessions.remove(session);
-		Object chatRoomId = session.getAttributes().get("chatRoomId");
-		if (chatRoomId != null) {
-			chatRoomSessionMap.get((long)chatRoomId).remove(session);
+		Object chatId = session.getAttributes().get("chatId");
+		if (chatId != null) {
+			chatRoomSessionMap.get((long)chatId).remove(session);
 		}
 	}
 

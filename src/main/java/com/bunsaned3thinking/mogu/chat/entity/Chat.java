@@ -29,7 +29,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Chat {
 	@Id
-	@Column(name = "post_id")
 	private Long id;
 
 	@OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -49,8 +48,8 @@ public class Chat {
 	@Builder.Default
 	private LocalDateTime lastTime = LocalDateTime.now();
 
-	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post post;
 

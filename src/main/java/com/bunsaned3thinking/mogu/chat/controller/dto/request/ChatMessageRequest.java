@@ -15,7 +15,7 @@ public class ChatMessageRequest {
 	}
 
 	private MessageType messageType; // 메시지 타입
-	private Long chatRoomId; // 방 번호
-	private String senderId; // 채팅을 보낸 사람
+	private Long chatId; // 방 번호
+	private String userId; // 채팅을 보낸 사람
 	private String message; // 메시지
 }
