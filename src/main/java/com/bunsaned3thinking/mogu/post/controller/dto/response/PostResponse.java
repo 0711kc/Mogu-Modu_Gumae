@@ -2,9 +2,13 @@ package com.bunsaned3thinking.mogu.post.controller.dto.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.bunsaned3thinking.mogu.chat.entity.Chat;
+import com.bunsaned3thinking.mogu.chat.entity.ChatUser;
 import com.bunsaned3thinking.mogu.common.util.S3Util;
 import com.bunsaned3thinking.mogu.post.entity.Post;
+import com.bunsaned3thinking.mogu.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Builder;
@@ -25,6 +29,8 @@ public class PostResponse {
 	private final Boolean shareCondition;
 	private final Integer pricePerCount;
 	private final Integer userCount;
+	private final Integer currentUserCount;
+	private final List<String> userProfiles;
 	private final Double longitude;
 	private final Double latitude;
 	private final Integer heartCount;
@@ -39,12 +45,20 @@ public class PostResponse {
 	private final LocalDate purchaseDate;
 
 	public static PostResponse from(final Post post) {
+		Chat chat = post.getChat();
 		return PostResponse.builder()
 			.id(post.getId())
 			.category(post.getCategory().getResponse())
 			.isHidden(post.getIsHidden())
 			.recruitState(post.getRecruitState().getResponse())
 			.title(post.getTitle())
+			.currentUserCount(chat != null ? chat.getUsers().size() : 1)
+			.userProfiles(chat != null ? chat.getUsers().stream()
+				.map(ChatUser::getUser)
+				.map(User::getProfileImage)
+				.map(S3Util::toS3ImageUrl)
+				.toList()
+				: List.of(S3Util.toS3ImageUrl(post.getUser().getProfileImage())))
 			.userNickname(post.getUser().getNickname())
 			.userId(post.getUser().getUid())
 			.chiefPrice(post.getChiefPrice())
