@@ -12,31 +12,33 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.UserDetailResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 
 import lombok.NonNull;
 
 public interface UserService {
-	ResponseEntity<UserResponse> createUser(UserRequest userRequest);
+	ResponseEntity<UserDetailResponse> createUser(UserRequest userRequest);
 
-	ResponseEntity<UserResponse> updateProfileImage(String userId, @NonNull String profileImage);
+	ResponseEntity<UserDetailResponse> updateProfileImage(String userId, @NonNull String profileImage);
 
 	ResponseEntity<Void> deleteUser(String userId);
 
-	ResponseEntity<UserResponse> findUser(String userId);
+	ResponseEntity<UserDetailResponse> findUser(String userId);
 
-	ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
+	ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
 
-	ResponseEntity<UserResponse> updateUser(String userId, String profileImageName,
+	ResponseEntity<UserDetailResponse> updateUser(String userId, String profileImageName,
 		UpdateUserRequest updateUserRequest);
 
 	boolean checkUser(String userId);
 
-	ResponseEntity<UserResponse> updatePassword(String userId, UpdateUserPasswordRequest updateUserPasswordRequest);
+	ResponseEntity<UserDetailResponse> updatePassword(String userId,
+		UpdateUserPasswordRequest updateUserPasswordRequest);
 
-	ResponseEntity<UserResponse> setBlockUser(String userId, boolean state);
+	ResponseEntity<UserDetailResponse> setBlockUser(String userId, boolean state);
 
-	ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews);
+	ResponseEntity<UserDetailResponse> updateUserManner(String userId, Slice<Review> reviews);
 
 	ResponseEntity<SavingCostResponse> findUserSavingCost(String userId);
 
@@ -46,5 +48,7 @@ public interface UserService {
 
 	String findImageName(String userId);
 
-	ResponseEntity<List<UserResponse>> findAllUser(Long cursor);
+	ResponseEntity<List<UserDetailResponse>> findAllUser(Long cursor);
+
+	ResponseEntity<UserResponse> findOtherUser(String userId);
 }

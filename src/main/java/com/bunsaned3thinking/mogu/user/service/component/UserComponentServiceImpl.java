@@ -16,6 +16,7 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.UserDetailResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.module.UserService;
@@ -31,18 +32,23 @@ public class UserComponentServiceImpl implements UserComponentService {
 	private final ReviewService reviewService;
 
 	@Override
-	public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
+	public ResponseEntity<UserDetailResponse> createUser(UserRequest userRequest) {
 		return userService.createUser(userRequest);
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> findUser(String userId) {
+	public ResponseEntity<UserDetailResponse> findUser(String userId) {
 		return userService.findUser(userId);
 	}
 
 	@Override
-	public ResponseEntity<List<UserResponse>> findAllUser(Long cursor) {
+	public ResponseEntity<List<UserDetailResponse>> findAllUser(Long cursor) {
 		return userService.findAllUser(cursor);
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> findOtherUser(String userId) {
+		return userService.findOtherUser(userId);
 	}
 
 	@Override
@@ -54,12 +60,13 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
+	public ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
 		MultipartFile multipartFile) {
 		if (multipartFile != null & updateUserRequest != null) {
 			String imageName = imageService.upload(multipartFile);
 			try {
-				ResponseEntity<UserResponse> response = userService.updateUser(userId, imageName, updateUserRequest);
+				ResponseEntity<UserDetailResponse> response = userService.updateUser(userId, imageName,
+					updateUserRequest);
 				imageService.delete(userService.findImageName(userId));
 				return response;
 			} catch (RuntimeException e) {
@@ -69,7 +76,7 @@ public class UserComponentServiceImpl implements UserComponentService {
 		} else if (multipartFile != null) {
 			String imageName = imageService.upload(multipartFile);
 			try {
-				ResponseEntity<UserResponse> response = userService.updateProfileImage(userId, imageName);
+				ResponseEntity<UserDetailResponse> response = userService.updateProfileImage(userId, imageName);
 				imageService.delete(userService.findImageName(userId));
 				return response;
 			} catch (RuntimeException e) {
@@ -83,18 +90,18 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUserPassword(String userId,
+	public ResponseEntity<UserDetailResponse> updateUserPassword(String userId,
 		UpdateUserPasswordRequest updateUserPasswordRequest) {
 		return userService.updatePassword(userId, updateUserPasswordRequest);
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> setBlockUser(String userId, boolean state) {
+	public ResponseEntity<UserDetailResponse> setBlockUser(String userId, boolean state) {
 		return userService.setBlockUser(userId, state);
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUserManner(String senderId, String receiverId, Manner manner,
+	public ResponseEntity<UserDetailResponse> updateUserManner(String senderId, String receiverId, Manner manner,
 		Long postId) {
 		reviewService.createReview(senderId, receiverId, manner, postId);
 		Slice<Review> reviews = reviewService.findByReceiverId(receiverId);

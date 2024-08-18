@@ -26,6 +26,7 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.UserDetailResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.entity.User;
@@ -44,26 +45,26 @@ public class UserServiceImpl implements UserService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
+	public ResponseEntity<UserDetailResponse> createUser(UserRequest userRequest) {
 		User user = userRequest.toEntity();
 		user.updatePassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(savedUser));
+			.body(UserDetailResponse.from(savedUser));
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> findUser(String userId) {
+	public ResponseEntity<UserDetailResponse> findUser(String userId) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(user));
+			.body(UserDetailResponse.from(user));
 	}
 
 	@Override
-	public ResponseEntity<List<UserResponse>> findAllUser(Long cursor) {
+	public ResponseEntity<List<UserDetailResponse>> findAllUser(Long cursor) {
 		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
 		Slice<User> users;
 		if (cursor == 0) {
@@ -71,12 +72,21 @@ public class UserServiceImpl implements UserService {
 		} else {
 			users = userRepository.findAll(pageRequest);
 		}
-		List<UserResponse> responses = users.stream()
-			.map(UserResponse::from)
+		List<UserDetailResponse> responses = users.stream()
+			.map(UserDetailResponse::from)
 			.toList();
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(responses);
+	}
+
+	@Override
+	public ResponseEntity<UserResponse> findOtherUser(String userId) {
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(UserResponse.from(user));
 	}
 
 	@Override
@@ -85,7 +95,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest) {
+	public ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		UpdateUserRequest originUser = UpdateUserRequest.from(user);
@@ -93,11 +103,11 @@ public class UserServiceImpl implements UserService {
 		update(user, originUser);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(user));
+			.body(UserDetailResponse.from(user));
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUser(String userId, String profileImageName,
+	public ResponseEntity<UserDetailResponse> updateUser(String userId, String profileImageName,
 		UpdateUserRequest updateUserRequest) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
@@ -107,11 +117,11 @@ public class UserServiceImpl implements UserService {
 		user.updateProfileImage(profileImageName);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(user));
+			.body(UserDetailResponse.from(user));
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updatePassword(String userId,
+	public ResponseEntity<UserDetailResponse> updatePassword(String userId,
 		UpdateUserPasswordRequest updateUserPasswordRequest) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
@@ -119,11 +129,11 @@ public class UserServiceImpl implements UserService {
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(savedUser));
+			.body(UserDetailResponse.from(savedUser));
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> setBlockUser(String userId, boolean state) {
+	public ResponseEntity<UserDetailResponse> setBlockUser(String userId, boolean state) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		if (user.getIsBlock() == state) {
@@ -133,11 +143,11 @@ public class UserServiceImpl implements UserService {
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(savedUser));
+			.body(UserDetailResponse.from(savedUser));
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateUserManner(String userId, Slice<Review> reviews) {
+	public ResponseEntity<UserDetailResponse> updateUserManner(String userId, Slice<Review> reviews) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		BigDecimal reviewCount = BigDecimal.valueOf(reviews.getSize());
@@ -157,7 +167,7 @@ public class UserServiceImpl implements UserService {
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(savedUser));
+			.body(UserDetailResponse.from(savedUser));
 	}
 
 	@Override
@@ -213,13 +223,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> updateProfileImage(String userId, @NonNull String profileImage) {
+	public ResponseEntity<UserDetailResponse> updateProfileImage(String userId, @NonNull String profileImage) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
 		user.updateProfileImage(profileImage);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(UserResponse.from(user));
+			.body(UserDetailResponse.from(user));
 	}
 
 	private void update(User user, UpdateUserRequest updateUserRequest) {

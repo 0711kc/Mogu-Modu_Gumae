@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.user.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import com.bunsaned3thinking.mogu.user.controller.dto.request.UpdateUserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.request.UserRequest;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.LevelResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.SavingCostResponse;
+import com.bunsaned3thinking.mogu.user.controller.dto.response.UserDetailResponse;
 import com.bunsaned3thinking.mogu.user.controller.dto.response.UserResponse;
 import com.bunsaned3thinking.mogu.user.entity.Manner;
 import com.bunsaned3thinking.mogu.user.service.component.UserComponentService;
@@ -39,17 +41,27 @@ public class UserController {
 	private final ObjectMapper objectMapper;
 
 	@PostMapping
-	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
+	public ResponseEntity<UserDetailResponse> createUser(@RequestBody @Valid final UserRequest userRequest) {
 		return userComponentService.createUser(userRequest);
 	}
 
+	@GetMapping("/my")
+	public ResponseEntity<UserDetailResponse> findUser(Principal principal) {
+		return userComponentService.findUser(principal.getName());
+	}
+
+	@GetMapping("/other/{userId}")
+	public ResponseEntity<UserResponse> findOtherUser(@PathVariable final String userId) {
+		return userComponentService.findOtherUser(userId);
+	}
+
 	@GetMapping("/{userId}")
-	public ResponseEntity<UserResponse> findUser(@PathVariable final String userId) {
+	public ResponseEntity<UserDetailResponse> findUser(@PathVariable final String userId) {
 		return userComponentService.findUser(userId);
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<UserResponse>> findAllUser(
+	public ResponseEntity<List<UserDetailResponse>> findAllUser(
 		@RequestParam(name = "cursor", required = false, defaultValue = "0") final Long cursor) {
 		return userComponentService.findAllUser(cursor);
 	}
@@ -65,7 +77,7 @@ public class UserController {
 	}
 
 	@PatchMapping(value = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<UserResponse> updateUser(@PathVariable final String userId,
+	public ResponseEntity<UserDetailResponse> updateUser(@PathVariable final String userId,
 		@RequestPart(name = "request", required = false) final Optional<String> updateUserRequestJson,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) throws JsonProcessingException {
 		@Valid UpdateUserRequest updateUserRequest = updateUserRequestJson.isPresent()
@@ -75,7 +87,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/{userId}/password")
-	public ResponseEntity<UserResponse> updateUserPassword(@PathVariable final String userId,
+	public ResponseEntity<UserDetailResponse> updateUserPassword(@PathVariable final String userId,
 		@RequestBody @Valid final UpdateUserPasswordRequest updateUserPasswordRequest) {
 		return userComponentService.updateUserPassword(userId, updateUserPasswordRequest);
 	}
@@ -86,13 +98,13 @@ public class UserController {
 	}
 
 	@PatchMapping("/block/{userId}")
-	public ResponseEntity<UserResponse> setBlockUser(@PathVariable final String userId,
+	public ResponseEntity<UserDetailResponse> setBlockUser(@PathVariable final String userId,
 		@RequestPart(name = "isBlock") Boolean state) {
 		return userComponentService.setBlockUser(userId, state);
 	}
 
 	@PatchMapping("/manner/sender/{senderId}/receiver/{receiverId}/{postId}")
-	public ResponseEntity<UserResponse> updateUserManner(
+	public ResponseEntity<UserDetailResponse> updateUserManner(
 		@PathVariable final String senderId,
 		@PathVariable final String receiverId,
 		@PathVariable final Long postId,
