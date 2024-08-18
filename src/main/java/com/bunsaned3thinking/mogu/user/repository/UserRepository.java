@@ -3,6 +3,8 @@ package com.bunsaned3thinking.mogu.user.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,4 +31,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 		on cu.chat_id = p.id
 		""")
 	int countByUserUidAndRecruitState(Long uid, RecruitState recruitState);
+
+	@Query("select u from User u where u.uid < :cursor order by u.uid desc")
+	Slice<User> findAll(Long cursor, PageRequest pageRequest);
+
+	@Query("select u from User u order by u.uid desc")
+	Slice<User> findAll(PageRequest pageRequest);
 }

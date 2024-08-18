@@ -46,5 +46,5 @@ public interface UserService {
 
 	String findImageName(String userId);
 
-	ResponseEntity<List<UserResponse>> findAllUser();
+	ResponseEntity<List<UserResponse>> findAllUser(Long cursor);
 }

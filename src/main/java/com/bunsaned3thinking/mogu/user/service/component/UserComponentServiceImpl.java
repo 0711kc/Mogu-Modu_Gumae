@@ -41,8 +41,8 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<List<UserResponse>> findAllUser() {
-		return userService.findAllUser();
+	public ResponseEntity<List<UserResponse>> findAllUser(Long cursor) {
+		return userService.findAllUser(cursor);
 	}
 
 	@Override

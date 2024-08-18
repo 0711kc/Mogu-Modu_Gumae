@@ -33,5 +33,5 @@ public interface UserComponentService {
 
 	ResponseEntity<LevelResponse> findUserLevel(String userId);
 
-	ResponseEntity<List<UserResponse>> findAllUser();
+	ResponseEntity<List<UserResponse>> findAllUser(Long cursor);
 }

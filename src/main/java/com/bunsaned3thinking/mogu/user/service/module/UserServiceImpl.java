@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
+	private static final int DEFAULT_PAGE__SIZE = 10;
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -61,8 +63,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<List<UserResponse>> findAllUser() {
-		List<User> users = userRepository.findAll();
+	public ResponseEntity<List<UserResponse>> findAllUser(Long cursor) {
+		PageRequest pageRequest = PageRequest.of(0, DEFAULT_PAGE__SIZE);
+		Slice<User> users;
+		if (cursor == 0) {
+			users = userRepository.findAll(cursor, pageRequest);
+		} else {
+			users = userRepository.findAll(pageRequest);
+		}
 		List<UserResponse> responses = users.stream()
 			.map(UserResponse::from)
 			.toList();
