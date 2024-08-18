@@ -433,7 +433,12 @@ public class PostServiceImpl implements PostService {
 		if (!postRequest.getShareCondition() & postRequest.getPerPrice() == null) {
 			throw new IllegalArgumentException("개수 당 가격을 입력해주세요.");
 		}
-		if (postRequest.getOriginalPrice() <= postRequest.getChiefPrice()) {
+		int perPrice = 0;
+		if (postRequest.getPerPrice() != null) {
+			perPrice = postRequest.getPerPrice();
+		}
+		if (postRequest.getOriginalPrice() <= postRequest.getChiefPrice()
+			| postRequest.getOriginalPrice() <= perPrice) {
 			throw new IllegalArgumentException("할인 가격은 기존 가격보다 낮아야됩니다.");
 		}
 	}

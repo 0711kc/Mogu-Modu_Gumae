@@ -56,6 +56,7 @@ public class PostRequest {
 	private Integer perPrice;
 
 	@NotNull(message = "구매 인원을 입력해주세요")
+	@Size(min = 2, message = "구매 인원은 2명 이상이어야됩니다")
 	private Integer userCount;
 
 	@NotNull(message = "경도를 입력해주세요")
