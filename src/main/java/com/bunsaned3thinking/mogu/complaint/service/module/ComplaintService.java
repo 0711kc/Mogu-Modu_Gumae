@@ -20,4 +20,6 @@ public interface ComplaintService {
 		String userId);
 
 	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint();
+
+	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(String userId);
 }

@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.complaint.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,11 +50,16 @@ public class ComplaintController {
 		return complaintComponentService.findAllComplaint();
 	}
 
-	@PatchMapping("/{id}/{userId}")
+	@GetMapping("/all/{userId}")
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(@PathVariable final String userId) {
+		return complaintComponentService.findAllComplaintByUser(userId);
+	}
+
+	@PatchMapping("/{id}")
 	public ResponseEntity<ComplaintResponse> updateComplaint(@PathVariable final Long id,
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestBody @Valid UpdateComplaintRequest updateComplaintRequest) {
-		return complaintComponentService.updateComplaint(id, updateComplaintRequest, userId);
+		return complaintComponentService.updateComplaint(id, updateComplaintRequest, principal.getName());
 	}
 
 }

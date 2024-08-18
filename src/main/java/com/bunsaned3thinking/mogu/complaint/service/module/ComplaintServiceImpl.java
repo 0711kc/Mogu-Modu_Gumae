@@ -67,6 +67,17 @@ public class ComplaintServiceImpl implements ComplaintService {
 	}
 
 	@Override
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(String userId) {
+		List<Complaint> complaints = complaintComponentRepository.findAllComplaintByUserId(userId);
+		List<ComplaintHeadResponse> responses = complaints.stream()
+			.map(ComplaintHeadResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
+
+	@Override
 	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId) {
 		Complaint complaint = complaintComponentRepository.findComplaintById(id)

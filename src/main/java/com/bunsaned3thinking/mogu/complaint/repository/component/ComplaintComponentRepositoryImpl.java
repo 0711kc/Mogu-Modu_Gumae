@@ -45,4 +45,9 @@ public class ComplaintComponentRepositoryImpl implements ComplaintComponentRepos
 	public List<Complaint> findAllComplaint() {
 		return complaintRepository.findAll();
 	}
+
+	@Override
+	public List<Complaint> findAllComplaintByUserId(String userId) {
+		return complaintRepository.findAllByUserId(userId);
+	}
 }

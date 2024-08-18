@@ -41,6 +41,11 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 	}
 
 	@Override
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(String userId) {
+		return complaintService.findAllComplaintByUser(userId);
+	}
+
+	@Override
 	public ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId) {
 		return complaintService.updateComplaint(id, updateComplaintRequest, userId);

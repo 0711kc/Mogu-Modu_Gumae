@@ -21,4 +21,6 @@ public interface ComplaintComponentService {
 		String userId);
 
 	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaint();
+
+	ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(String userId);
 }

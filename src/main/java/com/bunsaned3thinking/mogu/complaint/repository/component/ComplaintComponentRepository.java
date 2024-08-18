@@ -18,4 +18,6 @@ public interface ComplaintComponentRepository {
 	Optional<User> findUserByUserId(String userId);
 
 	List<Complaint> findAllComplaint();
+
+	List<Complaint> findAllComplaintByUserId(String userId);
 }
