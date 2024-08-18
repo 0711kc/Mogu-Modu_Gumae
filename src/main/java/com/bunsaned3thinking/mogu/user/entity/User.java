@@ -188,10 +188,6 @@ public class User {
 		this.password = password;
 	}
 
-	public void updateLoginInfo(String email, String name) {
-		this.name = name;
-	}
-
 	public void block(boolean state) {
 		if (state) {
 			this.blockDate = LocalDateTime.now();

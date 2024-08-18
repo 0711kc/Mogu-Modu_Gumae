@@ -21,7 +21,8 @@ public class WebConfig {
 					.allowedOrigins("*")
 					.allowedMethods("*")  // 모든 HTTP 메서드 허용
 					.allowedHeaders("*")
-					.allowCredentials(false);
+					.allowCredentials(false)
+					.exposedHeaders("Set-Cookie");
 			}
 		};
 	}

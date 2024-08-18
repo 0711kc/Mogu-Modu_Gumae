@@ -18,17 +18,14 @@ import com.bunsaned3thinking.mogu.common.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	private static final Long TOKEN_PERIOD_MS = 60 * 1000L;
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
-
-	public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-		this.authenticationManager = authenticationManager;
-		this.jwtUtil = jwtUtil;
-	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -57,7 +54,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		String token = jwtUtil.createJwt(username, role, TOKEN_PERIOD_MS);
 
-		response.addHeader("Authorization", "Bearer " + token);
+		response.addCookie(jwtUtil.createCookie("Authorization", token));
+		// response.addHeader("Authorization", "Bearer " + token);
 	}
 
 	@Override

@@ -25,11 +25,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (JwtException | IllegalArgumentException | NoSuchElementException e) {
-			setErrorResponse(response, "[Error] 유효하지 않은 토큰값입니다.");
+			setErrorResponse(response, "[Error] 유효하지 않은 토큰값입니다. : " + e.getMessage());
 		} catch (DisabledException e) {
 			setErrorResponse(response, "[Error] 비활성화된 계정입니다.");
 		} catch (UsernameNotFoundException e) {
-			setErrorResponse(response, "[Error] 로그인에 실패했습니다.");
+			setErrorResponse(response, "[Error] 해당 계정을 찾을 수 없습니다.");
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 
 @Component
 public class JwtUtil {
@@ -43,5 +44,15 @@ public class JwtUtil {
 			.expiration(new Date(System.currentTimeMillis() + expiredMs))
 			.signWith(secretKey)
 			.compact();
+	}
+
+	public Cookie createCookie(String key, String value) {
+		Cookie cookie = new Cookie(key, value);
+		cookie.setMaxAge(60 * 60 * 60);
+		//cookie.setSecure(true);
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+
+		return cookie;
 	}
 }
