@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.user.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.MediaType;
@@ -44,6 +45,11 @@ public class UserController {
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserResponse> findUser(@PathVariable final String userId) {
 		return userComponentService.findUser(userId);
+	}
+
+	@GetMapping("/all")
+	public ResponseEntity<List<UserResponse>> findAllUser() {
+		return userComponentService.findAllUser();
 	}
 
 	@GetMapping("/{userId}/saving")

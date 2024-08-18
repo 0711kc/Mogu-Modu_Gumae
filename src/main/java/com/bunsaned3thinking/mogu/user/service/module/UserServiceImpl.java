@@ -61,6 +61,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public ResponseEntity<List<UserResponse>> findAllUser() {
+		List<User> users = userRepository.findAll();
+		List<UserResponse> responses = users.stream()
+			.map(UserResponse::from)
+			.toList();
+		return ResponseEntity.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(responses);
+	}
+
+	@Override
 	public boolean checkUser(String userId) {
 		return userRepository.existsByUserId(userId);
 	}

@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.user.service.component;
 
+import java.util.List;
+
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,11 @@ public class UserComponentServiceImpl implements UserComponentService {
 	@Override
 	public ResponseEntity<UserResponse> findUser(String userId) {
 		return userService.findUser(userId);
+	}
+
+	@Override
+	public ResponseEntity<List<UserResponse>> findAllUser() {
+		return userService.findAllUser();
 	}
 
 	@Override

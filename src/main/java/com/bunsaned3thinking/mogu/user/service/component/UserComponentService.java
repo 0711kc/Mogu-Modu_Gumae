@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.user.service.component;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,4 +32,6 @@ public interface UserComponentService {
 	ResponseEntity<SavingCostResponse> findUserSavingCost(String userId);
 
 	ResponseEntity<LevelResponse> findUserLevel(String userId);
+
+	ResponseEntity<List<UserResponse>> findAllUser();
 }

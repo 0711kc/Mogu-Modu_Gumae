@@ -1,5 +1,7 @@
 package com.bunsaned3thinking.mogu.user.service.module;
 
+import java.util.List;
+
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 
@@ -43,4 +45,6 @@ public interface UserService {
 	ResponseEntity<LevelResponse> findUserLevel(String userId);
 
 	String findImageName(String userId);
+
+	ResponseEntity<List<UserResponse>> findAllUser();
 }
