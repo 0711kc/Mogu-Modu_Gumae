@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.bunsaned3thinking.mogu.common.config.SecurityConfig;
 import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetails;
 import com.bunsaned3thinking.mogu.common.util.JwtUtil;
 
@@ -22,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-	private static final Long TOKEN_PERIOD_MS = 60 * 1000L;
-
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
 
@@ -52,7 +51,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		String role = auth.getAuthority();
 
-		String token = jwtUtil.createJwt(username, role, TOKEN_PERIOD_MS);
+		String token = jwtUtil.createJwt(username, role, SecurityConfig.TOKEN_PERIOD_MS);
 
 		response.addCookie(jwtUtil.createCookie("Authorization", token));
 		// response.addHeader("Authorization", "Bearer " + token);

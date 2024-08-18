@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,15 +31,42 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @NonNullApi
 public class SecurityConfig implements WebMvcConfigurer {
+	public static final Long TOKEN_PERIOD_MS = 60 * 60 * 1000L;
 	private final CustomOAuth2UserService oAuth2UserService;
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JwtUtil jwtUtil;
 	private final CustomUserDetailsService customUserDetailsService;
 	private final OauthSuccessHandler successHandler;
 	private final OauthFailureHandler failureHandler;
+
+	private static final String[] WHITE_LIST_POST = {
+		"/login",
+		"/user"
+	};
+
+	private static final String[] ADMIN_POST = {
+		"/notice"
+	};
+
+	private static final String[] ADMIN_GET = {
+		"/post/reports",
+		"/user/{userId}",
+		"/user/all"
+	};
+
+	private static final String[] ADMIN_PATCH = {
+		"/notice/{id}",
+		"/complaint/{id}",
+		"/user/block/{userId}"
+	};
+
+	private static final String[] ADMIN_DELETE = {
+		"/notice/{id}",
+		"/user/{userId}"
+	};
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -87,8 +115,13 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 		http
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/user/{userId}").hasAnyRole("USER")
-				.anyRequest().permitAll());
+				.requestMatchers("/error").permitAll()
+				.requestMatchers(HttpMethod.POST, WHITE_LIST_POST).permitAll()
+				.requestMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN")
+				.requestMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN")
+				.requestMatchers(HttpMethod.PATCH, ADMIN_PATCH).hasAnyRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasAnyRole("ADMIN")
+				.anyRequest().authenticated());
 
 		http
 			.addFilterAfter(new ExceptionHandlerFilter(), LogoutFilter.class);

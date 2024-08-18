@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.bunsaned3thinking.mogu.common.config.SecurityConfig;
 import com.bunsaned3thinking.mogu.common.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class OauthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 		GrantedAuthority auth = iterator.next();
 		String role = auth.getAuthority();
 
-		String token = jwtUtil.createJwt(username, role, 60 * 60 * 60L);
+		String token = jwtUtil.createJwt(username, role, SecurityConfig.TOKEN_PERIOD_MS);
 
 		response.addCookie(jwtUtil.createCookie("Authorization", token));
 		response.sendRedirect("http://localhost:3000/");
