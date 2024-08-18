@@ -34,6 +34,7 @@ import com.bunsaned3thinking.mogu.post.entity.PostImage;
 import com.bunsaned3thinking.mogu.post.entity.RecruitState;
 import com.bunsaned3thinking.mogu.post.repository.component.PostComponentRepository;
 import com.bunsaned3thinking.mogu.searchhistory.entity.SearchHistory;
+import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -260,7 +261,7 @@ public class PostServiceImpl implements PostService {
 	public ResponseEntity<Void> deletePost(String userId, Long postId) {
 		Post post = postComponentRepository.findPostById(postId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
-		if (!post.getUser().getUserId().equals(userId)) {
+		if (!post.getUser().getUserId().equals(userId) & !post.getUser().getRole().equals(Role.admin)) {
 			throw new IllegalArgumentException("[Error] 자신의 게시글만 삭제할 수 있습니다.");
 		}
 		if (post.getPostDetail() == null) {

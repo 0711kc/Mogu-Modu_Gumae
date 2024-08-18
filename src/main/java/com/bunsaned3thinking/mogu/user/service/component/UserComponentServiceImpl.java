@@ -41,21 +41,34 @@ public class UserComponentServiceImpl implements UserComponentService {
 	@Override
 	public ResponseEntity<Void> deleteUser(String userId) {
 		String imageName = userService.findImageName(userId);
+		ResponseEntity<Void> response = userService.deleteUser(userId);
 		imageService.delete(imageName);
-		return userService.deleteUser(userId);
+		return response;
 	}
 
 	@Override
 	public ResponseEntity<UserResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
 		MultipartFile multipartFile) {
 		if (multipartFile != null & updateUserRequest != null) {
-			imageService.delete(userService.findImageName(userId));
 			String imageName = imageService.upload(multipartFile);
-			return userService.updateUser(userId, imageName, updateUserRequest);
+			try {
+				ResponseEntity<UserResponse> response = userService.updateUser(userId, imageName, updateUserRequest);
+				imageService.delete(userService.findImageName(userId));
+				return response;
+			} catch (RuntimeException e) {
+				imageService.delete(imageName);
+				throw e;
+			}
 		} else if (multipartFile != null) {
-			imageService.delete(userService.findImageName(userId));
 			String imageName = imageService.upload(multipartFile);
-			return userService.updateProfileImage(userId, imageName);
+			try {
+				ResponseEntity<UserResponse> response = userService.updateProfileImage(userId, imageName);
+				imageService.delete(userService.findImageName(userId));
+				return response;
+			} catch (RuntimeException e) {
+				imageService.delete(imageName);
+				throw e;
+			}
 		} else if (updateUserRequest != null) {
 			return userService.updateUser(userId, updateUserRequest);
 		}

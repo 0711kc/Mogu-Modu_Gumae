@@ -80,16 +80,24 @@ public class PostComponentServiceImpl implements PostComponentService {
 	public ResponseEntity<PostWithDetailResponse> updatePost(final Long postId, final String userId,
 		final UpdatePostRequest updatePostRequest, final List<MultipartFile> multipartFileList) {
 		List<String> imageNames = postService.findImageNames(postId);
-		imageService.deleteAll(imageNames);
 		List<String> imageLinks = imageService.uploadAll(multipartFileList);
-		return postService.updatePost(userId, postId, updatePostRequest, imageLinks);
+		try {
+			ResponseEntity<PostWithDetailResponse> response = postService.updatePost(userId, postId, updatePostRequest,
+				imageLinks);
+			imageService.deleteAll(imageNames);
+			return response;
+		} catch (RuntimeException e) {
+			imageService.deleteAll(imageLinks);
+			throw e;
+		}
 	}
 
 	@Override
 	public ResponseEntity<Void> deletePost(final String userId, final Long postId) {
 		List<String> imageNames = postService.findImageNames(postId);
+		ResponseEntity<Void> response = postService.deletePost(userId, postId);
 		imageService.deleteAll(imageNames);
-		return postService.deletePost(userId, postId);
+		return response;
 	}
 
 	@Override
