@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRequest {
 	@NotBlank(message = "아이디를 입력해주세요.")
-	@Email
+	@Email(message = "아이디는 이메일 형식으로 입력해주세요.")
 	private String userId;
 
 	@NotBlank(message = "비밀번호를 입력해주세요.")
@@ -32,15 +32,15 @@ public class UserRequest {
 	private String password;
 
 	@NotBlank(message = "이름을 입력해주세요.")
-	@Size(max = 12)
+	@Size(max = 12, message = "이름의 최대 크기는 12글자입니다.")
 	private String name;
 
 	@NotBlank(message = "별명을 입력해주세요.")
-	@Size(max = 12)
+	@Size(max = 12, message = "닉네임의 최대 크기는 12글자입니다.")
 	private String nickname;
 
 	@NotBlank(message = "전화번호를 입력해주세요.")
-	@Size(min = 11, max = 11)
+	@Size(min = 11, max = 11, message = "핸드폰 번호는 11글자의 숫자로 입력해주세요.")
 	private String phone;
 
 	@NotNull(message = "권한을 입력해주세요.")
