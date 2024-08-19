@@ -34,6 +34,10 @@ spring:
       stop:
         command: down
         timeout: 1m
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: -1
 
 logging:
   level:

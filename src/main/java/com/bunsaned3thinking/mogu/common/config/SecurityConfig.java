@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetailsService;
-import com.bunsaned3thinking.mogu.common.jwt.filter.ExceptionHandlerFilter;
+import com.bunsaned3thinking.mogu.common.jwt.filter.JwtExceptionHandlerFilter;
 import com.bunsaned3thinking.mogu.common.jwt.filter.JwtFilter;
 import com.bunsaned3thinking.mogu.common.jwt.filter.LoginFilter;
 import com.bunsaned3thinking.mogu.common.oauth.CustomOAuth2UserService;
@@ -113,10 +113,10 @@ public class SecurityConfig implements WebMvcConfigurer {
 				.anyRequest().authenticated());
 
 		http
-			.addFilterAfter(new ExceptionHandlerFilter(), LogoutFilter.class);
+			.addFilterAfter(new JwtExceptionHandlerFilter(), LogoutFilter.class);
 
 		http
-			.addFilterAfter(new JwtFilter(jwtUtil, customUserDetailsService), ExceptionHandlerFilter.class);
+			.addFilterAfter(new JwtFilter(jwtUtil, customUserDetailsService), JwtExceptionHandlerFilter.class);
 
 		http
 			.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),

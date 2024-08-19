@@ -3,6 +3,7 @@ package com.bunsaned3thinking.mogu.common.exception.handler;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
@@ -17,6 +19,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+	@Value("${spring.servlet.multipart.max-file-size}")
+	private String maxFileSize;
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<List<String>> handleMethodArgumentNotValidException(
@@ -54,6 +59,13 @@ public class ControllerExceptionHandler {
 	public ResponseEntity<String> handleUnrecognizedPropertyException(UnrecognizedPropertyException exception) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 			.body("[Error] 잘못된 Key 값이 들어왔습니다. : " + exception.getPropertyName());
+	}
+
+	@ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exception) {
+		return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+			.body("파일 크기가 너무 큽니다. 파일 크기는 " + maxFileSize + " 이하로 해주세요.");
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
