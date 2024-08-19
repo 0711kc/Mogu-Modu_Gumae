@@ -14,7 +14,7 @@ public interface ComplaintService {
 	ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
 		List<String> complaintImageLinks, String userId);
 
-	ResponseEntity<ComplaintResponse> findComplaint(Long id);
+	ResponseEntity<ComplaintResponse> findComplaint(Long id, String userId);
 
 	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId);

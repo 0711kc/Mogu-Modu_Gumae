@@ -19,6 +19,7 @@ import com.bunsaned3thinking.mogu.complaint.entity.Complaint;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintImage;
 import com.bunsaned3thinking.mogu.complaint.entity.ComplaintState;
 import com.bunsaned3thinking.mogu.complaint.repository.component.ComplaintComponentRepository;
+import com.bunsaned3thinking.mogu.user.entity.Role;
 import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -47,9 +48,14 @@ public class ComplaintServiceImpl implements ComplaintService {
 	}
 
 	@Override
-	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
+	public ResponseEntity<ComplaintResponse> findComplaint(Long id, String userId) {
 		Complaint complaint = complaintComponentRepository.findComplaintById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 문의를 찾을 수 없습니다."));
+		User user = complaintComponentRepository.findUserByUserId(userId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
+		if (!complaint.getUser().equals(user) | !user.getRole().equals(Role.admin)) {
+			throw new IllegalArgumentException("[Error] 자신의 민원만 조회할 수 있습니다.");
+		}
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(ComplaintResponse.from(complaint));

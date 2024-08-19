@@ -31,8 +31,8 @@ public class ComplaintComponentServiceImpl implements ComplaintComponentService 
 	}
 
 	@Override
-	public ResponseEntity<ComplaintResponse> findComplaint(Long id) {
-		return complaintService.findComplaint(id);
+	public ResponseEntity<ComplaintResponse> findComplaint(Long id, String userId) {
+		return complaintService.findComplaint(id, userId);
 	}
 
 	@Override

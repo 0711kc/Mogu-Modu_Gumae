@@ -31,18 +31,18 @@ import lombok.RequiredArgsConstructor;
 public class ComplaintController {
 	private final ComplaintComponentService complaintComponentService;
 
-	@PostMapping("/user/{userId}")
+	@PostMapping
 	public ResponseEntity<ComplaintResponse> createComplaint(
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestPart(name = "request") @Valid final ComplaintRequest complaintRequest,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList) {
 		return complaintComponentService.createComplaint(complaintRequest, multipartFileList.orElseGet(ArrayList::new),
-			userId);
+			principal.getName());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ComplaintResponse> findComplaint(@PathVariable final Long id) {
-		return complaintComponentService.findComplaint(id);
+	public ResponseEntity<ComplaintResponse> findComplaint(@PathVariable final Long id, Principal principal) {
+		return complaintComponentService.findComplaint(id, principal.getName());
 	}
 
 	@GetMapping("/all")
@@ -50,9 +50,9 @@ public class ComplaintController {
 		return complaintComponentService.findAllComplaint();
 	}
 
-	@GetMapping("/all/{userId}")
-	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(@PathVariable final String userId) {
-		return complaintComponentService.findAllComplaintByUser(userId);
+	@GetMapping("/all/my")
+	public ResponseEntity<List<ComplaintHeadResponse>> findAllComplaintByUser(Principal principal) {
+		return complaintComponentService.findAllComplaintByUser(principal.getName());
 	}
 
 	@PatchMapping("/{id}")

@@ -15,7 +15,7 @@ public interface ComplaintComponentService {
 	ResponseEntity<ComplaintResponse> createComplaint(ComplaintRequest complaintRequest,
 		List<MultipartFile> multipartFileList, String userId);
 
-	ResponseEntity<ComplaintResponse> findComplaint(Long id);
+	ResponseEntity<ComplaintResponse> findComplaint(Long id, String userId);
 
 	ResponseEntity<ComplaintResponse> updateComplaint(Long id, UpdateComplaintRequest updateComplaintRequest,
 		String userId);

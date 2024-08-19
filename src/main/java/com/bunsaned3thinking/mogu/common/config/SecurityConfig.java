@@ -51,6 +51,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 	private static final String[] ADMIN_GET = {
 		"/post/reports",
+		"/complaint/all",
 		"/user/all",
 		"/user/{userId}"
 	};
