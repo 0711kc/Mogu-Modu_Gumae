@@ -27,8 +27,7 @@ public class UserRequest {
 
 	@NotBlank(message = "비밀번호를 입력해주세요.")
 	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$",
-		message = "비밀번호는 8글자 이상 16글자 이하로 입력해주세요. "
-			+ "영문자, 숫자, 특수문자가 최소 하나씩 들어가야 됩니다.")
+		message = "비밀번호는 8글자 이상 16글자 이하로 입력해주세요. 영문자, 숫자, 특수문자가 최소 하나씩 들어가야 됩니다.")
 	private String password;
 
 	@NotBlank(message = "이름을 입력해주세요.")
@@ -40,7 +39,8 @@ public class UserRequest {
 	private String nickname;
 
 	@NotBlank(message = "전화번호를 입력해주세요.")
-	@Size(min = 11, max = 11, message = "핸드폰 번호는 11글자의 숫자로 입력해주세요.")
+	@Pattern(regexp = "^010[0-9]{8}$",
+		message = "핸드폰 번호는 010로 시작하는 11글자의 숫자여야 됩니다.")
 	private String phone;
 
 	@NotNull(message = "권한을 입력해주세요.")
