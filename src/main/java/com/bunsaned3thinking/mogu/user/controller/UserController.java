@@ -66,30 +66,35 @@ public class UserController {
 		return userComponentService.findAllUser(cursor);
 	}
 
-	@GetMapping("/{userId}/saving")
-	public ResponseEntity<SavingCostResponse> findUserSavingCost(@PathVariable final String userId) {
-		return userComponentService.findUserSavingCost(userId);
+	@GetMapping("/saving")
+	public ResponseEntity<SavingCostResponse> findUserSavingCost(Principal principal) {
+		return userComponentService.findUserSavingCost(principal.getName());
 	}
 
-	@GetMapping("/{userId}/level")
-	public ResponseEntity<LevelResponse> findUserLevel(@PathVariable final String userId) {
-		return userComponentService.findUserLevel(userId);
+	@GetMapping("/level")
+	public ResponseEntity<LevelResponse> findUserLevel(Principal principal) {
+		return userComponentService.findUserLevel(principal.getName());
 	}
 
-	@PatchMapping(value = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<UserDetailResponse> updateUser(@PathVariable final String userId,
+	@PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<UserDetailResponse> updateUser(Principal principal,
 		@RequestPart(name = "request", required = false) final Optional<String> updateUserRequestJson,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) throws JsonProcessingException {
 		@Valid UpdateUserRequest updateUserRequest = updateUserRequestJson.isPresent()
 			? objectMapper.readValue(updateUserRequestJson.get(), UpdateUserRequest.class)
 			: null;
-		return userComponentService.updateUser(userId, updateUserRequest, multipartFile);
+		return userComponentService.updateUser(principal.getName(), updateUserRequest, multipartFile);
 	}
 
-	@PatchMapping("/{userId}/password")
-	public ResponseEntity<UserDetailResponse> updateUserPassword(@PathVariable final String userId,
+	@PatchMapping("/password")
+	public ResponseEntity<UserDetailResponse> updateUserPassword(Principal principal,
 		@RequestBody @Valid final UpdateUserPasswordRequest updateUserPasswordRequest) {
-		return userComponentService.updateUserPassword(userId, updateUserPasswordRequest);
+		return userComponentService.updateUserPassword(principal.getName(), updateUserPasswordRequest);
+	}
+
+	@DeleteMapping("/my")
+	public ResponseEntity<Void> deleteMy(Principal principal) {
+		return userComponentService.deleteUser(principal.getName());
 	}
 
 	@DeleteMapping("/{userId}")
@@ -103,12 +108,12 @@ public class UserController {
 		return userComponentService.setBlockUser(userId, state);
 	}
 
-	@PatchMapping("/manner/sender/{senderId}/receiver/{receiverId}/{postId}")
+	@PatchMapping("/manner/post/{postId}/receiver/{receiverId}")
 	public ResponseEntity<UserDetailResponse> updateUserManner(
-		@PathVariable final String senderId,
+		Principal principal,
 		@PathVariable final String receiverId,
 		@PathVariable final Long postId,
 		@RequestPart(name = "manner") Manner manner) {
-		return userComponentService.updateUserManner(senderId, receiverId, manner, postId);
+		return userComponentService.updateUserManner(principal.getName(), receiverId, manner, postId);
 	}
 }

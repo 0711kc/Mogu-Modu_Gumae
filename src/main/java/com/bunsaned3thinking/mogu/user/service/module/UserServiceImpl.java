@@ -12,7 +12,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,12 +42,12 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 	private static final int DEFAULT_PAGE__SIZE = 10;
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public ResponseEntity<UserDetailResponse> createUser(UserRequest userRequest) {
 		User user = userRequest.toEntity();
-		user.updatePassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.updatePassword(passwordEncoder.encode(user.getPassword()));
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
 		UpdateUserPasswordRequest updateUserPasswordRequest) {
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 사용자를 찾을 수 없습니다."));
-		user.updatePassword(bCryptPasswordEncoder.encode(updateUserPasswordRequest.getPassword()));
+		user.updatePassword(passwordEncoder.encode(updateUserPasswordRequest.getPassword()));
 		User savedUser = userRepository.save(user);
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)

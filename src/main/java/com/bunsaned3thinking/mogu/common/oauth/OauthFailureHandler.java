@@ -15,6 +15,6 @@ public class OauthFailureHandler implements AuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException exception) throws IOException {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		response.getWriter().write("소셜 로그인 실패! 서버 로그를 확인해주세요.");
+		response.getWriter().write("소셜 로그인 실패!");
 	}
 }

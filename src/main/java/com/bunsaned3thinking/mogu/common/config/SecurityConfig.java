@@ -1,7 +1,5 @@
 package com.bunsaned3thinking.mogu.common.config;
 
-import java.util.Collections;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,9 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.bunsaned3thinking.mogu.common.jwt.CustomUserDetailsService;
@@ -53,8 +51,8 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 	private static final String[] ADMIN_GET = {
 		"/post/reports",
-		"/user/{userId}",
-		"/user/all"
+		"/user/all",
+		"/user/{userId}"
 	};
 
 	private static final String[] ADMIN_PATCH = {
@@ -68,13 +66,19 @@ public class SecurityConfig implements WebMvcConfigurer {
 		"/user/{userId}"
 	};
 
+	public static final String[] AUTH_GET = {
+		"/user/my",
+		"/user/saving",
+		"/user/level"
+	};
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
 	}
 
 	@Bean
-	public BCryptPasswordEncoder bcryptPasswordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
@@ -82,23 +86,6 @@ public class SecurityConfig implements WebMvcConfigurer {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable);
-
-		http
-			.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-
-				CorsConfiguration configuration = new CorsConfiguration();
-
-				configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-				configuration.setAllowedMethods(Collections.singletonList("*"));
-				configuration.setAllowCredentials(true);
-				configuration.setAllowedHeaders(Collections.singletonList("*"));
-				configuration.setMaxAge(3600L);
-
-				configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-				configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-				return configuration;
-			}));
 
 		http
 			.formLogin(AbstractHttpConfigurer::disable);
@@ -117,6 +104,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/error").permitAll()
 				.requestMatchers(HttpMethod.POST, WHITE_LIST_POST).permitAll()
+				.requestMatchers(HttpMethod.GET, AUTH_GET).authenticated()
 				.requestMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN")
 				.requestMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN")
 				.requestMatchers(HttpMethod.PATCH, ADMIN_PATCH).hasAnyRole("ADMIN")
@@ -132,15 +120,6 @@ public class SecurityConfig implements WebMvcConfigurer {
 		http
 			.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
 				JwtFilter.class);
-		// http
-		// 	.addFilterAfter(new ExceptionHandlerFilter(), OAuth2LoginAuthenticationFilter.class);
-		//
-		// http
-		// 	.addFilterAfter(new JwtFilter(jwtUtil, customUserDetailsService), ExceptionHandlerFilter.class);
-		//
-		// http
-		// 	.addFilterAfter(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
-		// 		JwtFilter.class);
 
 		http
 			.sessionManagement((session) -> session

@@ -2,12 +2,13 @@ package com.bunsaned3thinking.mogu.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.micrometer.common.lang.NonNull;
 
 @Configuration
 public class WebConfig {
@@ -22,7 +23,8 @@ public class WebConfig {
 					.allowedMethods("*")  // 모든 HTTP 메서드 허용
 					.allowedHeaders("*")
 					.allowCredentials(false)
-					.exposedHeaders("Set-Cookie");
+					.maxAge(3600L)
+					.exposedHeaders("Set-Cookie", "Authorization");
 			}
 		};
 	}
