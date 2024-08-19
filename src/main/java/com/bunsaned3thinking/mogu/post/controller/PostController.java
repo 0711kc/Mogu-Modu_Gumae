@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.post.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +40,15 @@ public class PostController {
 	private final PostComponentService postComponentService;
 	private final ObjectMapper objectMapper;
 
-	@PostMapping("/{userId}")
+	@PostMapping
 	public ResponseEntity<PostWithDetailResponse> createPost(
-		@PathVariable String userId,
+		Principal principal,
 		@RequestPart(name = "request") final String postRequestJson,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList)
 		throws JsonProcessingException {
 		@Valid final PostRequest postRequest = objectMapper.readValue(postRequestJson, PostRequest.class);
-		return postComponentService.createPost(userId, postRequest, multipartFileList.orElseGet(ArrayList::new));
+		return postComponentService.createPost(principal.getName(), postRequest,
+			multipartFileList.orElseGet(ArrayList::new));
 	}
 
 	@GetMapping("/{id}")
@@ -59,52 +61,54 @@ public class PostController {
 		return postComponentService.findPostWithDetail(id);
 	}
 
-	@GetMapping("/all/{userId}")
+	@GetMapping("/all")
 	public ResponseEntity<List<PostResponse>> findPostAll(
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
-		return postComponentService.findAllPosts(userId, cursor);
+		return postComponentService.findAllPosts(principal.getName(), cursor);
 	}
 
-	@PatchMapping("/{postId}/{userId}")
+	@PatchMapping("/{postId}")
 	public ResponseEntity<PostWithDetailResponse> updatePost(
 		@PathVariable Long postId,
-		@PathVariable String userId,
+		Principal principal,
 		@RequestPart(name = "request") final Optional<String> updatePostRequestJson,
 		@RequestPart(value = "multipartFileList", required = false) Optional<List<MultipartFile>> multipartFileList)
 		throws JsonProcessingException {
 		@Valid final UpdatePostRequest updatePostRequest = updatePostRequestJson.isPresent()
 			? objectMapper.readValue(updatePostRequestJson.get(), UpdatePostRequest.class)
 			: null;
-		return postComponentService.updatePost(postId, userId, updatePostRequest,
+		return postComponentService.updatePost(postId, principal.getName(), updatePostRequest,
 			multipartFileList.orElseGet(ArrayList::new));
 	}
 
-	@PatchMapping("/{postId}/{userId}/close")
-	public ResponseEntity<PostResponse> closePost(@PathVariable final Long postId, @PathVariable final String userId,
+	@PatchMapping("/{postId}/close")
+	public ResponseEntity<PostResponse> closePost(
+		@PathVariable final Long postId,
+		Principal principal,
 		@RequestPart(name = "state") RecruitState recruitState) {
-		return postComponentService.closePost(postId, userId, recruitState);
+		return postComponentService.closePost(postId, principal.getName(), recruitState);
 	}
 
-	@PatchMapping("/{postId}/{userId}/hide")
+	@PatchMapping("/{postId}/hide")
 	public ResponseEntity<PostResponse> hidePost(
 		@PathVariable final Long postId,
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestPart(name = "state") boolean state) {
-		return postComponentService.hidePost(postId, userId, state);
+		return postComponentService.hidePost(postId, principal.getName(), state);
 	}
 
-	@DeleteMapping("/{postId}/{userId}")
-	public ResponseEntity<Void> deletePost(@PathVariable final Long postId, @PathVariable final String userId) {
-		return postComponentService.deletePost(userId, postId);
+	@DeleteMapping("/{postId}")
+	public ResponseEntity<Void> deletePost(@PathVariable final Long postId, Principal principal) {
+		return postComponentService.deletePost(principal.getName(), postId);
 	}
 
-	@PostMapping("/report/{postId}/{userId}")
+	@PostMapping("/report/{postId}")
 	public ResponseEntity<ReportResponse> createReport(
 		@PathVariable final Long postId,
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestBody @Valid final ReportRequest reportRequest) {
-		return postComponentService.createReport(postId, userId, reportRequest);
+		return postComponentService.createReport(postId, principal.getName(), reportRequest);
 	}
 
 	@GetMapping("/reports")
@@ -113,39 +117,39 @@ public class PostController {
 		return postComponentService.findAllReportedPost(cursor);
 	}
 
-	@GetMapping("/search/{userId}")
+	@GetMapping("/search")
 	public ResponseEntity<List<PostResponse>> searchPosts(
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestParam(name = "keyword") String keyword,
 		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
-		return postComponentService.searchPostByKeyword(keyword, userId, cursor);
+		return postComponentService.searchPostByKeyword(keyword, principal.getName(), cursor);
 	}
 
-	@GetMapping("/search/histories/{userId}")
-	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(@PathVariable final String userId) {
-		return postComponentService.findAllSearchHistory(userId);
+	@GetMapping("/search/histories}")
+	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(Principal principal) {
+		return postComponentService.findAllSearchHistory(principal.getName());
 	}
 
-	@DeleteMapping("/search/history/{searchHistoryId}/{userId}")
+	@DeleteMapping("/search/history/{searchHistoryId}")
 	public ResponseEntity<Void> deleteSearchHistory(@PathVariable final Long searchHistoryId,
-		@PathVariable final String userId) {
-		return postComponentService.deleteSearchHistory(searchHistoryId, userId);
+		Principal principal) {
+		return postComponentService.deleteSearchHistory(searchHistoryId, principal.getName());
 	}
 
-	@PostMapping("/{postId}/like/{userId}")
-	public ResponseEntity<PostResponse> likePost(@PathVariable final Long postId, @PathVariable final String userId) {
-		return postComponentService.likePost(postId, userId);
+	@PostMapping("/{postId}/like")
+	public ResponseEntity<PostResponse> likePost(@PathVariable final Long postId, Principal principal) {
+		return postComponentService.likePost(postId, principal.getName());
 	}
 
-	@DeleteMapping("/{postId}/unlike/{userId}")
-	public ResponseEntity<Void> unlikePost(@PathVariable final Long postId, @PathVariable final String userId) {
-		return postComponentService.unlikePost(postId, userId);
+	@DeleteMapping("/{postId}/unlike")
+	public ResponseEntity<Void> unlikePost(@PathVariable final Long postId, Principal principal) {
+		return postComponentService.unlikePost(postId, principal.getName());
 	}
 
-	@GetMapping("/all/like/{userId}")
+	@GetMapping("/all/like")
 	public ResponseEntity<List<PostResponse>> findAllLikePost(
-		@PathVariable final String userId,
+		Principal principal,
 		@RequestParam(name = "cursor", required = false, defaultValue = "0") Long cursor) {
-		return postComponentService.findAllLikedPost(userId, cursor);
+		return postComponentService.findAllLikedPost(principal.getName(), cursor);
 	}
 }
