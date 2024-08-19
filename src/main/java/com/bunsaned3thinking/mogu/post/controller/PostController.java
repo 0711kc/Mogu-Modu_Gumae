@@ -125,7 +125,7 @@ public class PostController {
 		return postComponentService.searchPostByKeyword(keyword, principal.getName(), cursor);
 	}
 
-	@GetMapping("/search/histories}")
+	@GetMapping("/search/histories")
 	public ResponseEntity<List<SearchHistoryResponse>> findAllSearchHistory(Principal principal) {
 		return postComponentService.findAllSearchHistory(principal.getName());
 	}
