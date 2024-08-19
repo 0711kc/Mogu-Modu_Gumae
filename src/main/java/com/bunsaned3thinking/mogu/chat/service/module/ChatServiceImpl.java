@@ -47,11 +47,6 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public ResponseEntity<Void> deleteChat(Long id) {
-		return null;
-	}
-
-	@Override
 	public ResponseEntity<ChatResponse> findChat(Long id) {
 		Chat chat = chatComponentRepository.findChatById(id)
 			.orElseThrow(() -> new EntityNotFoundException("[Error] 채팅방을 찾을 수 없습니다."));
@@ -73,11 +68,6 @@ public class ChatServiceImpl implements ChatService {
 		return ResponseEntity.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(responses);
-	}
-
-	@Override
-	public ResponseEntity<ChatResponse> updateChat(Long id) {
-		return null;
 	}
 
 	@Override

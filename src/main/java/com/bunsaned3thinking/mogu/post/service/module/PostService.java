@@ -42,4 +42,6 @@ public interface PostService {
 	ResponseEntity<List<PostResponse>> findLikedPostsByUserId(String userId, Long cursor);
 
 	List<String> findImageNames(Long postId);
+
+	boolean isChief(String userId, Long chatId);
 }

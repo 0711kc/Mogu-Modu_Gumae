@@ -354,6 +354,13 @@ public class PostServiceImpl implements PostService {
 			.toList();
 	}
 
+	@Override
+	public boolean isChief(String userId, Long postId) {
+		Post post = postComponentRepository.findPostById(postId)
+			.orElseThrow(() -> new EntityNotFoundException("[Error] 게시글을 찾을 수 없습니다."));
+		return post.getUser().getUserId().equals(userId);
+	}
+
 	private Slice<Post> getAllLikedPosts(String userId, Long cursor, PageRequest pageRequest) {
 		if (cursor == 0) {
 			return postComponentRepository.findLikedPostsFirstPageByUserId(userId, pageRequest);
