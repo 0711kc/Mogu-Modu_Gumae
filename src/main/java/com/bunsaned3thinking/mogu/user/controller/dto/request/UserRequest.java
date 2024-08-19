@@ -6,8 +6,10 @@ import com.bunsaned3thinking.mogu.user.entity.User;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,13 +21,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class UserRequest {
-
 	@NotBlank(message = "아이디를 입력해주세요.")
-	@Size(max = 30)
+	@Email
 	private String userId;
 
 	@NotBlank(message = "비밀번호를 입력해주세요.")
-	@Size(max = 16)
+	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$",
+		message = "비밀번호는 8글자 이상 16글자 이하로 입력해주세요. "
+			+ "영문자, 숫자, 특수문자가 최소 하나씩 들어가야 됩니다.")
 	private String password;
 
 	@NotBlank(message = "이름을 입력해주세요.")
@@ -37,7 +40,7 @@ public class UserRequest {
 	private String nickname;
 
 	@NotBlank(message = "전화번호를 입력해주세요.")
-	@Size(max = 11)
+	@Size(min = 11, max = 11)
 	private String phone;
 
 	@NotNull(message = "권한을 입력해주세요.")
