@@ -1,5 +1,6 @@
 package com.bunsaned3thinking.mogu.chat.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -26,19 +27,19 @@ public class ChatController {
 		return chatService.findChat(id);
 	}
 
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<ChatResponse>> findChatByUser(@PathVariable final String userId) {
-		return chatService.findChatByUser(userId);
+	@GetMapping
+	public ResponseEntity<List<ChatResponse>> findChatByUser(Principal principal) {
+		return chatService.findChatByUser(principal.getName());
 	}
 
-	@DeleteMapping("/{chatId}/user/{userId}")
-	public ResponseEntity<Void> exitChat(@PathVariable final String userId, @PathVariable final Long chatId) {
-		return chatService.exitChatUser(userId, chatId);
+	@DeleteMapping("/{chatId}")
+	public ResponseEntity<Void> exitChat(Principal principal, @PathVariable final Long chatId) {
+		return chatService.exitChatUser(principal.getName(), chatId);
 	}
 
-	@GetMapping("/{chatId}/user/{userId}")
+	@GetMapping("{chatId}/messages")
 	public ResponseEntity<List<ChatMessageResponse>> findChatMessages(@PathVariable final Long chatId,
-		@PathVariable final String userId) {
-		return chatService.findAllChatMessages(chatId, userId);
+		Principal principal) {
+		return chatService.findAllChatMessages(chatId, principal.getName());
 	}
 }
