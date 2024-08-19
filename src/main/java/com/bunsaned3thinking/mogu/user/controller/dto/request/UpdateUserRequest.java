@@ -28,6 +28,7 @@ public class UpdateUserRequest {
 	@DecimalMax(value = "90.0", message = "-90.0 ~ 90.0 사이의 숫자를 입력해주세요")
 	private Double latitude;
 
+	@Size(min = 500, max = 3000)
 	private Short distanceMeters;
 
 	public static UpdateUserRequest from(User user) {
