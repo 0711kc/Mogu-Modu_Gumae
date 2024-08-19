@@ -310,6 +310,9 @@ public class PostServiceImpl implements PostService {
 			.equals(RecruitState.PURCHASED)) {
 			throw new IllegalArgumentException("[Error] 이미 종료된 게시글입니다.");
 		}
+		if (recruitState.equals(RecruitState.PURCHASED) & post.getChat().getUsers().size() <= 1) {
+			throw new IllegalArgumentException("[Error] 한 명만 참여한 상태에서는 구매 완료 상태로 변경할 수 없습니다.");
+		}
 		post.updateRecruitState(recruitState);
 		Post savedPost = postComponentRepository.savePost(post);
 		return ResponseEntity.status(HttpStatus.OK)
