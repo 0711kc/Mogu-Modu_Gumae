@@ -21,7 +21,9 @@ public interface UserComponentService {
 
 	ResponseEntity<Void> deleteUser(String userId);
 
-	ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
+	ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest);
+
+	ResponseEntity<UserDetailResponse> updateUserWithProfile(String userId, UpdateUserRequest updateUserRequest,
 		MultipartFile multipartFile);
 
 	ResponseEntity<UserDetailResponse> updateUserPassword(String userId,

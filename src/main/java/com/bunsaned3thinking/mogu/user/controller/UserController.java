@@ -77,13 +77,17 @@ public class UserController {
 	}
 
 	@PatchMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<UserDetailResponse> updateUser(Principal principal,
+	public ResponseEntity<UserDetailResponse> updateUserWithProfile(Principal principal,
+		@RequestParam(name = "profile", required = false, defaultValue = "false") final Boolean isUpdateProfile,
 		@RequestPart(name = "request", required = false) final Optional<String> updateUserRequestJson,
 		@RequestPart(name = "image", required = false) MultipartFile multipartFile) throws JsonProcessingException {
 		@Valid UpdateUserRequest updateUserRequest = updateUserRequestJson.isPresent()
 			? objectMapper.readValue(updateUserRequestJson.get(), UpdateUserRequest.class)
 			: null;
-		return userComponentService.updateUser(principal.getName(), updateUserRequest, multipartFile);
+		if (isUpdateProfile) {
+			return userComponentService.updateUserWithProfile(principal.getName(), updateUserRequest, multipartFile);
+		}
+		return userComponentService.updateUser(principal.getName(), updateUserRequest);
 	}
 
 	@PatchMapping("/password")

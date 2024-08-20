@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bunsaned3thinking.mogu.common.config.S3Config;
 import com.bunsaned3thinking.mogu.image.service.ImageService;
 import com.bunsaned3thinking.mogu.review.entity.Review;
 import com.bunsaned3thinking.mogu.review.service.ReviewService;
@@ -60,14 +61,23 @@ public class UserComponentServiceImpl implements UserComponentService {
 	}
 
 	@Override
-	public ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest,
+	public ResponseEntity<UserDetailResponse> updateUser(String userId, UpdateUserRequest updateUserRequest) {
+		if (updateUserRequest != null) {
+			return userService.updateUser(userId, updateUserRequest);
+		}
+		throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
+	}
+
+	@Override
+	public ResponseEntity<UserDetailResponse> updateUserWithProfile(String userId, UpdateUserRequest updateUserRequest,
 		MultipartFile multipartFile) {
 		if (multipartFile != null & updateUserRequest != null) {
 			String imageName = imageService.upload(multipartFile);
 			try {
+				String existImage = userService.findImageName(userId);
 				ResponseEntity<UserDetailResponse> response = userService.updateUser(userId, imageName,
 					updateUserRequest);
-				imageService.delete(userService.findImageName(userId));
+				imageService.delete(existImage);
 				return response;
 			} catch (RuntimeException e) {
 				imageService.delete(imageName);
@@ -76,15 +86,20 @@ public class UserComponentServiceImpl implements UserComponentService {
 		} else if (multipartFile != null) {
 			String imageName = imageService.upload(multipartFile);
 			try {
+				String existImage = userService.findImageName(userId);
 				ResponseEntity<UserDetailResponse> response = userService.updateProfileImage(userId, imageName);
-				imageService.delete(userService.findImageName(userId));
+				imageService.delete(existImage);
 				return response;
 			} catch (RuntimeException e) {
 				imageService.delete(imageName);
 				throw e;
 			}
 		} else if (updateUserRequest != null) {
-			return userService.updateUser(userId, updateUserRequest);
+			String existImage = userService.findImageName(userId);
+			ResponseEntity<UserDetailResponse> response = userService.updateUser(userId, S3Config.UserImage,
+				updateUserRequest);
+			imageService.delete(existImage);
+			return response;
 		}
 		throw new IllegalArgumentException("[Error] 수정할 데이터를 전달받지 못했습니다.");
 	}
