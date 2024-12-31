@@ -53,8 +53,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		String token = jwtUtil.createJwt(username, role, SecurityConfig.TOKEN_PERIOD_MS);
 
-		response.addCookie(jwtUtil.createCookie("Authorization", token));
-		// response.addHeader("Authorization", "Bearer " + token);
+		// response.addCookie(jwtUtil.createCookie("Authorization", token));
+		response.addHeader("Authorization", "Bearer " + token);
 	}
 
 	@Override

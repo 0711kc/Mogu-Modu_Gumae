@@ -36,7 +36,8 @@ public class OauthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 		String token = jwtUtil.createJwt(username, role, SecurityConfig.TOKEN_PERIOD_MS);
 
-		response.addCookie(jwtUtil.createCookie("Authorization", token));
-		response.sendRedirect("http://localhost:3000/");
+		// response.addCookie(jwtUtil.createCookie("Authorization", token));
+		// response.sendRedirect("http://localhost:3000/");
+		response.addHeader("Authorization", "Bearer " + token);
 	}
 }

@@ -18,6 +18,7 @@ services:
       - node.name=single-node
       - cluster.name=backtony
       - discovery.type=single-node
+    #      - ingest.geoip.downloader.enabled=false
     ports:
       - 9200:9200
       - 9300:9300

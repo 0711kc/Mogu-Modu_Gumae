@@ -73,6 +73,10 @@ public class SecurityConfig implements WebMvcConfigurer {
 		"/user/level"
 	};
 
+	public static final String[] AUTH_DELETE = {
+		"/user/my"
+	};
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
@@ -106,6 +110,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 				.requestMatchers("/error").permitAll()
 				.requestMatchers(HttpMethod.POST, WHITE_LIST_POST).permitAll()
 				.requestMatchers(HttpMethod.GET, AUTH_GET).authenticated()
+				.requestMatchers(HttpMethod.DELETE, AUTH_DELETE).authenticated()
 				.requestMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN")
 				.requestMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN")
 				.requestMatchers(HttpMethod.PATCH, ADMIN_PATCH).hasAnyRole("ADMIN")

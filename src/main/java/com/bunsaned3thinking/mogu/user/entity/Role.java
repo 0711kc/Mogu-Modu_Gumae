@@ -30,16 +30,6 @@ public enum Role {
 			.filter(memberRole -> memberRole.getRequest().equals(request))
 			.findFirst()
 			.orElseThrow(IllegalArgumentException::new);
-
-		/*
-			같은 의미
-			for(Role role : Role.values()) {
-				if (role.getRequest().equals(request)) {
-					return role;
-				}
-			}
-			throw new IllegalArgumentException();
-		*/
 	}
 
 	public static Role findByIndex(short index) {
