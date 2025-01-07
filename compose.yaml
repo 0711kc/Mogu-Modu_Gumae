@@ -8,6 +8,9 @@ services:
       - 'MYSQL_USER=myuser'
     ports:
       - '3314:3306'
+    networks:
+      - es-bridge  # 동일한 네트워크에 포함시킴
+
   es:
     build:
       context: .
@@ -18,7 +21,6 @@ services:
       - node.name=single-node
       - cluster.name=backtony
       - discovery.type=single-node
-    #      - ingest.geoip.downloader.enabled=false
     ports:
       - 9200:9200
       - 9300:9300
