@@ -9,7 +9,12 @@ services:
     ports:
       - '3314:3306'
     networks:
-      - es-bridge  # 동일한 네트워크에 포함시킴
+      - es-bridge
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   es:
     build:
@@ -26,6 +31,13 @@ services:
       - 9300:9300
     networks:
       - es-bridge
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
 
   kibana:
     container_name: kibana
@@ -35,11 +47,17 @@ services:
       ELASTICSEARCH_HOSTS: http://es:9200
     ports:
       - 5601:5601
-    # Elasticsearch Start Dependency
     depends_on:
       - es
     networks:
       - es-bridge
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:5601 || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
 
 networks:
   es-bridge:
