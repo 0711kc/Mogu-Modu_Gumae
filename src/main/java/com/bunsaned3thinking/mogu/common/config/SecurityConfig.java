@@ -45,6 +45,12 @@ public class SecurityConfig implements WebMvcConfigurer {
 		"/user"
 	};
 
+	private static final String[] WHITE_LIST_GET = {
+		"/v3/api-docs/**",
+		"/swagger-ui/**",
+		"/swagger-ui.html"
+	};
+
 	private static final String[] ADMIN_POST = {
 		"/notice"
 	};
@@ -109,6 +115,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/error").permitAll()
 				.requestMatchers(HttpMethod.POST, WHITE_LIST_POST).permitAll()
+				.requestMatchers(HttpMethod.GET, WHITE_LIST_GET).permitAll()
 				.requestMatchers(HttpMethod.GET, AUTH_GET).authenticated()
 				.requestMatchers(HttpMethod.DELETE, AUTH_DELETE).authenticated()
 				.requestMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN")
